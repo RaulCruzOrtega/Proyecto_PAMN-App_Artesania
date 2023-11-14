@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "217140092636",
+    "project_id": "app-artesania",
+    "storage_bucket": "app-artesania.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:217140092636:android:e71baa98d9f6cce9a65e19",
+        "android_client_info": {
+          "package_name": "com.example.app_artesania"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKJeiPUTDJ9fgVSQO70CJXeb2QsWWpBrw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
