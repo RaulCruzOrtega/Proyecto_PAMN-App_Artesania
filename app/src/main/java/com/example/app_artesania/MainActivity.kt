@@ -12,6 +12,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.app_artesania.ui.login.LoginScreen
+import com.example.app_artesania.ui.login.LoginViewModel
 import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
@@ -43,7 +45,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     db.collection("Articulos")
                     var cosa = db.collection("Articulos").document("Papelera").get()
-                    Greeting("App Artesania")
+                    LoginScreen(LoginViewModel())
                 }
             }
         }
