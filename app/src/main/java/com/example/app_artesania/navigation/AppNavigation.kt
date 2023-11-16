@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.app_artesania.ui.login.LoginScreen
 import com.example.app_artesania.ui.login.LoginViewModel
 import com.example.app_artesania.ui.register.RegisterScreen
+import com.example.app_artesania.ui.register.RegisterViewModel
 
 
 @Composable
@@ -17,7 +18,7 @@ fun AppNavigation() {
             LoginScreen(LoginViewModel(), navControler)
         }
         composable(route = AppScreens.RegisterScreen.route){
-            RegisterScreen(navControler)
+            RegisterScreen(RegisterViewModel(), navControler)
         }
     }
 }
