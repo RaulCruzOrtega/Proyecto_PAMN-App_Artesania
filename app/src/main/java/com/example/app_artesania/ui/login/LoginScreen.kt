@@ -21,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -28,28 +29,31 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.app_artesania.R
 import kotlinx.coroutines.launch
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel) {
+fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
     Box(
         Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Login(Modifier.align(Alignment.Center), viewModel)
+        Login(Modifier.align(Alignment.Center), viewModel, navController)
     }
 }
 
 @Composable
-fun Login(modifier: Modifier, viewModel: LoginViewModel) {
+fun Login(modifier: Modifier, viewModel: LoginViewModel, navController: NavController) {
 
     val email: String by viewModel.email.observeAsState(initial = "")
     val password: String by viewModel.password.observeAsState(initial = "")
     val loginEnable: Boolean by viewModel.loginEnable.observeAsState(initial = false)
+    val errorData: Boolean by viewModel.errorData.observeAsState(initial = false)
     val coroutineScope = rememberCoroutineScope()
 
     Column(modifier = modifier) {
@@ -59,13 +63,32 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel) {
         Spacer(modifier = Modifier.padding(4.dp))
         PasswordField(password) { viewModel.onLoginChanged(email, it) }
         Spacer(modifier = Modifier.padding(16.dp))
-        LoginButton(loginEnable) {
-            coroutineScope.launch {
-                viewModel.onLoginSelected()
-            }
+        if (errorData) {
+            Text(
+                text = "No se ha podido iniciar sesión. Comprueba que el correo electrónico y la contraseña son correctas.",
+                color = Color.Red,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally)
+            )
+            Spacer(modifier = Modifier.padding(16.dp))
         }
+        LoginButton(
+            loginEnable,
+            {
+                coroutineScope.launch {
+                    viewModel.onLoginSelected(navController)
+                }
+            })
         Spacer(modifier = Modifier.padding(8.dp))
-        Register(Modifier.align(Alignment.CenterHorizontally))
+        Register(
+            {
+                coroutineScope.launch {
+                    viewModel.onRegisterScreen(navController)
+                }
+            } ,
+            Modifier.align(Alignment.CenterHorizontally)
+        )
 
     }
 }
@@ -109,10 +132,12 @@ fun PasswordField(password: String, onTextFieldChanged: (String) -> Unit) {
 }
 
 @Composable
-fun Register(modifier: Modifier) {
+fun Register(onRegisterSelected: () -> Unit, modifier: Modifier) {
     Text(
         text = "Registrarse",
-        modifier = modifier.clickable { },
+        modifier = modifier.clickable {
+            onRegisterSelected()
+         },
         fontSize = 16.sp,
         fontWeight = FontWeight.Bold,
         color = Color(0, 139, 139)
