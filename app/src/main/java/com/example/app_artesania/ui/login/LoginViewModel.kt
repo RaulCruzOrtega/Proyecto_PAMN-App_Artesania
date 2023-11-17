@@ -40,7 +40,7 @@ class LoginViewModel : ViewModel() {
             .signInWithEmailAndPassword(email.value!!, password.value!!)
             .addOnCompleteListener {
                 if (it.isSuccessful) {
-                    navController.navigate(route = AppScreens.RegisterScreen.route)
+                    navController.navigate(route = AppScreens.HomeScreen.route)
                 } else {
                     _errorData.value = true
                 }
@@ -48,7 +48,7 @@ class LoginViewModel : ViewModel() {
     }
 
     suspend fun onRegisterScreen(navController: NavController) {
-        navController.navigate(route = AppScreens.RegisterScreen.route)
+        navController.navigate(route = AppScreens.HomeScreen.route)
     }
 
 
