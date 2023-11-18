@@ -1,14 +1,13 @@
 package com.example.app_artesania.ui.login
 
-import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import com.example.app_artesania.data.signIn
 import com.example.app_artesania.navigation.AppScreens
-import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.delay
+
 
 class LoginViewModel : ViewModel() {
 
@@ -35,20 +34,19 @@ class LoginViewModel : ViewModel() {
 
     private fun isValidEmail(email: String): Boolean  = Patterns.EMAIL_ADDRESS.matcher(email).matches()
 
+
     suspend fun onLoginSelected(navController: NavController) {
-        FirebaseAuth.getInstance()
-            .signInWithEmailAndPassword(email.value!!, password.value!!)
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    navController.navigate(route = AppScreens.HomeScreen.route)
-                } else {
-                    _errorData.value = true
-                }
-            }
+        val loginCorrect = signIn(email.value!!, password.value!!)
+        if (loginCorrect) {
+            navController.navigate(route = AppScreens.HomeScreen.route)
+        } else {
+            _errorData.value = true
+        }
+
     }
 
     suspend fun onRegisterScreen(navController: NavController) {
-        navController.navigate(route = AppScreens.HomeScreen.route)
+        navController.navigate(route = AppScreens.RegisterScreen.route)
     }
 
 

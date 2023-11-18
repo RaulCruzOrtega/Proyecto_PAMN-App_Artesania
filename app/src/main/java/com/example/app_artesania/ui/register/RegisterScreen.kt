@@ -103,7 +103,7 @@ fun Register(viewModel: RegisterViewModel, navController: NavController){
     val craftsman_error: Boolean by viewModel.craftsman_error.observeAsState(initial = false)
 
 
-    val RegisterEnable: Boolean by viewModel.RegisterEnable.observeAsState(initial = false)
+    val ExistUser: Boolean by viewModel.ExistUser.observeAsState(initial = false)
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -194,6 +194,12 @@ fun Register(viewModel: RegisterViewModel, navController: NavController){
                 }
                 Spacer(modifier = Modifier.padding(16.dp))
             }
+            if (ExistUser){
+                Spacer(modifier = Modifier.padding(4.dp))
+                textError(texto = "El usuario que intenta registrar ya existe")
+                Spacer(modifier = Modifier.padding(16.dp))
+            }
+
             RegisterButton ({
                 coroutineScope.launch {
                     viewModel.onRegisterSelected(navController)
@@ -248,11 +254,3 @@ fun textError(
         )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    App_ArtesaniaTheme {
-        val navControler = rememberNavController()
-        RegisterScreen(RegisterViewModel(), navControler)
-    }
-}

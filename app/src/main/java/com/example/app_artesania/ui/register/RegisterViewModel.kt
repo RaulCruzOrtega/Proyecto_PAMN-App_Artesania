@@ -1,11 +1,13 @@
 package com.example.app_artesania.ui.register
 
-import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import com.example.app_artesania.data.createUser
+import com.example.app_artesania.navigation.AppScreens
+
 
 class RegisterViewModel: ViewModel() {
     private val _user_name = MutableLiveData<String>().apply{value = ""}
@@ -41,8 +43,8 @@ class RegisterViewModel: ViewModel() {
     private val _craftsman_error = MutableLiveData<Boolean>().apply { value = false }
     val craftsman_error: LiveData<Boolean> = _craftsman_error
 
-    private val _RegisterEnable = MutableLiveData<Boolean>().apply { value = false }
-    val RegisterEnable: LiveData<Boolean> = _RegisterEnable
+    private val _ExistUser = MutableLiveData<Boolean>().apply { value = false }
+    val ExistUser: LiveData<Boolean> = _ExistUser
 
 
     fun onSwitchChange(){
@@ -91,11 +93,21 @@ class RegisterViewModel: ViewModel() {
 
         if (craftsman.value!!){
             if (email_correct && password_correct && ID_craftsman && password_iguales){
-                navController.popBackStack()
+                val RegisterCorrect = createUser(email = email.value!!, password = password.value!!)
+                if (RegisterCorrect) {
+                    navController.navigate(route = AppScreens.HomeScreen.route)
+                } else {
+                    _ExistUser.value = true
+                }
             }
         } else {
             if (email_correct && password_correct && password_iguales){
-                navController.popBackStack()
+                val RegisterCorrect = createUser(email = email.value!!, password = password.value!!)
+                if (RegisterCorrect) {
+                    navController.navigate(route = AppScreens.HomeScreen.route)
+                } else {
+                    _ExistUser.value = true
+                }
             }
         }
 

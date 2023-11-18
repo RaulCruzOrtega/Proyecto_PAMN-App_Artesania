@@ -20,20 +20,6 @@ import com.google.firebase.firestore.firestore
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val db = Firebase.firestore
-
-        db.collection("Articulos")
-            .get()
-            .addOnSuccessListener  {  result ->
-                for (document in result) {
-                    Log.d("TAG", "${document.id} => ${document.data}")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.d("TAG", "Error getting documents $exception")
-            }
-
         setContent {
             App_ArtesaniaTheme {
                 // A surface container using the 'background' color from the theme
@@ -41,20 +27,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    db.collection("Articulos")
                     AppNavigation()
                 }
             }
         }
     }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "$name!",
-        modifier = modifier
-    )
 }
 
 
