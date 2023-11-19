@@ -2,6 +2,7 @@ package com.example.app_artesania.data
 
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.tasks.await
 
 
 private val auth = FirebaseAuth.getInstance()

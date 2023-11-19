@@ -55,6 +55,7 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel, navController: NavContr
     val password: String by viewModel.password.observeAsState(initial = "")
     val loginEnable: Boolean by viewModel.loginEnable.observeAsState(initial = false)
     val errorData: Boolean by viewModel.errorData.observeAsState(initial = false)
+    val errorEmail: Boolean by viewModel.errorEmail.observeAsState(initial = false)
     val coroutineScope = rememberCoroutineScope()
 
     Column(modifier = modifier) {
@@ -66,7 +67,17 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel, navController: NavContr
         Spacer(modifier = Modifier.padding(16.dp))
         if (errorData) {
             Text(
-                text = "No se ha podido iniciar sesión. Comprueba que el correo electrónico y la contraseña son correctas.",
+                text = "La contraseña introducida es incorrecta",
+                color = Color.Red,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally)
+            )
+            Spacer(modifier = Modifier.padding(16.dp))
+        }
+        if (errorEmail) {
+            Text(
+                text = "No existe el correo introducido",
                 color = Color.Red,
                 modifier = Modifier
                     .fillMaxWidth()

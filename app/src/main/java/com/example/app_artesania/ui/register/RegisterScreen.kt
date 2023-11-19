@@ -196,7 +196,7 @@ fun Register(viewModel: RegisterViewModel, navController: NavController){
             }
             if (ExistUser){
                 Spacer(modifier = Modifier.padding(4.dp))
-                textError(texto = "El usuario que intenta registrar ya existe")
+                textError(texto = "El correo que intenta registrar ya ha sido registrado")
                 Spacer(modifier = Modifier.padding(16.dp))
             }
 

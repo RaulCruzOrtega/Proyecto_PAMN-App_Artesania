@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.example.app_artesania.data.createUser
+import com.example.app_artesania.data.notexistUser
 import com.example.app_artesania.navigation.AppScreens
 
 
@@ -59,6 +60,7 @@ class RegisterViewModel: ViewModel() {
     fun onEmailChanged(email: String) {
         _email.value = email
         _email_error.value = false
+        _ExistUser.value = false
     }
 
     fun onPasswordChanged(password: String) {
@@ -91,24 +93,26 @@ class RegisterViewModel: ViewModel() {
         val password_iguales = password.value!! == password_rep.value!!
         _password_rep_error.value = !password_iguales
 
-        if (craftsman.value!!){
-            if (email_correct && password_correct && ID_craftsman && password_iguales){
-                val RegisterCorrect = createUser(email = email.value!!, password = password.value!!)
-                if (RegisterCorrect) {
-                    navController.navigate(route = AppScreens.HomeScreen.route)
-                } else {
-                    _ExistUser.value = true
+        val no_exist_user = notexistUser(email.value!!)
+
+        if (no_exist_user) {
+            if (craftsman.value!!) {
+                if (email_correct && password_correct && ID_craftsman && password_iguales) {
+                    val RegisterCorrect = createUser(email = email.value!!, password = password.value!!)
+                    if (RegisterCorrect) {
+                        navController.navigate(route = AppScreens.HomeScreen.route)
+                    }
+                }
+            } else {
+                if (email_correct && password_correct && password_iguales) {
+                    val RegisterCorrect = createUser(email = email.value!!, password = password.value!!)
+                    if (RegisterCorrect) {
+                        navController.navigate(route = AppScreens.HomeScreen.route)
+                    }
                 }
             }
         } else {
-            if (email_correct && password_correct && password_iguales){
-                val RegisterCorrect = createUser(email = email.value!!, password = password.value!!)
-                if (RegisterCorrect) {
-                    navController.navigate(route = AppScreens.HomeScreen.route)
-                } else {
-                    _ExistUser.value = true
-                }
-            }
+            _ExistUser.value = true
         }
 
 
