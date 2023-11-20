@@ -6,7 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.example.app_artesania.data.createUser
+import com.example.app_artesania.data.newUser
 import com.example.app_artesania.data.notexistUser
+import com.example.app_artesania.model.User
 import com.example.app_artesania.navigation.AppScreens
 
 
@@ -107,6 +109,12 @@ class RegisterViewModel: ViewModel() {
                 if (email_correct && password_correct && password_iguales) {
                     val RegisterCorrect = createUser(email = email.value!!, password = password.value!!)
                     if (RegisterCorrect) {
+                        val new_user: User = User(
+                            name = user_name.value!!,
+                            email = email.value!!,
+                            image = "",
+                            orders = ArrayList())
+                        newUser(new_user)
                         navController.navigate(route = AppScreens.HomeScreen.route)
                     }
                 }

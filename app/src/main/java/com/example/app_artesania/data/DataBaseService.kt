@@ -1,5 +1,6 @@
 package com.example.app_artesania.data
 
+import com.example.app_artesania.model.User
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
@@ -10,4 +11,14 @@ suspend fun notexistUser(email:String): Boolean{
         .whereEqualTo("email", email)
         .get().await().isEmpty
     return exist
+}
+
+suspend fun newUser(newuser: User){
+    val userHashMap = hashMapOf(
+        "name" to newuser.name,
+        "email" to newuser.email,
+        "image" to newuser.image,
+        "orders" to newuser.orders
+    )
+    data.collection("Usuarios").add(userHashMap)
 }
