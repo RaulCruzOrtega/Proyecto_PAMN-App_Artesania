@@ -17,8 +17,11 @@ suspend fun newUser(newuser: User){
     val userHashMap = hashMapOf(
         "name" to newuser.name,
         "email" to newuser.email,
+        "isCraftsman" to newuser.isCraftsman,
+        "idCraftsman" to newuser.idCraftsman,
         "image" to newuser.image,
-        "orders" to newuser.orders
+        "orders" to newuser.orders,
+        "products" to newuser.products
     )
     data.collection("Usuarios").add(userHashMap)
 }

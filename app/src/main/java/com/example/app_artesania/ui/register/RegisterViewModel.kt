@@ -90,8 +90,8 @@ class RegisterViewModel: ViewModel() {
         _email_error.value = !email_correct
         val password_correct = isValidPassword(password.value!!)
         _password_error.value = !password_correct
-        val ID_craftsman = isValidID_Craftsman(ID_craftsman.value!!)
-        _craftsman_error.value = !ID_craftsman
+        val ID_craftsman_correct = isValidID_Craftsman(ID_craftsman.value!!)
+        _craftsman_error.value = !ID_craftsman_correct
         val password_iguales = password.value!! == password_rep.value!!
         _password_rep_error.value = !password_iguales
 
@@ -99,9 +99,18 @@ class RegisterViewModel: ViewModel() {
 
         if (no_exist_user) {
             if (craftsman.value!!) {
-                if (email_correct && password_correct && ID_craftsman && password_iguales) {
+                if (email_correct && password_correct && ID_craftsman_correct && password_iguales) {
                     val RegisterCorrect = createUser(email = email.value!!, password = password.value!!)
                     if (RegisterCorrect) {
+                        val new_user: User = User(
+                            name = user_name.value!!,
+                            email = email.value!!,
+                            isCraftsman = true,
+                            idCraftsman = ID_craftsman.value!!,
+                            image = "",
+                            orders = ArrayList(),
+                            products = ArrayList())
+                        newUser(new_user)
                         navController.navigate(route = AppScreens.HomeScreen.route)
                     }
                 }
@@ -112,8 +121,11 @@ class RegisterViewModel: ViewModel() {
                         val new_user: User = User(
                             name = user_name.value!!,
                             email = email.value!!,
+                            isCraftsman = false,
+                            idCraftsman = "",
                             image = "",
-                            orders = ArrayList())
+                            orders = ArrayList(),
+                            products = ArrayList())
                         newUser(new_user)
                         navController.navigate(route = AppScreens.HomeScreen.route)
                     }
