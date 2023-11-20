@@ -1,5 +1,6 @@
 package com.example.app_artesania.ui.home
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -14,7 +15,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,9 +31,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.app_artesania.ui.bottomNavBar.bottomNavBar
+import com.example.app_artesania.ui.bottomNavBar.bottomNavBarViewModel
 import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 
-
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
     val categories: ArrayList<HomeViewModel.Category> = viewModel.categories
@@ -39,22 +44,28 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
     val products2: ArrayList<HomeViewModel.Product> = viewModel.products2
     val craftsmans: ArrayList<HomeViewModel.Craftsman> = viewModel.craftsmans
 
-    Column {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(start = 16.dp)
-        ) {
-            item {
-                Spacer(modifier = Modifier.padding(8.dp))
-                CategoriesSlider(categories)
-                Spacer(modifier = Modifier.padding(8.dp))
-                CraftsmanSlider(craftsmans)
-                Spacer(modifier = Modifier.padding(14.dp))
-                ProductsSlider("Productos Nuevos", products)
-                Spacer(modifier = Modifier.padding(4.dp))
-                ProductsSlider("Productos en Tendencia", products2)
-                Spacer(modifier = Modifier.padding(8.dp))
+    Scaffold (
+        bottomBar = {
+            bottomNavBar(bottomNavBarViewModel(), navController)
+        }
+    ) {
+        Column {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 16.dp)
+            ) {
+                item {
+                    Spacer(modifier = Modifier.padding(8.dp))
+                    CategoriesSlider(categories)
+                    Spacer(modifier = Modifier.padding(8.dp))
+                    CraftsmanSlider(craftsmans)
+                    Spacer(modifier = Modifier.padding(14.dp))
+                    ProductsSlider("Productos Nuevos", products)
+                    Spacer(modifier = Modifier.padding(4.dp))
+                    ProductsSlider("Productos en Tendencia", products2)
+                    Spacer(modifier = Modifier.padding(20.dp))
+                }
             }
         }
     }

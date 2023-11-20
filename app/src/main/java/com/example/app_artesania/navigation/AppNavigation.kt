@@ -15,7 +15,7 @@ import com.example.app_artesania.ui.register.RegisterViewModel
 @Composable
 fun AppNavigation() {
     val navControler = rememberNavController()
-    NavHost(navController = navControler, startDestination = AppScreens.LoginScreen.route){
+    NavHost(navController = navControler, startDestination = AppScreens.HomeScreen.route){
         composable(route = AppScreens.LoginScreen.route){
             LoginScreen(LoginViewModel(), navControler)
         }
