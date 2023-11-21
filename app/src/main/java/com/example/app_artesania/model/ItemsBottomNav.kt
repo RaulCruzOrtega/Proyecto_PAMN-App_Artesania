@@ -16,7 +16,7 @@ sealed class ItemsBottomNav(
     object favsIcon: ItemsBottomNav(
         R.drawable.hearticon,
         "Item2",
-        AppScreens.ProductScreen.route
+        AppScreens.ProductScreen.route + "/1"
     )
     object ordersIcon: ItemsBottomNav(
         R.drawable.ordericon,

@@ -18,13 +18,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.app_artesania.model.Product
+import com.example.app_artesania.navigation.AppScreens
 
 @Composable
-fun ProductSmallViewTemplate(product: Product, height: Int){
+fun ProductSmallViewTemplate(product: Product, height: Int, navController: NavController){
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.clickable { println("Producto ${product.name}") }
+        modifier = Modifier.clickable { navController.navigate(route = AppScreens.ProductScreen.route + "/${product.id}") }
     ) {
         Image(
             painter = painterResource(id = product.image as Int),

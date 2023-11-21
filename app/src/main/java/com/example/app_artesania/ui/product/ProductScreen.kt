@@ -2,21 +2,14 @@ package com.example.app_artesania.ui.product
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,17 +22,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.app_artesania.model.Product
-import com.example.app_artesania.ui.bottomNavBar.bottomNavBar
+import com.example.app_artesania.ui.bottomNavBar.BottomNavBar
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
-import com.example.app_artesania.ui.home.HomeViewModel
-import com.example.app_artesania.ui.templates.ProductSmallViewTemplate
+import com.example.app_artesania.ui.templates.SimpleTopNavBar
 import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 
 
@@ -50,17 +41,18 @@ fun ProductScreen(viewModel: ProductViewModel, navController: NavController) {
     val product: Product = viewModel.product
 
     Scaffold (
-        bottomBar = {
-            bottomNavBar(BottomNavBarViewModel(), navController)
-        }
+        topBar = { SimpleTopNavBar(title = product.name, navController = navController) },
+        bottomBar = { BottomNavBar(BottomNavBarViewModel(), navController) }
     ) {
-        Column(
+        LazyColumn(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.padding(8.dp))
-            ProductDetailView(product)
-            Spacer(modifier = Modifier.padding(4.dp))
+            item{
+                Spacer(modifier = Modifier.padding(20.dp))
+                ProductDetailView(product)
+                Spacer(modifier = Modifier.padding(20.dp))
+            }
         }
     }
 }
@@ -72,7 +64,7 @@ fun ProductDetailView(product: Product) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(36.dp)
     ) {
         Text(
             text = product.name,
@@ -86,33 +78,26 @@ fun ProductDetailView(product: Product) {
             contentDescription = "Producto ${product.name}",
             alignment = Alignment.Center,
             modifier = Modifier
-                .height(300.dp)
-                .width(300.dp)
-                .padding(start=0.dp, end = 10.dp)
+                .size(300.dp)
                 .clip(RoundedCornerShape(10))
         )
         Spacer(modifier = Modifier.height(30.dp))
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+                .padding(16.dp, end = 16.dp),
         ) {
             Text(
                 text = product.idCraftsman,
                 fontSize = 18.sp,
-                color = Color.Black,
-                modifier =Modifier.padding(start = 36.dp, end = 16.dp)
+                color = Color.Black
             )
-
             Spacer(modifier = Modifier.weight(1f))
             Text(
                 text = product.price.toString() + " €",
                 fontSize = 18.sp,
-                color = Color.Black,
-                modifier =Modifier.padding(start = 16.dp, end = 36.dp)
-
+                color = Color.Black
             )
         }
 
@@ -122,8 +107,6 @@ fun ProductDetailView(product: Product) {
             fontSize = 16.sp,
             textAlign = TextAlign.Justify,
             color = Color.Gray,
-            modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp)
         )
 
         Spacer(modifier = Modifier.height(30.dp))
@@ -141,6 +124,6 @@ fun ProductDetailView(product: Product) {
 fun GreetingPreview() {
     App_ArtesaniaTheme {
         val navController = rememberNavController()
-        ProductScreen(ProductViewModel(), navController)
+        ProductScreen(ProductViewModel("1"), navController)
     }
 }

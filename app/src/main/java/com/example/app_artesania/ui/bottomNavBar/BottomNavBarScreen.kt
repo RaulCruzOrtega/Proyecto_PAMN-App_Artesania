@@ -18,7 +18,7 @@ import com.example.app_artesania.model.ItemsBottomNav
 import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 
 @Composable
-fun bottomNavBar(viewModel: BottomNavBarViewModel, navController: NavController){
+fun BottomNavBar(viewModel: BottomNavBarViewModel, navController: NavController){
     val items: List<ItemsBottomNav> = viewModel.items
 
     BottomAppBar(
@@ -51,6 +51,6 @@ fun bottomNavBar(viewModel: BottomNavBarViewModel, navController: NavController)
 fun Preview() {
     App_ArtesaniaTheme {
         val navController = rememberNavController()
-        bottomNavBar(BottomNavBarViewModel(), navController)
+        BottomNavBar(BottomNavBarViewModel(), navController)
     }
 }

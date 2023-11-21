@@ -35,8 +35,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.app_artesania.R
 import com.example.app_artesania.model.Product
+import com.example.app_artesania.ui.bottomNavBar.BottomNavBar
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
-import com.example.app_artesania.ui.bottomNavBar.bottomNavBar
 import com.example.app_artesania.ui.templates.ProductSmallViewTemplate
 import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 
@@ -48,7 +48,7 @@ fun CraftsmanProfileScreen(viewModel: CraftsmanProfileViewModel, navController: 
 
     Scaffold (
         bottomBar = {
-            bottomNavBar(BottomNavBarViewModel(), navController)
+            BottomNavBar(BottomNavBarViewModel(), navController)
         }
     ) {
         LazyVerticalGrid(
@@ -56,13 +56,13 @@ fun CraftsmanProfileScreen(viewModel: CraftsmanProfileViewModel, navController: 
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            item(span = { GridItemSpan(2) }) { profileHead() }
+            item(span = { GridItemSpan(2) }) { ProfileHead() }
             item(span = { GridItemSpan(2) }) {
                 Spacer(modifier = Modifier.padding(4.dp))
             }
-            item(span = { GridItemSpan(2) }) { tabs() }
+            item(span = { GridItemSpan(2) }) { Tabs() }
             for (product in products) {
-                item(span = { GridItemSpan(1) }) { ProductSmallViewTemplate(product, 180) }
+                item(span = { GridItemSpan(1) }) { ProductSmallViewTemplate(product, 180, navController) }
             }
             item(span = { GridItemSpan(2) }) {
                 Spacer(modifier = Modifier.padding(28.dp))
@@ -72,7 +72,7 @@ fun CraftsmanProfileScreen(viewModel: CraftsmanProfileViewModel, navController: 
 }
 
 @Composable
-private fun profileHead(){
+private fun ProfileHead(){
     Surface(color = Color(android.graphics.Color.parseColor("#4c2c17"))) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -102,7 +102,7 @@ private fun profileHead(){
 }
 
 @Composable
-private fun tabs() {
+private fun Tabs() {
     Row (
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly

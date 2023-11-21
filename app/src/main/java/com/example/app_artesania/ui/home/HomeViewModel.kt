@@ -3,6 +3,7 @@ package com.example.app_artesania.ui.home
 import androidx.lifecycle.ViewModel
 import com.example.app_artesania.R
 import com.example.app_artesania.model.Product
+import com.example.app_artesania.model.User
 
 class HomeViewModel : ViewModel() {
 
@@ -29,31 +30,19 @@ class HomeViewModel : ViewModel() {
 
     val products = ArrayList(
         listOf(
-            Product("Rana de cerámica", R.drawable.cosa, 34.00, "Descripción", "123ABC"),
-            Product("Lombrices caseras kelekffef", R.drawable.producto, 1.00, "Descripción", "123ABC"),
-            Product("Aguacate", R.drawable.producto3, 56.00, "Descripción", "123ABC"),
-            Product("P4", R.drawable.producto2, 100.00, "Descripción", "123ABC"),
-            Product("Productaso muy increible muy bueno increible 5", R.drawable.producto4, 7.00, "Descripción", "123ABC")
+            Product.p1, Product.p2, Product.p3, Product.p4, Product.p5, Product.p6
         )
     )
 
     val products2 = ArrayList(
         listOf(
-            Product("Adasdjas", R.drawable.producto5, 34.00, "Descripción", "123ABC"),
-            Product("MAriposasas", R.drawable.producto4, 1.00, "Descripción", "123ABC"),
-            Product("Aguacate", R.drawable.producto, 56.00, "Descripción", "123ABC"),
-            Product("P4", R.drawable.producto3, 100.00, "Descripción", "123ABC"),
-            Product("Productaso muy increible muy bueno increible 5", R.drawable.producto4, 7.00, "Descripción", "123ABC"),
+            Product.p6, Product.p5, Product.p2, Product.p4
         )
     )
 
     val craftsmans = ArrayList(
         listOf(
-            Craftsman("Artesano1", R.drawable.artesano1),
-            Craftsman("Pedro", R.drawable.artesano2),
-            Craftsman("Artesano3", R.drawable.artesano3),
-            Craftsman("Maria de los Angeles", R.drawable.artesano4),
-            Craftsman("Paco5", R.drawable.artesano5)
+            User.a1, User.a2, User.a3, User.a4, User.a5
         )
     )
 

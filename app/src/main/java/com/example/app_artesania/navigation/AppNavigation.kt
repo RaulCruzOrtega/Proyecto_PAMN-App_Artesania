@@ -1,9 +1,12 @@
 package com.example.app_artesania.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.app_artesania.ui.craftsmanProfile.CraftsmanProfileScreen
 import com.example.app_artesania.ui.craftsmanProfile.CraftsmanProfileViewModel
 import com.example.app_artesania.ui.home.HomeScreen
@@ -32,8 +35,14 @@ fun AppNavigation() {
         composable(route = AppScreens.CraftsmanProfileScreen.route){
             CraftsmanProfileScreen(CraftsmanProfileViewModel(), navControler)
         }
-        composable(route = AppScreens.ProductScreen.route){
-            ProductScreen(ProductViewModel(), navControler)
+        composable(route = AppScreens.ProductScreen.route + "/{productId}",
+            arguments = listOf(navArgument(name = "productId"){
+                type = NavType.StringType
+            })){
+            val ProductViewModel: ProductViewModel = ProductViewModel(
+                    it.arguments?.getString("productId")
+                )
+            ProductScreen(ProductViewModel, navControler)
         }
     }
 }

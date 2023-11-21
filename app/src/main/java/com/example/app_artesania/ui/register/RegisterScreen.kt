@@ -1,7 +1,6 @@
 package com.example.app_artesania.ui.register
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,19 +14,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -44,27 +37,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.app_artesania.ui.login.HeaderImage
+import com.example.app_artesania.ui.templates.SimpleTopNavBar
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
-    Scaffold (topBar = {
-        TopAppBar(
-            title = {
-                Text(text = "Registro", modifier = Modifier.padding(start = 20.dp))
-            },
-            navigationIcon = {
-                Icon(
-                    Icons.Default.ArrowBack,
-                    "backIcon",
-                    modifier = Modifier
-                        .clickable { navController.popBackStack() }
-                        .padding(start = 10.dp))
-            },
-            colors = TopAppBarDefaults.largeTopAppBarColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
-        )
+    Scaffold (
+        topBar = { SimpleTopNavBar(title = "Registro", navController = navController)
     }) {
         Box(
             Modifier
@@ -74,7 +55,6 @@ fun RegisterScreen(viewModel: RegisterViewModel, navController: NavController) {
             Register(viewModel, navController)
         }
     }
-
 }
 @Composable
 fun Register(viewModel: RegisterViewModel, navController: NavController){
@@ -88,17 +68,12 @@ fun Register(viewModel: RegisterViewModel, navController: NavController){
     val password_error: Boolean by viewModel.password_error.observeAsState(initial = false)
     val password_rep_error: Boolean by viewModel.password_rep_error.observeAsState(initial = false)
 
-
     val craftsman: Boolean by viewModel.craftsman.observeAsState(initial = false)
     val ID_craftsman: String by viewModel.ID_craftsman.observeAsState(initial = "")
     val craftsman_error: Boolean by viewModel.craftsman_error.observeAsState(initial = false)
 
-
     val ExistUser: Boolean by viewModel.ExistUser.observeAsState(initial = false)
-
     val coroutineScope = rememberCoroutineScope()
-
-
 
 
     Column (modifier = Modifier
@@ -197,7 +172,6 @@ fun Register(viewModel: RegisterViewModel, navController: NavController){
                 }
             }
             )
-
     }
 }
 
@@ -242,6 +216,5 @@ fun textError(
         modifier = Modifier.fillMaxWidth(),
         color = Color.Red,
         textAlign = TextAlign.Start
-        )
+    )
 }
-

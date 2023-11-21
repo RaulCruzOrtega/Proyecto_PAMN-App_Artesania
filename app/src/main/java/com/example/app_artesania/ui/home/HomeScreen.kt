@@ -33,7 +33,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.app_artesania.model.Product
-import com.example.app_artesania.ui.bottomNavBar.bottomNavBar
+import com.example.app_artesania.model.User
+import com.example.app_artesania.ui.bottomNavBar.BottomNavBar
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
 import com.example.app_artesania.ui.templates.ProductSmallViewTemplate
 import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
@@ -45,11 +46,11 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
     val categories: ArrayList<HomeViewModel.Category> = viewModel.categories
     val products: ArrayList<Product> = viewModel.products
     val products2: ArrayList<Product> = viewModel.products2
-    val craftsmans: ArrayList<HomeViewModel.Craftsman> = viewModel.craftsmans
+    val craftsmans: ArrayList<User> = viewModel.craftsmans
 
     Scaffold (
         bottomBar = {
-            bottomNavBar(BottomNavBarViewModel(), navController)
+            BottomNavBar(BottomNavBarViewModel(), navController)
         }
     ) {
         LazyVerticalGrid(
@@ -65,8 +66,8 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
             item(span = { GridItemSpan(2) }) {
                 Spacer(modifier = Modifier.padding(4.dp))
             }
-            item(span = { GridItemSpan(2) }) { ProductsSlider("Productos Nuevos", products) }
-            item(span = { GridItemSpan(2) }) { ProductsSlider("Productos en Tendencia", products2) }
+            item(span = { GridItemSpan(2) }) { ProductsSlider("Productos Nuevos", products, navController) }
+            item(span = { GridItemSpan(2) }) { ProductsSlider("Productos en Tendencia", products2, navController) }
             item(span = { GridItemSpan(2) }) {
                 Spacer(modifier = Modifier.padding(4.dp))
             }
@@ -79,7 +80,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
                 )
             }
             for (product in products) {
-                item(span = { GridItemSpan(1) }) {ProductSmallViewTemplate(product, 180) }
+                item(span = { GridItemSpan(1) }) {ProductSmallViewTemplate(product, 180, navController) }
             }
             item(span = { GridItemSpan(2) }) {
                 Spacer(modifier = Modifier.padding(28.dp))
@@ -121,7 +122,7 @@ fun CategoriesSlider(categories: ArrayList<HomeViewModel.Category>){
 }
 
 @Composable
-fun CraftsmanSlider(craftsmans: ArrayList<HomeViewModel.Craftsman>){
+fun CraftsmanSlider(craftsmans: ArrayList<User>){
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -144,7 +145,7 @@ fun CraftsmanSlider(craftsmans: ArrayList<HomeViewModel.Craftsman>){
                 ) {
                     Spacer(modifier = Modifier.height(5.dp))
                     Image(
-                        painter = painterResource(id = craftsmans[index].img),
+                        painter = painterResource(id = craftsmans[index].image as Int),
                         contentDescription = "Artesano $index: $item",
                         modifier = Modifier
                             .height(70.dp)
@@ -166,7 +167,7 @@ fun CraftsmanSlider(craftsmans: ArrayList<HomeViewModel.Craftsman>){
 }
 
 @Composable
-fun ProductsSlider(title: String, products: ArrayList<Product>){
+fun ProductsSlider(title: String, products: ArrayList<Product>, navController: NavController){
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -180,7 +181,7 @@ fun ProductsSlider(title: String, products: ArrayList<Product>){
         Spacer(modifier = Modifier.height(5.dp))
         LazyRow {
             itemsIndexed(products) { _, product ->
-                ProductSmallViewTemplate(product, 176)
+                ProductSmallViewTemplate(product, 176, navController)
             }
         }
     }
