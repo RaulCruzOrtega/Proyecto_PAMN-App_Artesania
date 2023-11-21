@@ -10,6 +10,8 @@ import com.example.app_artesania.ui.home.HomeScreen
 import com.example.app_artesania.ui.home.HomeViewModel
 import com.example.app_artesania.ui.login.LoginScreen
 import com.example.app_artesania.ui.login.LoginViewModel
+import com.example.app_artesania.ui.product.ProductScreen
+import com.example.app_artesania.ui.product.ProductViewModel
 import com.example.app_artesania.ui.register.RegisterScreen
 import com.example.app_artesania.ui.register.RegisterViewModel
 
@@ -29,6 +31,9 @@ fun AppNavigation() {
         }
         composable(route = AppScreens.CraftsmanProfileScreen.route){
             CraftsmanProfileScreen(CraftsmanProfileViewModel(), navControler)
+        }
+        composable(route = AppScreens.ProductScreen.route){
+            ProductScreen(ProductViewModel(), navControler)
         }
     }
 }
