@@ -18,7 +18,7 @@ import com.example.app_artesania.model.ItemsBottomNav
 import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 
 @Composable
-fun bottomNavBar(viewModel: bottomNavBarViewModel, navController: NavController){
+fun bottomNavBar(viewModel: BottomNavBarViewModel, navController: NavController){
     val items: List<ItemsBottomNav> = viewModel.items
 
     BottomAppBar(
@@ -37,7 +37,7 @@ fun bottomNavBar(viewModel: bottomNavBarViewModel, navController: NavController)
                     icon = { Icon(
                         painter = painterResource(item.icon),
                         contentDescription = item.title,
-                        tint = Color(android.graphics.Color.parseColor("#FFFFFF")),
+                        tint = Color.White,
                         modifier = Modifier.height(30.dp))
                     }
                 )
@@ -51,6 +51,6 @@ fun bottomNavBar(viewModel: bottomNavBarViewModel, navController: NavController)
 fun Preview() {
     App_ArtesaniaTheme {
         val navController = rememberNavController()
-        bottomNavBar(bottomNavBarViewModel(), navController)
+        bottomNavBar(BottomNavBarViewModel(), navController)
     }
 }
