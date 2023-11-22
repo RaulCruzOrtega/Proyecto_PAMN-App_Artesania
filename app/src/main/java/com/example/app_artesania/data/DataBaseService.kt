@@ -42,11 +42,10 @@ suspend fun getUsers(): ArrayList<User> {
 
 suspend fun getCraftsmans(): ArrayList<User> {
     val craftsmansList: ArrayList<User> = ArrayList()
-    val userCollection = data.collection("Usuarios").get().await()
+    val userCollection = data.collection("Usuarios").whereEqualTo("isCraftsman", true).get().await()
     for (document in userCollection.documents) {
-        val isCraftsman = document.getBoolean("isCraftsman")!!
         val user = document.toObject<User>()
-        if (user != null && isCraftsman) {
+        if (user != null) {
             user.isCraftsman = true
             craftsmansList.add(user)
         }
