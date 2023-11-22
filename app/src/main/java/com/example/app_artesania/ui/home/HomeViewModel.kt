@@ -1,18 +1,38 @@
 package com.example.app_artesania.ui.home
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.app_artesania.R
+import com.example.app_artesania.data.TemporalDatabase
+import com.example.app_artesania.data.getCraftsmans
 import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
+import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
 
-    data class Category(
-        val name: String,
-        val img: Int
-    )
+    private val _craftsmansDB = MutableLiveData<List<User>?>()
+    val craftsmansDB: MutableLiveData<List<User>?> = _craftsmansDB
 
-    data class Craftsman(
+
+    init {
+        loadCraftmans()
+    }
+
+    private fun loadCraftmans() {
+        try {
+            viewModelScope.launch {
+                _craftsmansDB.value = getCraftsmans()
+                println(craftsmansDB.value)
+            }
+        }
+        catch (e: Exception){
+            println("Error")
+        }
+    }
+
+    data class Category(
         val name: String,
         val img: Int
     )
@@ -28,11 +48,7 @@ class HomeViewModel : ViewModel() {
         )
     )
 
-    val products = ArrayList(
-        listOf(
-            Product.p1, Product.p2, Product.p3, Product.p4, Product.p5, Product.p6
-        )
-    )
+    val products = TemporalDatabase.products
 
     val products2 = ArrayList(
         listOf(

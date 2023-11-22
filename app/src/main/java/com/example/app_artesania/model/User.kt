@@ -5,12 +5,13 @@ import com.example.app_artesania.R
 data class User(
     val name: String,
     val email: String,
-    val isCraftsman: Boolean,
+    var isCraftsman: Boolean,
     val idCraftsman: String,
     val image: Any, //Cambiar cuando firebase esté listo
-    val orders: ArrayList<String> = ArrayList<String>(),
-    val products: ArrayList<String> = ArrayList<String>()
+    val orders: ArrayList<String>,
+    val products: ArrayList<String>
 ){
+    constructor() : this("", "", false, "", "", ArrayList(), ArrayList())
     companion object {
         val a1: User = User(
             "Valentina",
