@@ -4,7 +4,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.app_artesania.R
+import androidx.compose.runtime.LaunchedEffect
+import com.example.app_artesania.data.SingOut
 import com.example.app_artesania.data.TemporalDatabase
+import com.example.app_artesania.data.currentUser
+import com.example.app_artesania.data.currentUserEmail
 import com.example.app_artesania.data.getCraftsmans
 import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
@@ -15,9 +19,16 @@ class HomeViewModel : ViewModel() {
     private val _craftsmansDB = MutableLiveData<List<User>?>()
     val craftsmansDB: MutableLiveData<List<User>?> = _craftsmansDB
 
-
     init {
+        prueba()
         loadCraftmans()
+    }
+
+    private fun prueba() {
+        val algo = currentUser()
+
+        val otro = currentUserEmail()
+
     }
 
     private fun loadCraftmans() {

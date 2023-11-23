@@ -8,10 +8,26 @@ import kotlinx.coroutines.tasks.await
 private val data = FirebaseFirestore.getInstance()
 
 suspend fun notexistUser(email:String): Boolean{
-    val exist = data.collection("Usuarios")
+    val exist = data.collection("Users")
         .whereEqualTo("email", email)
         .get().await().isEmpty
     return exist
+}
+
+suspend fun getUser(email: String): User{
+    val usersList: ArrayList<User> = ArrayList()
+    val users = data.collection("Users")
+        .whereEqualTo("email", email)
+        .get().await()
+    for (document in users.documents) {
+        val user = document.toObject<User>()
+        if (user != null) {
+            user.isCraftsman = document.getBoolean("isCraftsman")!!
+            usersList.add(user)
+        }
+    }
+    return usersList[0]
+
 }
 
 suspend fun newUser(newuser: User){
@@ -24,12 +40,12 @@ suspend fun newUser(newuser: User){
         "orders" to newuser.orders,
         "products" to newuser.products
     )
-    data.collection("Usuarios").add(userHashMap)
+    data.collection("Users").add(userHashMap)
 }
 
 suspend fun getUsers(): ArrayList<User> {
     val usersList: ArrayList<User> = ArrayList()
-    val userCollection = data.collection("Usuarios").get().await()
+    val userCollection = data.collection("Users").get().await()
     for (document in userCollection.documents) {
         val user = document.toObject<User>()
         if (user != null) {
@@ -42,7 +58,7 @@ suspend fun getUsers(): ArrayList<User> {
 
 suspend fun getCraftsmans(): ArrayList<User> {
     val craftsmansList: ArrayList<User> = ArrayList()
-    val userCollection = data.collection("Usuarios").whereEqualTo("isCraftsman", true).get().await()
+    val userCollection = data.collection("Users").whereEqualTo("isCraftsman", true).get().await()
     for (document in userCollection.documents) {
         val user = document.toObject<User>()
         if (user != null) {

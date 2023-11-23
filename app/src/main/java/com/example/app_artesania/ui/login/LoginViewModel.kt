@@ -5,12 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import com.example.app_artesania.data.currentUser
 import com.example.app_artesania.data.notexistUser
 import com.example.app_artesania.data.signIn
 import com.example.app_artesania.navigation.AppScreens
 
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel(navController: NavController) : ViewModel() {
 
     private val _email = MutableLiveData<String>()
     val email: LiveData<String> = _email
@@ -26,6 +27,13 @@ class LoginViewModel : ViewModel() {
 
     private val _errorEmail = MutableLiveData<Boolean>()
     val errorEmail: LiveData<Boolean> = _errorEmail
+
+    init {
+        val login = currentUser()
+        if (login){
+            navController.navigate(route = AppScreens.HomeScreen.route)
+        }
+    }
 
     fun onLoginChanged(email: String, password: String) {
         _email.value = email

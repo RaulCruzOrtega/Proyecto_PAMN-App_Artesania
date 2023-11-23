@@ -42,3 +42,19 @@ suspend fun signIn(email: String, password: String): Boolean {
         false
     }
 }
+
+fun currentUser(): Boolean{
+    if (auth.currentUser != null){
+        return true
+    } else {
+        return false
+    }
+}
+
+fun currentUserEmail(): String?{
+    return auth.currentUser?.email
+}
+
+fun SingOut(){
+    auth.signOut()
+}
