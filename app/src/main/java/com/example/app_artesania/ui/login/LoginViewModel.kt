@@ -4,11 +4,16 @@ import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.app_artesania.data.currentUser
+import com.example.app_artesania.data.currentUserEmail
+import com.example.app_artesania.data.getUser
 import com.example.app_artesania.data.notexistUser
 import com.example.app_artesania.data.signIn
+import com.example.app_artesania.model.DataRepository
 import com.example.app_artesania.navigation.AppScreens
+import kotlinx.coroutines.launch
 
 
 class LoginViewModel(navController: NavController) : ViewModel() {
@@ -31,7 +36,17 @@ class LoginViewModel(navController: NavController) : ViewModel() {
     init {
         val login = currentUser()
         if (login){
+            current_User_exist(navController)
+        }
+    }
+
+    fun current_User_exist(navController: NavController){
+        viewModelScope.launch {
+            val current_email = currentUserEmail()
+            val usuario = getUser(current_email!!)
+            DataRepository.setUser(usuario)
             navController.navigate(route = AppScreens.HomeScreen.route)
+
         }
     }
 
@@ -54,6 +69,8 @@ class LoginViewModel(navController: NavController) : ViewModel() {
         val no_exist_user = notexistUser(email.value!!)
         if (!no_exist_user) {
             if (loginCorrect) {
+                val usuario = getUser(email.value!!)
+                DataRepository.setUser(usuario)
                 navController.navigate(route = AppScreens.HomeScreen.route)
             } else {
                 _errorData.value = true

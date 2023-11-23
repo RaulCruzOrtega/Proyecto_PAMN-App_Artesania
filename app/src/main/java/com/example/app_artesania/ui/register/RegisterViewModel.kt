@@ -8,6 +8,7 @@ import androidx.navigation.NavController
 import com.example.app_artesania.data.createUser
 import com.example.app_artesania.data.newUser
 import com.example.app_artesania.data.notexistUser
+import com.example.app_artesania.model.DataRepository
 import com.example.app_artesania.model.User
 import com.example.app_artesania.navigation.AppScreens
 
@@ -110,6 +111,7 @@ class RegisterViewModel: ViewModel() {
                             image = "",
                             orders = ArrayList(),
                             products = ArrayList())
+                        DataRepository.setUser(new_user)
                         newUser(new_user)
                         navController.navigate(route = AppScreens.HomeScreen.route)
                     }
@@ -126,6 +128,7 @@ class RegisterViewModel: ViewModel() {
                             image = "",
                             orders = ArrayList(),
                             products = ArrayList())
+                        DataRepository.setUser(new_user)
                         newUser(new_user)
                         navController.navigate(route = AppScreens.HomeScreen.route)
                     }

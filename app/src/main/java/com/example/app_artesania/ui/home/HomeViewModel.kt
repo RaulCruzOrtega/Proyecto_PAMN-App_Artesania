@@ -10,6 +10,7 @@ import com.example.app_artesania.data.TemporalDatabase
 import com.example.app_artesania.data.currentUser
 import com.example.app_artesania.data.currentUserEmail
 import com.example.app_artesania.data.getCraftsmans
+import com.example.app_artesania.model.DataRepository
 import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
 import kotlinx.coroutines.launch
@@ -20,15 +21,7 @@ class HomeViewModel : ViewModel() {
     val craftsmansDB: MutableLiveData<List<User>?> = _craftsmansDB
 
     init {
-        prueba()
         loadCraftmans()
-    }
-
-    private fun prueba() {
-        val algo = currentUser()
-
-        val otro = currentUserEmail()
-
     }
 
     private fun loadCraftmans() {

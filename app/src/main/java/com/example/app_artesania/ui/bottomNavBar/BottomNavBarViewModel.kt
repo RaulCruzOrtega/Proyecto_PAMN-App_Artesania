@@ -4,8 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.app_artesania.data.currentUserEmail
-import com.example.app_artesania.data.getUser
+import com.example.app_artesania.model.DataRepository
 import com.example.app_artesania.model.ItemsBottomNav
 import com.example.app_artesania.model.User
 import kotlinx.coroutines.launch
@@ -19,10 +18,9 @@ class BottomNavBarViewModel : ViewModel() {
 
 
     init {
-        val email = currentUserEmail()
         viewModelScope.launch {
-            _user.value = getUser(email!!)
-            if (_user.value!!.isCraftsman){
+            val user = DataRepository.getUser()
+            if (user!!.isCraftsman){
                 _items.value = listOf(
                     ItemsBottomNav.homeIcon,
                     ItemsBottomNav.favsIcon,
