@@ -31,6 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.app_artesania.R
@@ -60,7 +61,7 @@ fun CraftsmanProfileScreen(viewModel: CraftsmanProfileViewModel, navController: 
             item(span = { GridItemSpan(2) }) {
                 Spacer(modifier = Modifier.padding(4.dp))
             }
-            item(span = { GridItemSpan(2) }) { Tabs() }
+            item(span = { GridItemSpan(2) }) { Tabs(viewModel, navController) }
             for (product in products) {
                 item(span = { GridItemSpan(1) }) { ProductSmallViewTemplate(product, 180, navController) }
             }
@@ -102,7 +103,7 @@ private fun ProfileHead(){
 }
 
 @Composable
-private fun Tabs() {
+private fun Tabs(viewModel: CraftsmanProfileViewModel, navController: NavController) {
     Row (
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
@@ -110,8 +111,8 @@ private fun Tabs() {
         Button(onClick = { /*TODO*/ }) {
             Text(text = "Editar Perfil")
         }
-        Button(onClick = { /*TODO*/ }) {
-            Text(text = "Notificaciones")
+        Button(onClick = { viewModel.cerrarSesión(navController) }) {
+            Text(text = "Cerrar Sesión")
         }
     }
     Spacer(modifier = Modifier.padding(8.dp))

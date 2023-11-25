@@ -11,6 +11,14 @@ data class User(
     val orders: ArrayList<String>,
     val products: ArrayList<String>
 ){
+    fun getisCraftsman(): Boolean{
+        return isCraftsman
+    }
+
+    fun setisCraftsman(newisCraftsman: Boolean){
+        isCraftsman = newisCraftsman
+    }
+
     constructor() : this("", "", false, "", "", ArrayList(), ArrayList())
     companion object {
         val a1: User = User(

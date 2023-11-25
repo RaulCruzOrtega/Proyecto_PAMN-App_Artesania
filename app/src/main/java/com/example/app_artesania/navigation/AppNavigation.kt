@@ -30,6 +30,7 @@ fun AppNavigation() {
             RegisterScreen(RegisterViewModel(), navControler)
         }
         composable(route = AppScreens.HomeScreen.route){
+            println("Redirigiendo a HOME")
             HomeScreen(HomeViewModel(), navControler)
         }
         composable(route = AppScreens.CraftsmanProfileScreen.route){

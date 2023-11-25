@@ -25,11 +25,16 @@ class HomeViewModel : ViewModel() {
     val categories: LiveData<ArrayList<Categories>> = _categories
 
     init {
+        lanzarmiento()
+        println("OTRAVEZ")
+    }
+
+    private fun lanzarmiento() {
         try {
             _loadState.value = LoadState.LOADING
             loadCraftmans()
             loadCategories()
-            _loadState.value = LoadState.SUCCESS
+
         }
         catch (e: Exception){
             println("Error ${e.message}")
@@ -54,6 +59,7 @@ class HomeViewModel : ViewModel() {
             viewModelScope.launch {
                 _craftsmansDB.value = getCraftsmans()
                 println(craftsmansDB.value)
+                _loadState.value = LoadState.SUCCESS
             }
         }
         catch (e: Exception){

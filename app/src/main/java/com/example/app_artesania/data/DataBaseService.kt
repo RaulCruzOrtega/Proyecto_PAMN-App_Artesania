@@ -66,5 +66,6 @@ suspend fun getCraftsmans(): ArrayList<User> {
             craftsmansList.add(user)
         }
     }
+    println("SE HA EJECUTADO")
     return craftsmansList
 }

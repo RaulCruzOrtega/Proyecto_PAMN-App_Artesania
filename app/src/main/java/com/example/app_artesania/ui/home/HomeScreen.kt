@@ -1,6 +1,8 @@
 package com.example.app_artesania.ui.home
 
 import android.annotation.SuppressLint
+import androidx.activity.ComponentActivity
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -45,25 +47,34 @@ import com.example.app_artesania.ui.bottomNavBar.BottomNavBar
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
 import com.example.app_artesania.ui.templates.ProductSmallViewTemplate
 import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
+fun HomeScreen(viewModel: HomeViewModel, navController: NavController){
+
     val categories: ArrayList<Categories> = viewModel.categories.value!!
     val products: ArrayList<Product> = viewModel.products
     val products2: ArrayList<Product> = viewModel.products2
     val craftsmans: ArrayList<User> = viewModel.craftsmans
+
     val craftsmansDB by viewModel.craftsmansDB.observeAsState(ArrayList())
+
     val loadState by viewModel.loadState.observeAsState(LoadState.LOADING)
+
+
+
 
     when (loadState) {
         LoadState.LOADING -> {
             // Puedes mostrar un indicador de carga
             Text(text = "Cargando")
+            println("Esperando")
         }
 
         LoadState.SUCCESS -> {
+            println("SE PRESENTA")
             Scaffold (
                 bottomBar = {
                     BottomNavBar(BottomNavBarViewModel(), navController)
@@ -143,6 +154,7 @@ fun CategoriesSlider(categories: ArrayList<Categories>){
 
 @Composable
 fun CraftsmanSlider(craftsmans: ArrayList<User>){
+    println("SE COLOCA LOS ARTESANOS")
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier

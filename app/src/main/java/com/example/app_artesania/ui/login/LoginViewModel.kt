@@ -45,8 +45,9 @@ class LoginViewModel(navController: NavController) : ViewModel() {
             val current_email = currentUserEmail()
             val usuario = getUser(current_email!!)
             DataRepository.setUser(usuario)
-            navController.navigate(route = AppScreens.HomeScreen.route)
-
+            if (navController.currentDestination?.route != AppScreens.HomeScreen.route) {
+                navController.navigate(route = AppScreens.HomeScreen.route)
+            }
         }
     }
 
@@ -71,7 +72,9 @@ class LoginViewModel(navController: NavController) : ViewModel() {
             if (loginCorrect) {
                 val usuario = getUser(email.value!!)
                 DataRepository.setUser(usuario)
-                navController.navigate(route = AppScreens.HomeScreen.route)
+                if (navController.currentDestination?.route != AppScreens.HomeScreen.route) {
+                    navController.navigate(route = AppScreens.HomeScreen.route)
+                }
             } else {
                 _errorData.value = true
             }
