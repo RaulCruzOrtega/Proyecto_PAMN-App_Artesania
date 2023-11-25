@@ -4,24 +4,49 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.app_artesania.R
-import androidx.compose.runtime.LaunchedEffect
-import com.example.app_artesania.data.SingOut
+import androidx.lifecycle.LiveData
 import com.example.app_artesania.data.TemporalDatabase
-import com.example.app_artesania.data.currentUser
-import com.example.app_artesania.data.currentUserEmail
 import com.example.app_artesania.data.getCraftsmans
-import com.example.app_artesania.model.DataRepository
+import com.example.app_artesania.model.Categories
+import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
 import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
 
-    private val _craftsmansDB = MutableLiveData<List<User>?>()
-    val craftsmansDB: MutableLiveData<List<User>?> = _craftsmansDB
+    private val _loadState = MutableLiveData<LoadState>()
+    val loadState: MutableLiveData<LoadState> = _loadState
+
+    private val _craftsmansDB = MutableLiveData<ArrayList<User>?>()
+    val craftsmansDB: LiveData<ArrayList<User>?> = _craftsmansDB
+
+    private val _categories = MutableLiveData<ArrayList<Categories>>()
+    val categories: LiveData<ArrayList<Categories>> = _categories
 
     init {
-        loadCraftmans()
+        try {
+            _loadState.value = LoadState.LOADING
+            loadCraftmans()
+            loadCategories()
+            _loadState.value = LoadState.SUCCESS
+        }
+        catch (e: Exception){
+            println("Error ${e.message}")
+            _loadState.value = LoadState.ERROR
+        }
+    }
+
+    private fun loadCategories() {
+        _categories.value = arrayListOf<Categories>(
+            Categories.Alfarería,
+            Categories.Cestería,
+            Categories.Joyería,
+            Categories.Vestimenta,
+            Categories.Juguetes,
+            Categories.Cuchillería,
+            Categories.Zapateria
+        )
     }
 
     private fun loadCraftmans() {
@@ -32,25 +57,9 @@ class HomeViewModel : ViewModel() {
             }
         }
         catch (e: Exception){
-            println("Error")
+            println("Error load craftmans")
         }
     }
-
-    data class Category(
-        val name: String,
-        val img: Int
-    )
-
-    val categories = ArrayList(
-        listOf(
-            Category("Textiles", R.drawable.ropa),
-            Category("Cerámica", R.drawable.ceramica),
-            Category("Esculturas", R.drawable.escultura),
-            Category("Joyas", R.drawable.joyas),
-            Category("Juguetes", R.drawable.juguete),
-            Category("Cestería", R.drawable.cesta)
-        )
-    )
 
     val products = TemporalDatabase.products
 
