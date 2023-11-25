@@ -3,6 +3,7 @@ package com.example.app_artesania.data
 import com.example.app_artesania.model.User
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 
 private val data = FirebaseFirestore.getInstance()

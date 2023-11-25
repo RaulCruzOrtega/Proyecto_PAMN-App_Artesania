@@ -11,6 +11,7 @@ import com.example.app_artesania.model.Categories
 import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
@@ -59,6 +60,7 @@ class HomeViewModel : ViewModel() {
             viewModelScope.launch {
                 _craftsmansDB.value = getCraftsmans()
                 println(craftsmansDB.value)
+                delay(500)
                 _loadState.value = LoadState.SUCCESS
             }
         }
