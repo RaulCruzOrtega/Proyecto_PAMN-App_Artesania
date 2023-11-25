@@ -3,10 +3,10 @@ package com.example.app_artesania.ui.home
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.app_artesania.R
 import androidx.lifecycle.LiveData
 import com.example.app_artesania.data.TemporalDatabase
 import com.example.app_artesania.data.getCraftsmans
+import com.example.app_artesania.data.getProducts
 import com.example.app_artesania.model.Categories
 import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.Product
@@ -22,19 +22,23 @@ class HomeViewModel : ViewModel() {
     private val _craftsmansDB = MutableLiveData<ArrayList<User>?>()
     val craftsmansDB: LiveData<ArrayList<User>?> = _craftsmansDB
 
+    private val _productsDB = MutableLiveData<ArrayList<Product>?>()
+    val productsDB: LiveData<ArrayList<Product>?> = _productsDB
+
     private val _categories = MutableLiveData<ArrayList<Categories>>()
     val categories: LiveData<ArrayList<Categories>> = _categories
 
     init {
-        lanzarmiento()
+        lanzamiento()
         println("OTRAVEZ")
     }
 
-    private fun lanzarmiento() {
+    private fun lanzamiento() {
         try {
             _loadState.value = LoadState.LOADING
             loadCraftmans()
             loadCategories()
+            loadProducts()
 
         }
         catch (e: Exception){
@@ -68,6 +72,21 @@ class HomeViewModel : ViewModel() {
             println("Error load craftmans")
         }
     }
+
+    private fun loadProducts() {
+        try {
+            viewModelScope.launch {
+                _productsDB.value = getProducts()
+                println("Products: " + productsDB.value)
+                _loadState.value = LoadState.SUCCESS
+            }
+        }
+        catch (e: Exception){
+            println("Error load craftmans")
+        }
+    }
+
+
 
     val products = TemporalDatabase.products
 

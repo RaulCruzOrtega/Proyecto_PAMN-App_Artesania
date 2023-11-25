@@ -13,12 +13,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.rememberImagePainter
 import com.example.app_artesania.model.Product
 import com.example.app_artesania.navigation.AppScreens
 
@@ -26,10 +26,16 @@ import com.example.app_artesania.navigation.AppScreens
 fun ProductSmallViewTemplate(product: Product, height: Int, navController: NavController){
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.clickable { navController.navigate(route = AppScreens.ProductScreen.route + "/${product.id}") }
+        modifier = Modifier.clickable {
+            navController.navigate(route = AppScreens.ProductScreen.route + "/${product.id}")
+        }
     ) {
+        var image: Any = product.image
+        if(product.image == ""){
+            image = "https://firebasestorage.googleapis.com/v0/b/app-artesania.appspot.com/o/ImagenRota.jpg?alt=media&token=14b0a319-edd5-4a75-879c-3d6f1150b2de"
+        }
         Image(
-            painter = painterResource(id = product.image as Int),
+            painter = rememberImagePainter(data = image),
             contentDescription = "Producto ${product.name}",
             alignment = Alignment.Center,
             modifier = Modifier

@@ -1,5 +1,6 @@
 package com.example.app_artesania.data
 
+import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
@@ -28,7 +29,6 @@ suspend fun getUser(email: String): User{
         }
     }
     return usersList[0]
-
 }
 
 suspend fun newUser(newuser: User){
@@ -69,4 +69,16 @@ suspend fun getCraftsmans(): ArrayList<User> {
     }
     println("SE HA EJECUTADO")
     return craftsmansList
+}
+
+suspend fun getProducts(): ArrayList<Product> {
+    val productsList: ArrayList<Product> = ArrayList()
+    val productCollection = data.collection("Articulos").get().await()
+    for (document in productCollection.documents) {
+        val product = document.toObject<Product>()
+        if (product != null) {
+            productsList.add(product)
+        }
+    }
+    return productsList
 }

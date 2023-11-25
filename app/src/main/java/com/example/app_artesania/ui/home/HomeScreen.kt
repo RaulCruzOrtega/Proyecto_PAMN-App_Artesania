@@ -62,9 +62,9 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController){
     val categories: ArrayList<Categories> = viewModel.categories.value!!
     val products: ArrayList<Product> = viewModel.products
     val products2: ArrayList<Product> = viewModel.products2
-    val craftsmans: ArrayList<User> = viewModel.craftsmans
 
     val craftsmansDB by viewModel.craftsmansDB.observeAsState(ArrayList())
+    val productsDB by viewModel.productsDB.observeAsState(ArrayList())
 
     val loadState by viewModel.loadState.observeAsState(LoadState.LOADING)
 
@@ -111,8 +111,8 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController){
                     item(span = { GridItemSpan(2) }) {
                         Spacer(modifier = Modifier.padding(4.dp))
                     }
-                    item(span = { GridItemSpan(2) }) { ProductsSlider("Productos Nuevos", products, navController) }
-                    item(span = { GridItemSpan(2) }) { ProductsSlider("Productos en Tendencia", products2, navController) }
+                    item(span = { GridItemSpan(2) }) { ProductsSlider("Productos Nuevos", productsDB!!, navController) }
+                    item(span = { GridItemSpan(2) }) { ProductsSlider("Productos en Tendencia", productsDB!!, navController) }
                     item(span = { GridItemSpan(2) }) {
                         Spacer(modifier = Modifier.padding(4.dp))
                     }
@@ -124,7 +124,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController){
                             modifier = Modifier.padding(8.dp)
                         )
                     }
-                    for (product in products) {
+                    for (product in productsDB!!) {
                         item(span = { GridItemSpan(1) }) {ProductSmallViewTemplate(product, 180, navController) }
                     }
                     item(span = { GridItemSpan(2) }) {
@@ -199,7 +199,6 @@ fun CraftsmanSlider(craftsmans: ArrayList<User>){
                         image = "https://firebasestorage.googleapis.com/v0/b/app-artesania.appspot.com/o/usericon.png?alt=media&token=3b8d9258-3e22-49c8-ad51-47776f99f5a2"
                     }
                     Image(
-
                         painter = rememberImagePainter(data = image),
                         contentDescription = "Artesano $index: $item",
                         modifier = Modifier
