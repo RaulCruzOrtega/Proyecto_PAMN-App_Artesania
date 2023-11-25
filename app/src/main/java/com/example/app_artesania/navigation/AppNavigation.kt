@@ -9,6 +9,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.app_artesania.ui.craftsmanProfile.CraftsmanProfileScreen
 import com.example.app_artesania.ui.craftsmanProfile.CraftsmanProfileViewModel
+import com.example.app_artesania.ui.createProduct.CreateProduct
+import com.example.app_artesania.ui.createProduct.CreateProductViewModel
 import com.example.app_artesania.ui.home.HomeScreen
 import com.example.app_artesania.ui.home.HomeViewModel
 import com.example.app_artesania.ui.login.LoginScreen
@@ -32,6 +34,9 @@ fun AppNavigation() {
         composable(route = AppScreens.HomeScreen.route){
             println("Redirigiendo a HOME")
             HomeScreen(HomeViewModel(), navControler)
+        }
+        composable(route = AppScreens.CreateProductScreen.route){
+            CreateProduct(CreateProductViewModel(), navControler)
         }
         composable(route = AppScreens.CraftsmanProfileScreen.route){
             CraftsmanProfileScreen(CraftsmanProfileViewModel(), navControler)

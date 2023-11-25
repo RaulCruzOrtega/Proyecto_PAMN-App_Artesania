@@ -24,7 +24,7 @@ class BottomNavBarViewModel : ViewModel() {
                 _items.value = listOf(
                     ItemsBottomNav.homeIcon,
                     ItemsBottomNav.favsIcon,
-                    ItemsBottomNav.favs2Icon,
+                    ItemsBottomNav.createProductIcon,
                     ItemsBottomNav.ordersIcon,
                     ItemsBottomNav.userIcon
                 )

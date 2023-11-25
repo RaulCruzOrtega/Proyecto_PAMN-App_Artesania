@@ -22,6 +22,7 @@ import com.google.firebase.firestore.firestore
 
 class MainActivity : ComponentActivity() {
 
+    private val viewModel by viewModels<HomeViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -31,7 +32,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Log.d("INICIANDO", "Está INICIANDO LA COSA")
+                    println("INICIANDO")
                     AppNavigation()
                 }
             }

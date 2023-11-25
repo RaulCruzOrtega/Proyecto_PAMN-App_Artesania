@@ -10,22 +10,22 @@ sealed class ItemsBottomNav(
 ){
     object homeIcon: ItemsBottomNav(
         R.drawable.homeicon,
-        "Item1",
+        "HomeIcon",
         AppScreens.HomeScreen.route
     )
     object favsIcon: ItemsBottomNav(
         R.drawable.hearticon,
-        "Item2",
+        "FavoIcon",
         AppScreens.ProductScreen.route + "/1"
     )
-    object favs2Icon: ItemsBottomNav(
-        R.drawable.hearticon,
-        "Item2",
-        AppScreens.ProductScreen.route + "/1"
+    object createProductIcon: ItemsBottomNav(
+        R.drawable.crear_producto,
+        "CreateProductIcon",
+        AppScreens.CreateProductScreen.route
     )
     object ordersIcon: ItemsBottomNav(
         R.drawable.ordericon,
-        "Item3",
+        "Orders",
         AppScreens.RegisterScreen.route
     )
 
