@@ -107,3 +107,17 @@ suspend fun getProduct(id: String): Product {
     }
     return product!!
 }
+
+suspend fun getProducts_Craftsman(idcraftsman: String): ArrayList<Product> {
+    val productsList: ArrayList<Product> = ArrayList()
+    val productCollection = data.collection("Articulos")
+        .whereEqualTo("idCraftsman", idcraftsman).get().await()
+    for (document in productCollection.documents) {
+        val product = document.toObject<Product>()
+        if (product != null) {
+            product.id = document.id
+            productsList.add(product)
+        }
+    }
+    return productsList
+}

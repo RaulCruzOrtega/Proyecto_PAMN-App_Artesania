@@ -7,8 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.app_artesania.ui.craftsmanProfile.CraftsmanProfileScreen
-import com.example.app_artesania.ui.craftsmanProfile.CraftsmanProfileViewModel
 import com.example.app_artesania.ui.createProduct.CreateProduct
 import com.example.app_artesania.ui.createProduct.CreateProductViewModel
 import com.example.app_artesania.ui.home.HomeScreen
@@ -39,9 +37,6 @@ fun AppNavigation() {
         }
         composable(route = AppScreens.CreateProductScreen.route){
             CreateProduct(CreateProductViewModel(), navControler)
-        }
-        composable(route = AppScreens.CraftsmanProfileScreen.route){
-            CraftsmanProfileScreen(CraftsmanProfileViewModel(), navControler)
         }
         composable(route = AppScreens.UserProfileScreen.route){
             UserProfileScreen(UserProfileViewModel(), navControler)
