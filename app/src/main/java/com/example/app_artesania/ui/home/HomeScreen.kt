@@ -50,6 +50,8 @@ import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
 import com.example.app_artesania.ui.templates.ProductSmallViewTemplate
 import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 import com.example.app_artesania.model.Category
+import com.example.app_artesania.ui.templates.DefaultTopBar
+import com.example.app_artesania.ui.templates.SimpleTopNavBar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -84,6 +86,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController){
 
             println("SE PRESENTA")
             Scaffold (
+                topBar = { DefaultTopBar(navController = navController) },
                 bottomBar = {
                     BottomNavBar(BottomNavBarViewModel(), navController)
                 }
@@ -93,6 +96,9 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController){
                     horizontalArrangement = Arrangement.Center,
                     modifier = Modifier.fillMaxWidth()
                 ) {
+                    item(span = { GridItemSpan(2) }) {
+                        Spacer(modifier = Modifier.padding(35.dp))
+                    }
                     item(span = { GridItemSpan(2) }) { CategoriesSlider(categories) }
                     item(span = { GridItemSpan(2) }) {
                         Spacer(modifier = Modifier.padding(8.dp))
