@@ -24,6 +24,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,7 +33,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -57,15 +57,9 @@ import com.example.app_artesania.model.Category
 fun HomeScreen(viewModel: HomeViewModel, navController: NavController){
 
     val categories: ArrayList<Category> = viewModel.categories.value!!
-    val products: ArrayList<Product> = viewModel.products
-    val products2: ArrayList<Product> = viewModel.products2
-
     val craftsmansDB by viewModel.craftsmansDB.observeAsState(ArrayList())
     val productsDB by viewModel.productsDB.observeAsState(ArrayList())
-
     val loadState by viewModel.loadState.observeAsState(LoadState.LOADING)
-
-
 
 
     when (loadState) {
@@ -74,14 +68,13 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController){
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Gray)
             ) {
                 // Muestra el círculo de carga
                 CircularProgressIndicator(
                     modifier = Modifier
                         .size(50.dp)
                         .align(Alignment.Center),
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.primary,
                 )
             }
             println("Esperando")
@@ -116,7 +109,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController){
                     item(span = { GridItemSpan(2) }) {
                         Text(
                             text = "Otros Productos",
-                            color = Color(android.graphics.Color.parseColor("#4c2c17")),
+                            color = MaterialTheme.colorScheme.primary,
                             fontSize = 20.sp,
                             modifier = Modifier.padding(8.dp)
                         )
@@ -151,7 +144,7 @@ fun CategoriesSlider(categories: ArrayList<Category>){
                 Icon(
                     painter = painterResource(id = categories[index].image),
                     contentDescription = "Categoría: $item",
-                    tint = Color(android.graphics.Color.parseColor("#4c2c17")),
+                    tint = MaterialTheme.colorScheme.secondary,
                     modifier = Modifier
                         .height(60.dp)
                         .width(60.dp)
@@ -160,7 +153,7 @@ fun CategoriesSlider(categories: ArrayList<Category>){
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
                     text = categories[index].categoryType.name,
-                    color = Color(android.graphics.Color.parseColor("#4c2c17"))
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
         }
@@ -180,7 +173,7 @@ fun CraftsmanSlider(craftsmans: ArrayList<User>){
             text = "Artesanos",
             fontSize = 20.sp,
             textAlign = TextAlign.Center,
-            color = Color(android.graphics.Color.parseColor("#4c2c17"))
+            color = MaterialTheme.colorScheme.primary
         )
         LazyRow {
             itemsIndexed(craftsmans) { index, item ->
@@ -206,7 +199,7 @@ fun CraftsmanSlider(craftsmans: ArrayList<User>){
 
                     Text(
                         text = craftsmans[index].name,
-                        color = Color(android.graphics.Color.parseColor("#4c2c17")),
+                        color = MaterialTheme.colorScheme.primary,
                         textAlign = TextAlign.Center,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -228,7 +221,7 @@ fun ProductsSlider(title: String, products: ArrayList<Product>, navController: N
         Text(
             text = title,
             fontSize = 20.sp,
-            color = Color(android.graphics.Color.parseColor("#4c2c17"))
+            color = MaterialTheme.colorScheme.primary
         )
         Spacer(modifier = Modifier.height(5.dp))
         LazyRow {

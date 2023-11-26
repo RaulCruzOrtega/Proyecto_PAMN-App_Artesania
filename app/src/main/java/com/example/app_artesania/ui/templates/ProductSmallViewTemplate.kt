@@ -7,12 +7,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -51,7 +51,7 @@ fun ProductSmallViewTemplate(product: Product, height: Int, navController: NavCo
         ) {
             Text(
                 text = product.name,
-                color = Color(android.graphics.Color.parseColor("#4c2c17")),
+                color = MaterialTheme.colorScheme.primary,
                 fontSize = 16.sp,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
@@ -60,7 +60,7 @@ fun ProductSmallViewTemplate(product: Product, height: Int, navController: NavCo
             )
             Text(
                 text = product.price.toString() + " €",
-                color = Color(android.graphics.Color.parseColor("#4a8cb0")),
+                color = MaterialTheme.colorScheme.secondary,
                 fontSize = 14.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,

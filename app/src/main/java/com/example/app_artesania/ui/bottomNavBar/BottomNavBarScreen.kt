@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
@@ -24,13 +25,13 @@ fun BottomNavBar(viewModel: BottomNavBarViewModel, navController: NavController)
     val items: List<ItemsBottomNav> by viewModel.items.observeAsState(ArrayList())
 
     BottomAppBar(
-        containerColor = Color(android.graphics.Color.parseColor("#4c2c17")),
+        containerColor = MaterialTheme.colorScheme.primary,
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp),
     ) {
         NavigationBar(
-            containerColor = Color(android.graphics.Color.parseColor("#4c2c17"))
+            containerColor = MaterialTheme.colorScheme.primary
         ) {
             items.forEach {item->
                 NavigationBarItem(

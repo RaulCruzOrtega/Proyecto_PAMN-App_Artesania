@@ -22,8 +22,8 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
+    primary = MainColor,
+    secondary = SecondColor,
     tertiary = Pink40
 
     /* Other default colors to override
@@ -41,9 +41,10 @@ private val LightColorScheme = lightColorScheme(
 fun App_ArtesaniaTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    // dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
+    /**
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
@@ -53,6 +54,8 @@ fun App_ArtesaniaTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
+    */
+    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
