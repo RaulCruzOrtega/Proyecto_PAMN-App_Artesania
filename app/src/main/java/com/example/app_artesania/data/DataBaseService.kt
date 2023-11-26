@@ -2,6 +2,7 @@ package com.example.app_artesania.data
 
 import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
+import com.example.app_artesania.model.newProducto
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.delay
@@ -120,4 +121,16 @@ suspend fun getProducts_Craftsman(idcraftsman: String): ArrayList<Product> {
         }
     }
     return productsList
+}
+
+suspend fun newProduct(newProduct: newProducto){
+    val productHashMap = hashMapOf(
+        "name" to newProduct.name,
+        "idCraftsman" to newProduct.idCraftsman,
+        "image" to newProduct.image,
+        "price" to newProduct.price,
+        "category" to newProduct.category,
+        "description" to newProduct.description
+    )
+    data.collection("Articulos").add(productHashMap)
 }

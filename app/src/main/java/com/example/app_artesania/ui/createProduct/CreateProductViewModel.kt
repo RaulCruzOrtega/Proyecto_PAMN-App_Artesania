@@ -4,7 +4,14 @@ import android.media.MediaRouter.RouteCategory
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
+import com.example.app_artesania.data.newProduct
 import com.example.app_artesania.model.Category
+import com.example.app_artesania.model.DataRepository
+import com.example.app_artesania.model.newProducto
+import com.example.app_artesania.navigation.AppScreens
+import kotlinx.coroutines.launch
 
 class CreateProductViewModel: ViewModel() {
     private val _name = MutableLiveData<String>()
@@ -34,4 +41,22 @@ class CreateProductViewModel: ViewModel() {
             }
         }
     }
+
+    fun crearProducto(navController: NavController){
+        val new_producto: newProducto = newProducto(
+            name = name.value!!,
+            image = "",
+            price = price.value!!.toDouble(),
+            description = description.value!!,
+            category = category.value!!.categoryType.name,
+            idCraftsman = DataRepository.getUser()!!.idCraftsman
+        )
+        viewModelScope.launch { newProduct(new_producto) }
+        _name.value = ""
+        _price.value = ""
+        _category.value = Category.Alfarería
+        _description.value = ""
+        navController.navigate(route = AppScreens.UserProfileScreen.route)
+    }
+
 }

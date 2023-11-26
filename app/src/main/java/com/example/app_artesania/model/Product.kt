@@ -21,3 +21,12 @@ data class Product(
         val p6: Product = Product("6","Adasdjas", R.drawable.producto5, 34.00, "Descripción", "123ABC")
     }
 }
+
+data class newProducto(
+    val name: String,
+    val image: Any, //Cambiar cuando firebase esté listo
+    val price: Double,
+    val category: String,
+    val description: String,
+    val idCraftsman: String
+)

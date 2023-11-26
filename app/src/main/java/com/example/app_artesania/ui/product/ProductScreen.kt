@@ -3,6 +3,7 @@ package com.example.app_artesania.ui.product
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
+import com.example.app_artesania.model.DataRepository
 import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
@@ -41,6 +43,7 @@ import com.example.app_artesania.ui.bottomNavBar.BottomNavBar
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
 import com.example.app_artesania.ui.templates.SimpleTopNavBar
 import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
+import com.example.app_artesania.ui.userProfile.UserProfileViewModel
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -80,7 +83,7 @@ fun ProductScreen(viewModel: ProductViewModel, navController: NavController) {
                 ) {
                     item {
                         Spacer(modifier = Modifier.padding(20.dp))
-                        ProductDetailView(product!!, craftsman!!)
+                        ProductDetailView(product!!, craftsman!!, viewModel, navController)
                         Spacer(modifier = Modifier.padding(20.dp))
                     }
                 }
@@ -92,7 +95,7 @@ fun ProductScreen(viewModel: ProductViewModel, navController: NavController) {
 
 
 @Composable
-fun ProductDetailView(product: Product, craftsman: User) {
+fun ProductDetailView(product: Product, craftsman: User, viewModel: ProductViewModel, navController: NavController) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -148,13 +151,33 @@ fun ProductDetailView(product: Product, craftsman: User) {
         )
 
         Spacer(modifier = Modifier.height(30.dp))
-        Button(
-            onClick = { /* TODO: Acción del botón */ },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Comprar")
+        if (DataRepository.getUser()!!.idCraftsman == craftsman.idCraftsman){
+            tabs(viewModel, navController)
+        } else {
+            Button(
+                onClick = { /* TODO: Acción del botón */ },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Comprar")
+            }
         }
     }
+}
+
+@Composable
+private fun tabs(viewModel: ProductViewModel , navController: NavController) {
+    Row (
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        Button(onClick = { /*TODO*/ }) {
+            Text(text = "Editar Producto")
+        }
+        Button(onClick = { /*TODO*/ }) {
+            Text(text = "Eliminar Producto")
+        }
+    }
+    Spacer(modifier = Modifier.padding(8.dp))
 }
 
 @Preview(showBackground = true)

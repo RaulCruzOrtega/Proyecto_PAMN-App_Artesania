@@ -1,6 +1,10 @@
 package com.example.app_artesania.ui.createProduct
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -44,6 +48,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.app_artesania.model.Category
 import com.example.app_artesania.model.Category.Alfarería.getCategories
@@ -90,7 +95,7 @@ fun CreateProductBody(viewModel: CreateProductViewModel, navController: NavContr
             Spacer(modifier = Modifier.padding(16.dp))
             ButtonProductImage()
             Spacer(modifier = Modifier.padding(16.dp))
-            ButtonCreateProduct()
+            ButtonCreateProduct(viewModel, navController)
         }
     }
 }
@@ -126,7 +131,9 @@ fun PriceField(price: String, onTextFieldChanged: (String) -> Unit) {
 fun DescriptionField(description: String, onTextFieldChanged: (String) -> Unit) {
     OutlinedTextField(
         value = description, onValueChange = { onTextFieldChanged(it) },
-        modifier = Modifier.fillMaxWidth() .padding(0.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(0.dp),
         label = { Text(text = "Descripción del Producto") },
         maxLines = 10
     )
@@ -187,14 +194,22 @@ fun DropdownCategoryMenu(selectedCategory: Category, onCategorySelected: (Catego
 
 @Composable
 fun ButtonProductImage() {
-    OutlinedButton(onClick = { /*TODO*/ }) {
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ){imageUri ->
+        imageUri?.let {
+            println(imageUri)
+        }
+    }
+
+    OutlinedButton(onClick = { galleryLauncher.launch("image/*") }) {
         Text(text = "Seleccionar Imagen de la Galería")
     }
 }
 
 @Composable
-fun ButtonCreateProduct() {
-    Button(onClick = { /*TODO*/ }, modifier = Modifier.fillMaxWidth()) {
+fun ButtonCreateProduct(viewModel: CreateProductViewModel, navController: NavController) {
+    Button(onClick = { viewModel.crearProducto(navController) }, modifier = Modifier.fillMaxWidth()) {
         Text(text = "Añadir Producto")
     }
 }
