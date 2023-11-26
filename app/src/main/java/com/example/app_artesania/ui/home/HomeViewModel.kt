@@ -36,9 +36,8 @@ class HomeViewModel : ViewModel() {
     private fun lanzamiento() {
         try {
             _loadState.value = LoadState.LOADING
-            loadCraftmans()
             loadCategories()
-            loadProducts()
+            loadData()
 
         }
         catch (e: Exception){
@@ -59,25 +58,14 @@ class HomeViewModel : ViewModel() {
         )
     }
 
-    private fun loadCraftmans() {
+    private fun loadData() {
         try {
             viewModelScope.launch {
                 _craftsmansDB.value = getCraftsmans()
-                println(craftsmansDB.value)
-                delay(500)
-                _loadState.value = LoadState.SUCCESS
-            }
-        }
-        catch (e: Exception){
-            println("Error load craftmans")
-        }
-    }
-
-    private fun loadProducts() {
-        try {
-            viewModelScope.launch {
                 _productsDB.value = getProducts()
+                println(craftsmansDB.value)
                 println("Products: " + productsDB.value)
+                delay(500)
                 _loadState.value = LoadState.SUCCESS
             }
         }

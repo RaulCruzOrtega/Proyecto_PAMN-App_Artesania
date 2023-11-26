@@ -71,14 +71,39 @@ suspend fun getCraftsmans(): ArrayList<User> {
     return craftsmansList
 }
 
+suspend fun getCraftsman(idcraftsman: String): User{
+    val usersList: ArrayList<User> = ArrayList()
+    val users = data.collection("Users")
+        .whereEqualTo("idCraftsman", idcraftsman)
+        .get().await()
+    for (document in users.documents) {
+        val user = document.toObject<User>()
+        if (user != null) {
+            user.isCraftsman = document.getBoolean("isCraftsman")!!
+            usersList.add(user)
+        }
+    }
+    return usersList[0]
+}
+
 suspend fun getProducts(): ArrayList<Product> {
     val productsList: ArrayList<Product> = ArrayList()
     val productCollection = data.collection("Articulos").get().await()
     for (document in productCollection.documents) {
         val product = document.toObject<Product>()
         if (product != null) {
+            product.id = document.id
             productsList.add(product)
         }
     }
     return productsList
+}
+
+suspend fun getProduct(id: String): Product {
+    val document = data.collection("Articulos").document(id).get().await()
+    val product = document.toObject<Product>()
+    if (product != null){
+        product.id = document.id
+    }
+    return product!!
 }
