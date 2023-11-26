@@ -31,7 +31,7 @@ sealed class ItemsBottomNav(
     object userIcon: ItemsBottomNav(
         R.drawable.usericon,
         "Item4",
-        AppScreens.CraftsmanProfileScreen.route
+        AppScreens.UserProfileScreen.route
     )
 }
 
