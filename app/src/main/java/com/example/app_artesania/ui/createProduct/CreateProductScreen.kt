@@ -1,9 +1,12 @@
 package com.example.app_artesania.ui.createProduct
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
@@ -19,6 +23,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -31,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.input.ImeAction
@@ -64,6 +70,7 @@ fun CreateProduct(viewModel: CreateProductViewModel, navController: NavControlle
 fun CreateProductBody(viewModel: CreateProductViewModel, navController: NavController){
     val name: String by viewModel.name.observeAsState(initial = "")
     val price: String by viewModel.price.observeAsState(initial = "")
+    val category: Category by viewModel.category.observeAsState(initial = Category.Alfarería)
     val description: String by viewModel.description.observeAsState(initial = "")
 
     LazyColumn (modifier = Modifier
@@ -73,13 +80,13 @@ fun CreateProductBody(viewModel: CreateProductViewModel, navController: NavContr
         item {
             Text(text = "Detalles del producto", fontSize = 20.sp)
             Spacer(modifier = Modifier.padding(16.dp))
-            NameField(name) { viewModel.onCreateProductChanged(it, price, description) }
+            NameField(name) { viewModel.onCreateProductChanged(it, price, category, description) }
             Spacer(modifier = Modifier.padding(16.dp))
-            PriceField(price) { viewModel.onCreateProductChanged(name, it, description) }
+            PriceField(price) { viewModel.onCreateProductChanged(name, it, category, description) }
             Spacer(modifier = Modifier.padding(16.dp))
-            DropdownCategoryMenu()
+            DropdownCategoryMenu(category) { viewModel.onCreateProductChanged(name, price, it, description) }
             Spacer(modifier = Modifier.padding(16.dp))
-            DescriptionField(description) { viewModel.onCreateProductChanged(name, price, it) }
+            DescriptionField(description) { viewModel.onCreateProductChanged(name, price, category, it) }
             Spacer(modifier = Modifier.padding(16.dp))
             ButtonProductImage()
             Spacer(modifier = Modifier.padding(16.dp))
@@ -125,55 +132,58 @@ fun DescriptionField(description: String, onTextFieldChanged: (String) -> Unit) 
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropdownCategoryMenu() {
+fun DropdownCategoryMenu(selectedCategory: Category, onCategorySelected: (Category) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     val categories: ArrayList<Category> = getCategories()
-    var selectedCategory by remember { mutableStateOf("") }
-    var textFiledSize by remember { mutableStateOf(Size.Zero) }
 
-    val icon = if (expanded) {
-        Icons.Filled.KeyboardArrowUp
-    } else {
-        Icons.Filled.KeyboardArrowDown
-    }
-
-    Column {
-        OutlinedTextField(
-            value = selectedCategory,
-            onValueChange = { selectedCategory = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(0.dp)
-                .onGloballyPositioned { coordinates ->
-                    textFiledSize = coordinates.size.toSize()
-                },
-            label = { Text(text = "Selecciona una Categoría") },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-            trailingIcon = {
-                Icon(icon, "", Modifier.clickable { expanded = !expanded } )
+    Box(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column {
+            Text("Selecciona una categoría")
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(1.dp, MaterialTheme.colorScheme.primary)
+                    .clickable { expanded = true }
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Text(
+                        text = selectedCategory.categoryType.name,
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 16.dp)
+                    )
+                    Icon(
+                        imageVector = Icons.Default.ArrowDropDown,
+                        contentDescription = null
+                    )
+                }
             }
 
-        )
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = Modifier
-                .width(textFiledSize.width.dp)
-        ) {
-            categories.forEach { label ->
-                DropdownMenuItem(
-                    text = { Text(text = label.categoryType.name) },
-                    onClick = {
-                        selectedCategory = label.categoryType.name
-                        expanded = false
-                    }
-                )
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                categories.forEach { category ->
+                    DropdownMenuItem(
+                        text = { Text(text = category.categoryType.name) },
+                        onClick = {
+                            onCategorySelected(category)
+                            expanded = false
+                        }
+                    )
+                }
             }
         }
     }
 }
+
 
 @Composable
 fun ButtonProductImage() {
