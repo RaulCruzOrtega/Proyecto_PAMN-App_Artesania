@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -36,6 +37,7 @@ import com.example.app_artesania.R
 import com.example.app_artesania.model.Product
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBar
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
+import com.example.app_artesania.ui.craftsmanProfile.CraftsmanProfileViewModel
 import com.example.app_artesania.ui.templates.ProductSmallViewTemplate
 import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 
@@ -62,7 +64,7 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
             item(span = { GridItemSpan(2) }) {
                 Spacer(modifier = Modifier.height(20.dp))
             }
-            item(span = { GridItemSpan(2) }) { tabs() }
+            item(span = { GridItemSpan(2) }) { tabs(viewModel,navController) }
             item(span = { GridItemSpan(2) }) {
                 Spacer(modifier = Modifier.height(20.dp))
             }
@@ -104,18 +106,19 @@ private fun profileHead() {
 }
 
 @Composable
-private fun tabs() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
+private fun tabs(viewModel: UserProfileViewModel, navController: NavController) {
+    Row (
+        modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        OutlinedButton(onClick = { /*TODO*/ }) {
-            Text("Editar Perfil")
+        Button(onClick = { /*TODO*/ }) {
+            Text(text = "Editar Perfil")
         }
-
+        Button(onClick = { viewModel.cerrarSesión(navController) }) {
+            Text(text = "Cerrar Sesión")
+        }
     }
+    Spacer(modifier = Modifier.padding(8.dp))
 }
 
 @Preview(showBackground = true)
