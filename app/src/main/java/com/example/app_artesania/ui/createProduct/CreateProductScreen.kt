@@ -14,6 +14,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,7 +22,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -35,6 +35,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import androidx.navigation.NavController
 import com.example.app_artesania.model.Category
@@ -58,7 +59,6 @@ fun CreateProduct(viewModel: CreateProductViewModel, navController: NavControlle
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateProductBody(viewModel: CreateProductViewModel, navController: NavController){
     val name: String by viewModel.name.observeAsState(initial = "")
@@ -67,20 +67,21 @@ fun CreateProductBody(viewModel: CreateProductViewModel, navController: NavContr
 
     LazyColumn (modifier = Modifier
         .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally)
+        horizontalAlignment = Alignment.Start)
     {
         item {
-            Text(text = "Agregar un nuevo producto")
+            Text(text = "Detalles del producto", fontSize = 20.sp)
             Spacer(modifier = Modifier.padding(16.dp))
-            Text(text = "Nombre del producto")
             NameField(name) { viewModel.onCreateProductChanged(it, price, description) }
             Spacer(modifier = Modifier.padding(16.dp))
-            Text(text = "Precio")
             PriceField(price) { viewModel.onCreateProductChanged(name, it, description) }
             Spacer(modifier = Modifier.padding(16.dp))
-            Text(text = "Descripción del producto")
-            DescriptionField(description) { viewModel.onCreateProductChanged(name, price, it) }
             DropdownCategoryMenu()
+            Spacer(modifier = Modifier.padding(16.dp))
+            DescriptionField(description) { viewModel.onCreateProductChanged(name, price, it) }
+            Spacer(modifier = Modifier.padding(16.dp))
+
+            ButtonCreateProduct()
         }
     }
 }
@@ -88,10 +89,10 @@ fun CreateProductBody(viewModel: CreateProductViewModel, navController: NavContr
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NameField(name: String, onTextFieldChanged: (String) -> Unit) {
-    TextField(
+    OutlinedTextField(
         value = name, onValueChange = { onTextFieldChanged(it) },
         modifier = Modifier.fillMaxWidth(),
-        placeholder = { Text(text = "Nombre del Producto") },
+        label = { Text(text = "Nombre del Producto") },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         singleLine = true,
         maxLines = 1
@@ -101,10 +102,10 @@ fun NameField(name: String, onTextFieldChanged: (String) -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PriceField(price: String, onTextFieldChanged: (String) -> Unit) {
-    TextField(
+    OutlinedTextField(
         value = price, onValueChange = { onTextFieldChanged(it) },
         modifier = Modifier.fillMaxWidth(),
-        placeholder = { Text(text = "Precio del Producto (€)") },
+        label = { Text(text = "Precio del Producto (€)") },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
         singleLine = true,
         maxLines = 1
@@ -114,11 +115,10 @@ fun PriceField(price: String, onTextFieldChanged: (String) -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DescriptionField(description: String, onTextFieldChanged: (String) -> Unit) {
-    TextField(
+    OutlinedTextField(
         value = description, onValueChange = { onTextFieldChanged(it) },
-        modifier = Modifier.fillMaxWidth(),
-        placeholder = { Text(text = "Descripción del Producto") },
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+        modifier = Modifier.fillMaxWidth() .padding(0.dp),
+        label = { Text(text = "Descripción del Producto") },
         maxLines = 10
     )
 }
@@ -137,19 +137,22 @@ fun DropdownCategoryMenu() {
         Icons.Filled.KeyboardArrowDown
     }
 
-    Column(modifier = Modifier.padding(20.dp)) {
+    Column {
         OutlinedTextField(
             value = selectedCategory,
             onValueChange = { selectedCategory = it },
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(0.dp)
                 .onGloballyPositioned { coordinates ->
                     textFiledSize = coordinates.size.toSize()
                 },
             label = { Text(text = "Selecciona una Categoría") },
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             trailingIcon = {
                 Icon(icon, "", Modifier.clickable { expanded = !expanded } )
             }
+
         )
         DropdownMenu(
             expanded = expanded,
@@ -167,5 +170,12 @@ fun DropdownCategoryMenu() {
                 )
             }
         }
+    }
+}
+
+@Composable
+fun ButtonCreateProduct() {
+    Button(onClick = {  }) {
+        Text(text = "Añadir Producto")
     }
 }
