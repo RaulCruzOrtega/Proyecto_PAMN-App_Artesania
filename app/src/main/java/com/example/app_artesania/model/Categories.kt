@@ -2,7 +2,7 @@ package com.example.app_artesania.model
 
 import com.example.app_artesania.R
 
-enum class TypeCategories{
+enum class CategoryType{
     Cestería,
     Alfarería,
     Joyería,
@@ -12,42 +12,54 @@ enum class TypeCategories{
     Juguetes
 }
 
-sealed class Categories(
-    val categorie: TypeCategories,
+sealed class Category(
+    val categoryType: CategoryType,
     val image: Int
 ) {
-    object Cestería: Categories(
-        categorie = TypeCategories.Cestería,
+    object Cestería: Category(
+        categoryType = CategoryType.Cestería,
         image = R.drawable.cesta
     )
 
-    object Alfarería: Categories(
-        categorie = TypeCategories.Alfarería,
+    object Alfarería: Category(
+        categoryType = CategoryType.Alfarería,
         image = R.drawable.ceramica
     )
 
-    object Joyería: Categories(
-        categorie = TypeCategories.Joyería,
+    object Joyería: Category(
+        categoryType = CategoryType.Joyería,
         image = R.drawable.joyas
     )
 
-    object Vestimenta: Categories(
-        categorie = TypeCategories.Vestimenta,
+    object Vestimenta: Category(
+        categoryType = CategoryType.Vestimenta,
         image = R.drawable.ropa
     )
 
-    object Juguetes: Categories(
-        categorie = TypeCategories.Juguetes,
+    object Juguetes: Category(
+        categoryType = CategoryType.Juguetes,
         image = R.drawable.juguete
     )
 
-    object Cuchillería: Categories(
-        categorie = TypeCategories.Cuchillería,
+    object Cuchillería: Category(
+        categoryType = CategoryType.Cuchillería,
         image = R.drawable.cuchillo
     )
 
-    object Zapateria: Categories(
-        categorie = TypeCategories.Zapatería,
+    object Zapateria: Category(
+        categoryType = CategoryType.Zapatería,
         image = R.drawable.zapato
     )
+
+    fun getCategories(): ArrayList<Category> {
+        return arrayListOf<Category>(
+            Alfarería,
+            Cestería,
+            Joyería,
+            Vestimenta,
+            Juguetes,
+            Cuchillería,
+            Zapateria
+        )
+    }
 }

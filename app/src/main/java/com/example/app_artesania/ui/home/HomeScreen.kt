@@ -1,7 +1,6 @@
 package com.example.app_artesania.ui.home
 
 import android.annotation.SuppressLint
-import androidx.activity.ComponentActivity
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -40,11 +39,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
-import com.example.app_artesania.model.Categories
 import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
@@ -52,14 +49,14 @@ import com.example.app_artesania.ui.bottomNavBar.BottomNavBar
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
 import com.example.app_artesania.ui.templates.ProductSmallViewTemplate
 import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.app_artesania.model.Category
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(viewModel: HomeViewModel, navController: NavController){
 
-    val categories: ArrayList<Categories> = viewModel.categories.value!!
+    val categories: ArrayList<Category> = viewModel.categories.value!!
     val products: ArrayList<Product> = viewModel.products
     val products2: ArrayList<Product> = viewModel.products2
 
@@ -138,7 +135,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController){
 }
 
 @Composable
-fun CategoriesSlider(categories: ArrayList<Categories>){
+fun CategoriesSlider(categories: ArrayList<Category>){
     LazyRow {
         itemsIndexed(categories) { index, item ->
             Column(
@@ -148,7 +145,7 @@ fun CategoriesSlider(categories: ArrayList<Categories>){
                     .fillMaxWidth()
                     .height(100.dp)
                     .width(100.dp)
-                    .clickable { println("Categoría $index: ${item.categorie.name}") }
+                    .clickable { println("Categoría $index: ${item.categoryType.name}") }
             ) {
                 Spacer(modifier = Modifier.height(5.dp))
                 Icon(
@@ -162,7 +159,7 @@ fun CategoriesSlider(categories: ArrayList<Categories>){
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = categories[index].categorie.name,
+                    text = categories[index].categoryType.name,
                     color = Color(android.graphics.Color.parseColor("#4c2c17"))
                 )
             }

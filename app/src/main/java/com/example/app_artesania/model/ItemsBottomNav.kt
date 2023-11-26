@@ -28,7 +28,6 @@ sealed class ItemsBottomNav(
         "Orders",
         AppScreens.RegisterScreen.route
     )
-
     object userIcon: ItemsBottomNav(
         R.drawable.usericon,
         "Item4",

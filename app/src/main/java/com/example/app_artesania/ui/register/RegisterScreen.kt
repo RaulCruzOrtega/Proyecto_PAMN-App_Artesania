@@ -170,8 +170,7 @@ fun Register(viewModel: RegisterViewModel, navController: NavController){
                 coroutineScope.launch {
                     viewModel.onRegisterSelected(navController)
                 }
-            }
-            )
+            })
     }
 }
 

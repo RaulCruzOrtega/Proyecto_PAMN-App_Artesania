@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData
 import com.example.app_artesania.data.TemporalDatabase
 import com.example.app_artesania.data.getCraftsmans
 import com.example.app_artesania.data.getProducts
-import com.example.app_artesania.model.Categories
+import com.example.app_artesania.model.Category
 import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
@@ -25,8 +25,8 @@ class HomeViewModel : ViewModel() {
     private val _productsDB = MutableLiveData<ArrayList<Product>?>()
     val productsDB: LiveData<ArrayList<Product>?> = _productsDB
 
-    private val _categories = MutableLiveData<ArrayList<Categories>>()
-    val categories: LiveData<ArrayList<Categories>> = _categories
+    private val _categories = MutableLiveData<ArrayList<Category>>()
+    val categories: LiveData<ArrayList<Category>> = _categories
 
     init {
         lanzamiento()
@@ -48,14 +48,14 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun loadCategories() {
-        _categories.value = arrayListOf<Categories>(
-            Categories.Alfarería,
-            Categories.Cestería,
-            Categories.Joyería,
-            Categories.Vestimenta,
-            Categories.Juguetes,
-            Categories.Cuchillería,
-            Categories.Zapateria
+        _categories.value = arrayListOf<Category>(
+            Category.Alfarería,
+            Category.Cestería,
+            Category.Joyería,
+            Category.Vestimenta,
+            Category.Juguetes,
+            Category.Cuchillería,
+            Category.Zapateria
         )
     }
 
