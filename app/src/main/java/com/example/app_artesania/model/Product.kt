@@ -3,7 +3,7 @@ package com.example.app_artesania.model
 import com.example.app_artesania.R
 
 data class Product(
-    val id: String,
+    var id: String,
     val name: String,
     val image: Any, //Cambiar cuando firebase esté listo
     val price: Double,
