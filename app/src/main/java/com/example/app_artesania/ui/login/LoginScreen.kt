@@ -9,10 +9,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -82,12 +85,12 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel, navController: NavContr
             Spacer(modifier = Modifier.padding(16.dp))
         }
         LoginButton(
-            loginEnable,
-            {
-                coroutineScope.launch {
-                    viewModel.onLoginSelected(navController)
-                }
-            })
+            loginEnable
+        ) {
+            coroutineScope.launch {
+                viewModel.onLoginSelected(navController)
+            }
+        }
         Spacer(modifier = Modifier.padding(8.dp))
         Register(
             {
@@ -103,10 +106,11 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel, navController: NavContr
 
 @Composable
 fun HeaderImage(modifier: Modifier) {
-    Image(
-        painter = painterResource(id = R.drawable.pinta),
+    Icon(
+        painter = painterResource(id = R.drawable.logo),
+        tint = MaterialTheme.colorScheme.primary,
         contentDescription = "Header",
-        modifier = modifier
+        modifier = modifier.size(250.dp)
     )
 }
 

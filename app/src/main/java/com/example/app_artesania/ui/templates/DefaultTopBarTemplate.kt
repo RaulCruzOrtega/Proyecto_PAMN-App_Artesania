@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
@@ -21,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.app_artesania.R
@@ -32,6 +34,7 @@ import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 @Composable
 fun DefaultTopBar(navController: NavController) {
     TopAppBar(
+        modifier = Modifier.height(40.dp),
         title = {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -44,11 +47,12 @@ fun DefaultTopBar(navController: NavController) {
                     modifier = Modifier.size(35.dp),
                     tint = Color.White
                 )
-                Spacer(modifier = Modifier.size(16.dp))
+                Spacer(modifier = Modifier.size(10.dp))
                 Text(
                     text = "Mundo Canario",
+                    fontSize = 20.sp,
                     color = Color.White
-                    )
+                )
             }
         },
         actions = {
@@ -64,8 +68,7 @@ fun DefaultTopBar(navController: NavController) {
             IconButton(onClick = { /* TODO: Manejar clic de configuración */ }) {
                 Icon(Icons.Default.Settings, contentDescription = "Settings", tint = Color.White)
             }
-        }
-        ,
+        },
         colors = TopAppBarDefaults.largeTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary
         )
