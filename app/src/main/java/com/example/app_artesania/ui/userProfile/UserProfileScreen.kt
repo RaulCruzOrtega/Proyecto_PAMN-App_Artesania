@@ -47,6 +47,7 @@ import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBar
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
+import com.example.app_artesania.ui.templates.DefaultTopBar
 import com.example.app_artesania.ui.templates.ProductSmallViewTemplate
 import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 
@@ -78,6 +79,7 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
 
         LoadState.SUCCESS -> {
             Scaffold(
+                topBar = { DefaultTopBar(navController = navController) },
                 bottomBar = { BottomNavBar(BottomNavBarViewModel(), navController) }
             ) {
                 LazyVerticalGrid(
@@ -89,7 +91,7 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
                     verticalArrangement = Arrangement.Top
                 ) {
                     item(span = { GridItemSpan(2) }) {
-                        Spacer(modifier = Modifier.height(20.dp))
+                        Spacer(modifier = Modifier.height(40.dp))
                     }
                     item(span = { GridItemSpan(2) }) { profileHead(user!!) }
                     item(span = { GridItemSpan(2) }) {
