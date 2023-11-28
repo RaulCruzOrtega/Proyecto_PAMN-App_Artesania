@@ -1,4 +1,4 @@
-package com.example.app_artesania.ui.EditProfile
+package com.example.app_artesania.ui.editProfile
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

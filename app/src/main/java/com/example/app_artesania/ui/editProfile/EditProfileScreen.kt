@@ -1,4 +1,4 @@
-package com.example.app_artesania.ui.EditProfile
+package com.example.app_artesania.ui.editProfile
 
 import android.annotation.SuppressLint
 import androidx.activity.compose.rememberLauncherForActivityResult

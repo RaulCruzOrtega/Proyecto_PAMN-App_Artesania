@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.app_artesania.model.Category
 import com.example.app_artesania.model.Category.Alfarería.getCategories
+import com.example.app_artesania.ui.register.textError
 import com.example.app_artesania.ui.templates.SimpleTopNavBar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -69,6 +70,10 @@ fun CreateProductBody(viewModel: CreateProductViewModel, navController: NavContr
     val description: String by viewModel.description.observeAsState(initial = "")
     val image: String by viewModel.imageselect.observeAsState(initial = "")
 
+    val nameError: Boolean by viewModel.nameError.observeAsState(initial = false)
+    val priceError: Boolean by viewModel.priceError.observeAsState(initial = false)
+    val descriptionError: Boolean by viewModel.descriptionError.observeAsState(initial = false)
+
     LazyColumn (modifier = Modifier
         .fillMaxSize(),
         horizontalAlignment = Alignment.Start)
@@ -77,12 +82,24 @@ fun CreateProductBody(viewModel: CreateProductViewModel, navController: NavContr
             Text(text = "Detalles del producto", fontSize = 20.sp)
             Spacer(modifier = Modifier.padding(16.dp))
             NameField(name) { viewModel.onCreateProductChanged(it, price, category, description) }
+            if(nameError){
+                Spacer(modifier = Modifier.padding(4.dp))
+                textError(texto = "Introduzca un Nombre para el producto")
+            }
             Spacer(modifier = Modifier.padding(16.dp))
             PriceField(price) { viewModel.onCreateProductChanged(name, it, category, description) }
+            if(priceError){
+                Spacer(modifier = Modifier.padding(4.dp))
+                textError(texto = "Introduzca un Precio para el producto")
+            }
             Spacer(modifier = Modifier.padding(16.dp))
             DropdownCategoryMenu(category) { viewModel.onCreateProductChanged(name, price, it, description) }
             Spacer(modifier = Modifier.padding(16.dp))
             DescriptionField(description) { viewModel.onCreateProductChanged(name, price, category, it) }
+            if(descriptionError){
+                Spacer(modifier = Modifier.padding(4.dp))
+                textError(texto = "Introduzca una Descripción del producto")
+            }
             Spacer(modifier = Modifier.padding(16.dp))
             ButtonProductImage(viewModel)
             if (image != "") {

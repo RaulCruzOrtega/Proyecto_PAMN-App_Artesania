@@ -12,7 +12,6 @@ import com.example.app_artesania.model.Category
 import com.example.app_artesania.model.DataRepository
 import com.example.app_artesania.model.newProducto
 import com.example.app_artesania.navigation.AppScreens
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class CreateProductViewModel: ViewModel() {
@@ -27,6 +26,13 @@ class CreateProductViewModel: ViewModel() {
     private val _imageuri = MutableLiveData<Uri>()
     private val _imageselect = MutableLiveData<String>()
     val imageselect: LiveData<String> = _imageselect
+
+    private val _nameError = MutableLiveData<Boolean>()
+    val nameError: LiveData<Boolean> = _nameError
+    private val _priceError = MutableLiveData<Boolean>()
+    val priceError: LiveData<Boolean> = _priceError
+    private val _descriptionError = MutableLiveData<Boolean>()
+    val descriptionError: LiveData<Boolean> = _descriptionError
 
     fun onCreateProductChanged(name: String, price: String, category: Category, description: String) {
         _name.value = name
@@ -53,35 +59,47 @@ class CreateProductViewModel: ViewModel() {
         println(_imageuri.value)
     }
 
-    fun crearProducto(navController: NavController){
+    private fun isValidName(name: String): Boolean = name.isNotEmpty()
+    private fun isValidPrice(price: String): Boolean = price.isNotEmpty()
+    private fun isValidDescription(description: String): Boolean = description.isNotEmpty()
+    private fun areFieldsValid(): Boolean {
+        return isValidName(_name.value!!) && isValidPrice(_price.value!!) && isValidDescription(_description.value!!)
+    }
+
+    fun crearProducto(navController: NavController) {
         viewModelScope.launch {
-            if (_imageuri.value != null){
-                val uristorage = addImageProductToFirebaseStorage(_imageuri.value!!)
-                println(uristorage)
-                val new_producto: newProducto = newProducto(
-                    name = name.value!!,
-                    image = uristorage.toString(),
-                    price = price.value!!.toDouble(),
-                    description = description.value!!,
-                    category = category.value!!.categoryType.name,
-                    idCraftsman = DataRepository.getUser()!!.idCraftsman
-                )
-                newProduct(new_producto)
+            if (areFieldsValid()) {
+                if (_imageuri.value != null) {
+                    val uristorage = addImageProductToFirebaseStorage(_imageuri.value!!)
+                    println(uristorage)
+                    val new_producto: newProducto = newProducto(
+                        name = name.value!!,
+                        image = uristorage.toString(),
+                        price = price.value!!.toDouble(),
+                        description = description.value!!,
+                        category = category.value!!.categoryType.name,
+                        idCraftsman = DataRepository.getUser()!!.idCraftsman
+                    )
+                    newProduct(new_producto)
+                } else {
+                    val new_producto: newProducto = newProducto(
+                        name = name.value!!,
+                        image = "",
+                        price = price.value!!.toDouble(),
+                        description = description.value!!,
+                        category = category.value!!.categoryType.name,
+                        idCraftsman = DataRepository.getUser()!!.idCraftsman
+                    )
+                    newProduct(new_producto)
+                }
+                if (navController.currentDestination?.route != AppScreens.UserProfileScreen.route) {
+                    navController.navigate(route = AppScreens.UserProfileScreen.route)
+                }
             } else {
-                val new_producto: newProducto = newProducto(
-                    name = name.value!!,
-                    image = "",
-                    price = price.value!!.toDouble(),
-                    description = description.value!!,
-                    category = category.value!!.categoryType.name,
-                    idCraftsman = DataRepository.getUser()!!.idCraftsman
-                )
-                newProduct(new_producto)
-            }
-            if (navController.currentDestination?.route != AppScreens.UserProfileScreen.route) {
-                navController.navigate(route = AppScreens.UserProfileScreen.route)
+                _nameError.value = !isValidName(_name.value!!)
+                _priceError.value = !isValidPrice(_price.value!!)
+                _descriptionError.value = !isValidDescription(_description.value!!)
             }
         }
     }
-
 }
