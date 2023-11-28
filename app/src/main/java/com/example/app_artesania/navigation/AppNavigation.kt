@@ -51,7 +51,8 @@ fun AppNavigation() {
                 type = NavType.StringType
             })){
             val ProductViewModel: ProductViewModel = ProductViewModel(
-                    it.arguments?.getString("productId")
+                    it.arguments?.getString("productId"),
+                    navControler
                 )
             ProductScreen(ProductViewModel, navControler)
         }
