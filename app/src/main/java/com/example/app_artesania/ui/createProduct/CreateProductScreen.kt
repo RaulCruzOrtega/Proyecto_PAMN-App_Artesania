@@ -1,6 +1,7 @@
 package com.example.app_artesania.ui.createProduct
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContract
@@ -77,6 +78,7 @@ fun CreateProductBody(viewModel: CreateProductViewModel, navController: NavContr
     val price: String by viewModel.price.observeAsState(initial = "")
     val category: Category by viewModel.category.observeAsState(initial = Category.Alfarería)
     val description: String by viewModel.description.observeAsState(initial = "")
+    val image: String by viewModel.imageselect.observeAsState(initial = "")
 
     LazyColumn (modifier = Modifier
         .fillMaxSize(),
@@ -93,7 +95,10 @@ fun CreateProductBody(viewModel: CreateProductViewModel, navController: NavContr
             Spacer(modifier = Modifier.padding(16.dp))
             DescriptionField(description) { viewModel.onCreateProductChanged(name, price, category, it) }
             Spacer(modifier = Modifier.padding(16.dp))
-            ButtonProductImage()
+            ButtonProductImage(viewModel)
+            if (image != "") {
+                Text(text = image)
+            }
             Spacer(modifier = Modifier.padding(16.dp))
             ButtonCreateProduct(viewModel, navController)
         }
@@ -193,12 +198,12 @@ fun DropdownCategoryMenu(selectedCategory: Category, onCategorySelected: (Catego
 
 
 @Composable
-fun ButtonProductImage() {
+fun ButtonProductImage(viewModel: CreateProductViewModel) {
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ){imageUri ->
         imageUri?.let {
-            println(imageUri)
+            viewModel.imageselect(imageUri)
         }
     }
 

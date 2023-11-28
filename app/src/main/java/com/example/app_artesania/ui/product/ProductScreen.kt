@@ -173,7 +173,7 @@ private fun tabs(viewModel: ProductViewModel , navController: NavController) {
         Button(onClick = { /*TODO*/ }) {
             Text(text = "Editar Producto")
         }
-        Button(onClick = { /*TODO*/ }) {
+        Button(onClick = { viewModel.delProduct(navController) }) {
             Text(text = "Eliminar Producto")
         }
     }
@@ -185,6 +185,6 @@ private fun tabs(viewModel: ProductViewModel , navController: NavController) {
 fun GreetingPreview() {
     App_ArtesaniaTheme {
         val navController = rememberNavController()
-        ProductScreen(ProductViewModel("1"), navController)
+        ProductScreen(ProductViewModel("1", navController), navController)
     }
 }

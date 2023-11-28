@@ -5,17 +5,22 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.example.app_artesania.data.TemporalDatabase
+import com.example.app_artesania.data.deleteProduct
 import com.example.app_artesania.data.getCraftsman
 import com.example.app_artesania.data.getProduct
 import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
+import com.example.app_artesania.navigation.AppScreens
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-class ProductViewModel(productId: String?) : ViewModel() {
+class ProductViewModel(productId: String?, navController: NavController) : ViewModel() {
     private val _loadState = MutableLiveData<LoadState>()
     val loadState: MutableLiveData<LoadState> = _loadState
 
@@ -26,8 +31,10 @@ class ProductViewModel(productId: String?) : ViewModel() {
     val craftsman: LiveData<User> = _craftsman
 
     init {
-        _loadState.value = LoadState.LOADING
-        loaddata(productId!!)
+        if (navController.currentDestination?.route != AppScreens.HomeScreen.route) {
+            _loadState.value = LoadState.LOADING
+            loaddata(productId!!)
+        }
     }
 
     private fun loaddata(productId: String) {
@@ -37,6 +44,11 @@ class ProductViewModel(productId: String?) : ViewModel() {
             delay(500)
             _loadState.value = LoadState.SUCCESS
         }
+    }
+
+    fun delProduct(navController: NavController){
+        deleteProduct(_product.value!!.id)
+        navController.navigate(route = AppScreens.HomeScreen.route)
     }
 }
 

@@ -134,3 +134,7 @@ suspend fun newProduct(newProduct: newProducto){
     )
     data.collection("Articulos").add(productHashMap)
 }
+
+fun deleteProduct(idProduct: String){
+    data.collection("Articulos").document(idProduct).delete()
+}
