@@ -22,7 +22,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,7 +31,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,11 +38,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
-import com.example.app_artesania.R
 import com.example.app_artesania.model.DataRepository
 import com.example.app_artesania.model.LoadState
-import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
+import com.example.app_artesania.navigation.AppScreens
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBar
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
 import com.example.app_artesania.ui.templates.DefaultTopBar
@@ -115,7 +112,6 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
                     item(span = { GridItemSpan(2) }) {
                         Spacer(modifier = Modifier.padding(28.dp))
                     }
-
                 }
             }
         }
@@ -159,7 +155,7 @@ private fun tabs(viewModel: UserProfileViewModel, navController: NavController) 
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        Button(onClick = { /*TODO*/ }) {
+        Button(onClick = { navController.navigate(route = AppScreens.EditProfileScreen.route) }) {
             Text(text = "Editar Perfil")
         }
         Button(onClick = { viewModel.cerrarSesión(navController) }) {
