@@ -1,12 +1,15 @@
 package com.example.app_artesania.ui.editProfile
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.example.app_artesania.data.editUserName
+import com.example.app_artesania.data.addImageProductToFirebaseStorage
+import com.example.app_artesania.data.modifyUserName
 import com.example.app_artesania.data.getUser
+import com.example.app_artesania.data.modifyUserImage
 import com.example.app_artesania.model.DataRepository
 import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.User
@@ -23,6 +26,10 @@ class EditProfileViewModel : ViewModel() {
 
     private val _userName = MutableLiveData<String>()
     val userName: LiveData<String> = _userName
+
+    private val _imageuri = MutableLiveData<Uri>()
+    private val _imageselect = MutableLiveData<String>()
+    val imageselect: LiveData<String> = _imageselect
 
     init{
         _loadState.value = LoadState.LOADING
@@ -41,12 +48,29 @@ class EditProfileViewModel : ViewModel() {
     }
 
     private fun isValidName(name: String?): Boolean = !name.isNullOrBlank()
+    private fun isValidImage(image: String?): Boolean = !image.isNullOrBlank()
 
     suspend fun editUserName(navController: NavController) {
         viewModelScope.launch {
             if (isValidName(userName.value)) {
-                editUserName(user.value!!, userName.value!!)
+                modifyUserName(user.value!!, userName.value!!)
                 println(userName.value)
+                navController.navigate(route = AppScreens.UserProfileScreen.route)
+            }
+        }
+    }
+
+    fun imageselect(newImageUri: Uri){
+        _imageuri.value = newImageUri
+        _imageselect.value = newImageUri.toString()
+        println(_imageuri.value)
+    }
+
+    suspend fun editUserImage(navController: NavController) {
+        viewModelScope.launch {
+            if (isValidImage(_imageselect.value)) {
+                val uriStorage: Uri= addImageProductToFirebaseStorage(_imageuri.value!!)
+                modifyUserImage(user.value!!, uriStorage)
                 navController.navigate(route = AppScreens.UserProfileScreen.route)
             }
         }

@@ -7,7 +7,7 @@ data class User(
     val email: String,
     var isCraftsman: Boolean,
     val idCraftsman: String,
-    val image: Any, //Cambiar cuando firebase esté listo
+    var image: Any, //Cambiar cuando firebase esté listo
     val orders: ArrayList<String>,
     val products: ArrayList<String>
 ){

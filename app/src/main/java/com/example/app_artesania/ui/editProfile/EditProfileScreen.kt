@@ -22,12 +22,14 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.app_artesania.ui.createProduct.CreateProductViewModel
 import com.example.app_artesania.ui.templates.SimpleTopNavBar
 import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 import kotlinx.coroutines.launch
@@ -54,23 +56,32 @@ fun EditProfileScreen(viewModel: EditProfileViewModel, navController: NavControl
 fun EditProfileBody(viewModel: EditProfileViewModel, navController: NavController) {
     val userName: String by viewModel.userName.observeAsState(initial = "")
     val coroutineScope = rememberCoroutineScope()
+    val imageSelect: String by viewModel.imageselect.observeAsState(initial = "")
 
-    Column (modifier = Modifier
-        .fillMaxSize()
-        .padding(10.dp),
-        horizontalAlignment = Alignment.Start)
-    {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp),
+        horizontalAlignment = Alignment.Start
+    ) {
         Text(text = "Editar Perfil de Usuario", fontSize = 20.sp)
         Spacer(modifier = Modifier.padding(16.dp))
         Text(text = "Modificar Nombre de usuario:", fontSize = 15.sp)
         UserNameField(userName) { viewModel.onCreateProductChanged(it) }
-        Spacer(modifier = Modifier.padding(16.dp))
-        Text(text = "Cambiar Foto de Perfil:", fontSize = 15.sp)
-        ButtonImage()
-        Spacer(modifier = Modifier.padding(16.dp))
-        ButtonModifyUser {
+        ButtonModifyUser{
             coroutineScope.launch {
                 viewModel.editUserName(navController)
+            }
+        }
+        Spacer(modifier = Modifier.padding(16.dp))
+        Text(text = "Cambiar Foto de Perfil:", fontSize = 15.sp)
+        ButtonImage(viewModel)
+        if (imageSelect.isNotEmpty()){
+            Text(text = imageSelect, color = Color.Gray, fontSize = 8.sp)
+        }
+        ButtonModifyImage{
+            coroutineScope.launch {
+                viewModel.editUserImage(navController)
             }
         }
     }
@@ -90,24 +101,33 @@ fun UserNameField(userName: String, onTextFieldChanged: (String) -> Unit) {
 }
 
 @Composable
-fun ButtonImage() {
-    val galleryLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ){imageUri ->
-        imageUri?.let {
-            println(imageUri)
-        }
-    }
-    OutlinedButton(onClick = { galleryLauncher.launch("image/*") }) {
-        Text(text = "Seleccionar Imagen de la Galería")
+fun ButtonModifyUser(editUserName: () -> Unit) {
+    Button(
+        onClick = { editUserName() }) {
+        Text(text = "Modificar Nombre de Usuario")
     }
 }
 
 @Composable
-fun ButtonModifyUser(editUserName: () -> Unit) {
+fun ButtonModifyImage(editUserImage: () -> Unit) {
     Button(
-        onClick = { editUserName() }) {
-        Text(text = "Modificar  Perfil")
+        onClick = { editUserImage() }) {
+        Text(text = "Modificar Foto de Perfil")
+    }
+}
+
+@Composable
+fun ButtonImage(viewModel: EditProfileViewModel) {
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ){imageUri ->
+        imageUri?.let {
+            viewModel.imageselect(imageUri)
+        }
+    }
+
+    OutlinedButton(onClick = { galleryLauncher.launch("image/*") }) {
+        Text(text = "Seleccionar Imagen de la Galería")
     }
 }
 

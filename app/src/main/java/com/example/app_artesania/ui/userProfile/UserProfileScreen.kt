@@ -121,7 +121,6 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
 
 @Composable
 private fun profileHead(user: User) {
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -140,7 +139,6 @@ private fun profileHead(user: User) {
                 .size(150.dp)
                 .clip(CircleShape)
                 .border(2.dp, Color.Gray, CircleShape)
-                .padding(8.dp)
         )
         Spacer(modifier = Modifier.height(10.dp))
         Text(text = user.name, fontWeight = FontWeight.Bold, fontSize = 24.sp)

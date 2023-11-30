@@ -1,11 +1,12 @@
 package com.example.app_artesania.data
 
+import android.net.Uri
 import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
 import com.example.app_artesania.model.newProducto
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 
 private val data = FirebaseFirestore.getInstance()
@@ -30,6 +31,12 @@ suspend fun getUser(email: String): User{
         }
     }
     return usersList[0]
+}
+
+suspend fun getUserDoc(email: String): DocumentSnapshot? {
+    return data.collection("Users")
+        .whereEqualTo("email", email)
+        .get().await().documents[0]
 }
 
 suspend fun newUser(newuser: User){
@@ -139,7 +146,7 @@ fun deleteProduct(idProduct: String){
     data.collection("Articulos").document(idProduct).delete()
 }
 
-suspend fun editUserName(user: User, newName: String){
+suspend fun modifyUserName(user: User, newName: String){
     val userDocument = data.collection("Users")
         .whereEqualTo("email", user.email)
         .get().await()
@@ -159,5 +166,13 @@ suspend fun editUserName(user: User, newName: String){
         // Handle the case where the user with the provided email doesn't exist
         println("User with email $user.email not found.")
     }
+}
 
+suspend fun modifyUserImage(user: User, uri: Uri){
+    val documentSnapshot = getUserDoc(user.email)
+    val existingUser = documentSnapshot!!.toObject<User>()
+
+    // Update the fields you want to modify
+    existingUser?.image = uri.toString()
+    documentSnapshot.reference.set(existingUser!!).await()
 }
