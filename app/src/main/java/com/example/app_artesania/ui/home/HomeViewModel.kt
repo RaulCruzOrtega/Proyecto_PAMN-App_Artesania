@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import com.example.app_artesania.data.getCraftsmans
 import com.example.app_artesania.data.getProducts
 import com.example.app_artesania.model.Category
+import com.example.app_artesania.model.Category.Alfarería.getCategories
 import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
@@ -46,15 +47,7 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun loadCategories() {
-        _categories.value = arrayListOf<Category>(
-            Category.Alfarería,
-            Category.Cestería,
-            Category.Joyería,
-            Category.Vestimenta,
-            Category.Juguetes,
-            Category.Cuchillería,
-            Category.Zapateria
-        )
+        _categories.value = getCategories()
     }
 
     private fun loadData() {
