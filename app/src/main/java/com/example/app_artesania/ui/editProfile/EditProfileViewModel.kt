@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.app_artesania.data.addImageProductToFirebaseStorage
+import com.example.app_artesania.data.addImageUserToFirebaseStorage
 import com.example.app_artesania.data.modifyUserName
 import com.example.app_artesania.data.getUser
 import com.example.app_artesania.data.modifyUserImage
@@ -62,14 +63,14 @@ class EditProfileViewModel : ViewModel() {
 
     fun imageselect(newImageUri: Uri){
         _imageuri.value = newImageUri
-        _imageselect.value = newImageUri.toString()
+        _imageselect.value = newImageUri.lastPathSegment.toString()
         println(_imageuri.value)
     }
 
     suspend fun editUserImage(navController: NavController) {
         viewModelScope.launch {
             if (isValidImage(_imageselect.value)) {
-                val uriStorage: Uri= addImageProductToFirebaseStorage(_imageuri.value!!)
+                val uriStorage: Uri= addImageUserToFirebaseStorage(_imageuri.value!!, DataRepository.getUser()!!)
                 modifyUserImage(user.value!!, uriStorage)
                 navController.navigate(route = AppScreens.UserProfileScreen.route)
             }

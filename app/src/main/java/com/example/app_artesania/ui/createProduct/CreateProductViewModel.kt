@@ -55,7 +55,7 @@ class CreateProductViewModel: ViewModel() {
 
     fun imageselect(newImageUri: Uri){
         _imageuri.value = newImageUri
-        _imageselect.value = newImageUri.toString()
+        _imageselect.value = newImageUri.lastPathSegment.toString()
         println(_imageuri.value)
     }
 
@@ -70,7 +70,7 @@ class CreateProductViewModel: ViewModel() {
         viewModelScope.launch {
             if (areFieldsValid()) {
                 if (_imageuri.value != null) {
-                    val uristorage = addImageProductToFirebaseStorage(_imageuri.value!!)
+                    val uristorage = addImageProductToFirebaseStorage(_imageuri.value!!, DataRepository.getUser()!!)
                     println(uristorage)
                     val new_producto: newProducto = newProducto(
                         name = name.value!!,
