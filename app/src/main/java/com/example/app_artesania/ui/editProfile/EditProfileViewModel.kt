@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.app_artesania.data.addImageProductToFirebaseStorage
 import com.example.app_artesania.data.addImageUserToFirebaseStorage
+import com.example.app_artesania.data.changePassword
 import com.example.app_artesania.data.modifyUserName
 import com.example.app_artesania.data.getUser
 import com.example.app_artesania.data.modifyUserImage
@@ -32,6 +33,15 @@ class EditProfileViewModel : ViewModel() {
     private val _imageselect = MutableLiveData<String>()
     val imageselect: LiveData<String> = _imageselect
 
+    private val _password = MutableLiveData<String>().apply{value = ""}
+    val password: LiveData<String> = _password
+    private val _password_rep = MutableLiveData<String>().apply{value = ""}
+    val password_rep: LiveData<String> = _password_rep
+    private val _password_error = MutableLiveData<Boolean>().apply { value = false }
+    val password_error: LiveData<Boolean> = _password_error
+    private val _password_rep_error = MutableLiveData<Boolean>().apply { value = false }
+    val password_rep_error: LiveData<Boolean> = _password_rep_error
+
     init{
         _loadState.value = LoadState.LOADING
         loadData()
@@ -44,8 +54,33 @@ class EditProfileViewModel : ViewModel() {
             _loadState.value = LoadState.SUCCESS
         }
     }
-    fun onCreateProductChanged(userName: String) {
+    fun onNameChanged(userName: String) {
         _userName.value = userName
+    }
+
+    fun onPasswordChanged(password1: String, password2: String) {
+        _password.value = password1
+        _password_rep.value = password2
+    }
+    private fun isValidPassword(password: String): Boolean = password.length > 5
+
+    private fun equalPasswords(password1: String, password2: String): Boolean = password1 == password2
+
+    suspend fun editPassword(navController: NavController) {
+        viewModelScope.launch {
+            if (isValidPassword(_password.value!!)) {
+                if (equalPasswords(_password.value!!, _password_rep.value!!)) {
+                    changePassword(_password.value!!)
+                    navController.navigate(route = AppScreens.UserProfileScreen.route)
+                }
+                else{
+                    _password_rep_error.value = true
+                }
+            }
+            else {
+                _password_error.value = true
+            }
+        }
     }
 
     private fun isValidName(name: String?): Boolean = !name.isNullOrBlank()

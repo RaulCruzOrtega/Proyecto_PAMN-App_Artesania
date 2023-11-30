@@ -24,12 +24,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.app_artesania.ui.createProduct.CreateProductViewModel
+import com.example.app_artesania.ui.register.textError
 import com.example.app_artesania.ui.templates.SimpleTopNavBar
 import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 import kotlinx.coroutines.launch
@@ -57,6 +59,10 @@ fun EditProfileBody(viewModel: EditProfileViewModel, navController: NavControlle
     val userName: String by viewModel.userName.observeAsState(initial = "")
     val coroutineScope = rememberCoroutineScope()
     val imageSelect: String by viewModel.imageselect.observeAsState(initial = "")
+    val password1: String by viewModel.password.observeAsState(initial = "")
+    val password2: String by viewModel.password_rep.observeAsState(initial = "")
+    val passwordError: Boolean by viewModel.password_error.observeAsState(initial = false)
+    val passwordRepError: Boolean by viewModel.password_rep_error.observeAsState(initial = false)
 
     Column(
         modifier = Modifier
@@ -67,7 +73,7 @@ fun EditProfileBody(viewModel: EditProfileViewModel, navController: NavControlle
         Text(text = "Editar Perfil de Usuario", fontSize = 20.sp)
         Spacer(modifier = Modifier.padding(16.dp))
         Text(text = "Modificar Nombre de usuario:", fontSize = 15.sp)
-        UserNameField(userName) { viewModel.onCreateProductChanged(it) }
+        UserNameField(userName) { viewModel.onNameChanged(it) }
         ButtonModifyUser{
             coroutineScope.launch {
                 viewModel.editUserName(navController)
@@ -82,6 +88,14 @@ fun EditProfileBody(viewModel: EditProfileViewModel, navController: NavControlle
         ButtonModifyImage{
             coroutineScope.launch {
                 viewModel.editUserImage(navController)
+            }
+        }
+        PasswordField1(password1, passwordError) { viewModel.onPasswordChanged(it, password2) }
+        PasswordField2(password2, passwordRepError) { viewModel.onPasswordChanged(password1, it) }
+
+        ButtonModifyPassword{
+            coroutineScope.launch {
+                viewModel.editPassword(navController)
             }
         }
     }
@@ -131,6 +145,50 @@ fun ButtonImage(viewModel: EditProfileViewModel) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PasswordField1(password1: String, passwordError: Boolean, onTextFieldChanged: (String) -> Unit){
+    OutlinedTextField(
+        value = password1, onValueChange = { onTextFieldChanged(it) },
+        modifier = Modifier.fillMaxWidth(),
+        label = { Text(text = "Contraseña") },
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Password),
+        singleLine = true,
+        maxLines = 1,
+        visualTransformation = PasswordVisualTransformation()
+    )
+    if(passwordError){
+        Spacer(modifier = Modifier.padding(4.dp))
+        textError(texto = "La contraseña debe tener al menos 6 caracteres")
+    }
+    Spacer(modifier = Modifier.padding(4.dp))
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PasswordField2(password2: String, passwordRepError: Boolean, onTextFieldChanged: (String) -> Unit){
+    OutlinedTextField(
+        value = password2, onValueChange = { onTextFieldChanged(it) },
+        modifier = Modifier.fillMaxWidth(),
+        label = { Text(text = "Repetir Contraseña") },
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Password),
+        singleLine = true,
+        maxLines = 1,
+        visualTransformation = PasswordVisualTransformation()
+    )
+    if(passwordRepError){
+        Spacer(modifier = Modifier.padding(4.dp))
+        textError(texto = "Las contraseñas no coinciden")
+    }
+}
+
+@Composable
+fun ButtonModifyPassword(editPassword: () -> Unit) {
+    Button(
+        onClick = { editPassword() }) {
+        Text(text = "Cambiar contraseña")
+    }
+}
 
 @Preview(showBackground = true)
 @Composable

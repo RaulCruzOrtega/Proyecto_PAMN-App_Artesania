@@ -44,11 +44,7 @@ suspend fun signIn(email: String, password: String): Boolean {
 }
 
 fun currentUser(): Boolean{
-    if (auth.currentUser != null){
-        return true
-    } else {
-        return false
-    }
+    return auth.currentUser != null
 }
 
 fun currentUserEmail(): String?{
@@ -57,4 +53,10 @@ fun currentUserEmail(): String?{
 
 fun SingOut(){
     auth.signOut()
+}
+
+suspend fun changePassword(newPassword: String) {
+    /* TODO
+    auth.currentUser!!.reauthenticate(credential).await()
+    auth.currentUser!!.updatePassword(newPassword)?.await() */
 }
