@@ -138,3 +138,26 @@ suspend fun newProduct(newProduct: newProducto){
 fun deleteProduct(idProduct: String){
     data.collection("Articulos").document(idProduct).delete()
 }
+
+suspend fun editUserName(user: User, newName: String){
+    val userDocument = data.collection("Users")
+        .whereEqualTo("email", user.email)
+        .get().await()
+
+    if (!userDocument.isEmpty) {
+        val documentSnapshot = userDocument.documents[0]
+
+        // Get the existing user data
+        val existingUser = documentSnapshot.toObject<User>()
+
+        // Update the fields you want to modify
+        existingUser?.name = newName
+
+        // Update the user in the database
+        documentSnapshot.reference.set(existingUser!!).await()
+    } else {
+        // Handle the case where the user with the provided email doesn't exist
+        println("User with email $user.email not found.")
+    }
+
+}

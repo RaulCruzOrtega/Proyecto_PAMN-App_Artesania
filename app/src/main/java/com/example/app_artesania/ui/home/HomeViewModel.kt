@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.LiveData
-import com.example.app_artesania.data.TemporalDatabase
 import com.example.app_artesania.data.getCraftsmans
 import com.example.app_artesania.data.getProducts
 import com.example.app_artesania.model.Category
@@ -73,21 +72,4 @@ class HomeViewModel : ViewModel() {
             println("Error load craftmans")
         }
     }
-
-
-
-    val products = TemporalDatabase.products
-
-    val products2 = ArrayList(
-        listOf(
-            Product.p6, Product.p5, Product.p2, Product.p4
-        )
-    )
-
-    val craftsmans = ArrayList(
-        listOf(
-            User.a1, User.a2, User.a3, User.a4, User.a5
-        )
-    )
-
 }

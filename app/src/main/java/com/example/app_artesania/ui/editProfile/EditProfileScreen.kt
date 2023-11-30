@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
@@ -29,6 +30,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.app_artesania.ui.templates.SimpleTopNavBar
 import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
+import kotlinx.coroutines.launch
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -51,6 +53,7 @@ fun EditProfileScreen(viewModel: EditProfileViewModel, navController: NavControl
 @Composable
 fun EditProfileBody(viewModel: EditProfileViewModel, navController: NavController) {
     val userName: String by viewModel.userName.observeAsState(initial = "")
+    val coroutineScope = rememberCoroutineScope()
 
     Column (modifier = Modifier
         .fillMaxSize()
@@ -65,7 +68,11 @@ fun EditProfileBody(viewModel: EditProfileViewModel, navController: NavControlle
         Text(text = "Cambiar Foto de Perfil:", fontSize = 15.sp)
         ButtonImage()
         Spacer(modifier = Modifier.padding(16.dp))
-        ButtonModifyUser()
+        ButtonModifyUser {
+            coroutineScope.launch {
+                viewModel.editUserName(navController)
+            }
+        }
     }
 }
 
@@ -97,8 +104,9 @@ fun ButtonImage() {
 }
 
 @Composable
-fun ButtonModifyUser() {
-    Button(onClick = { }, modifier = Modifier.fillMaxWidth()) {
+fun ButtonModifyUser(editUserName: () -> Unit) {
+    Button(
+        onClick = { editUserName() }) {
         Text(text = "Modificar  Perfil")
     }
 }

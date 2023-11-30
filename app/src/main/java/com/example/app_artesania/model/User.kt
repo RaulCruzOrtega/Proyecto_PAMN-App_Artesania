@@ -3,7 +3,7 @@ package com.example.app_artesania.model
 import com.example.app_artesania.R
 
 data class User(
-    val name: String,
+    var name: String,
     val email: String,
     var isCraftsman: Boolean,
     val idCraftsman: String,

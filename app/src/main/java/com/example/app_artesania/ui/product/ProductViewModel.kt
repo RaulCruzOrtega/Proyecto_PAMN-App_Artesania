@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.example.app_artesania.data.TemporalDatabase
 import com.example.app_artesania.data.deleteProduct
 import com.example.app_artesania.data.getCraftsman
 import com.example.app_artesania.data.getProduct
@@ -14,8 +13,6 @@ import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
 import com.example.app_artesania.navigation.AppScreens
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
