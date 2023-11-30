@@ -6,6 +6,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.app_artesania.ui.category.CategoryScreen
+import com.example.app_artesania.ui.category.CategoryViewModel
 import com.example.app_artesania.ui.editProfile.EditProfileScreen
 import com.example.app_artesania.ui.editProfile.EditProfileViewModel
 import com.example.app_artesania.ui.createProduct.CreateProduct
@@ -65,6 +67,16 @@ fun AppNavigation() {
                 it.arguments?.getString("productId")!!
             )
             EditProduct(EditProductViewModel, navControler)
+        }
+        composable(route = AppScreens.CategoryScreen.route + "/{category}",
+            arguments = listOf(navArgument(name = "category"){
+                type = NavType.StringType
+            })){
+            val CategoryViewModel: CategoryViewModel = CategoryViewModel(
+                it.arguments?.getString("category"),
+                navControler
+            )
+            CategoryScreen(CategoryViewModel, navControler)
         }
     }
 }

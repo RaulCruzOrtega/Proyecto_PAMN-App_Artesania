@@ -188,3 +188,17 @@ suspend fun modifyProduct(product: newProducto, idProduct: String){
     )
     val userDocument = data.collection("Articulos").document(idProduct).update(productHashMap as Map<String, Any>).await()
 }
+
+suspend fun getProductsFilterByCategory(category: String): ArrayList<Product> {
+    val productsList: ArrayList<Product> = ArrayList()
+    val productCollection = data.collection("Articulos")
+        .whereEqualTo("category", category).get().await()
+    for (document in productCollection.documents) {
+        val product = document.toObject<Product>()
+        if (product != null) {
+            product.id = document.id
+            productsList.add(product)
+        }
+    }
+    return productsList
+}

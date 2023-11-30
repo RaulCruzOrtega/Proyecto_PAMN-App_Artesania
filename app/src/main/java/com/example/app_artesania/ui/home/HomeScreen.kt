@@ -50,8 +50,10 @@ import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
 import com.example.app_artesania.ui.templates.ProductSmallViewTemplate
 import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 import com.example.app_artesania.model.Category
+import com.example.app_artesania.navigation.AppScreens
 import com.example.app_artesania.ui.templates.DefaultTopBar
 import com.example.app_artesania.ui.templates.SimpleTopNavBar
+import com.example.app_artesania.ui.templates.loader
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,23 +67,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController){
 
 
     when (loadState) {
-        LoadState.LOADING -> {
-            //Puedes mostrar un indicador de carga
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                // Muestra el círculo de carga
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(50.dp)
-                        .align(Alignment.Center),
-                    color = MaterialTheme.colorScheme.primary,
-                )
-            }
-            println("Esperando")
-        }
-
+        LoadState.LOADING -> { loader() }
         LoadState.SUCCESS -> {
 
             println("SE PRESENTA")
@@ -99,7 +85,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController){
                     item(span = { GridItemSpan(2) }) {
                         Spacer(modifier = Modifier.padding(35.dp))
                     }
-                    item(span = { GridItemSpan(2) }) { CategoriesSlider(categories) }
+                    item(span = { GridItemSpan(2) }) { CategoriesSlider(categories, navController) }
                     item(span = { GridItemSpan(2) }) {
                         Spacer(modifier = Modifier.padding(8.dp))
                     }
@@ -134,7 +120,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController){
 }
 
 @Composable
-fun CategoriesSlider(categories: ArrayList<Category>){
+fun CategoriesSlider(categories: ArrayList<Category>, navController: NavController){
     LazyRow {
         itemsIndexed(categories) { index, item ->
             Column(
@@ -144,7 +130,7 @@ fun CategoriesSlider(categories: ArrayList<Category>){
                     .fillMaxWidth()
                     .height(100.dp)
                     .width(100.dp)
-                    .clickable { println("Categoría $index: ${item.categoryType.name}") }
+                    .clickable { navController.navigate(route = AppScreens.CategoryScreen.route + "/${item.categoryType.name}") }
             ) {
                 Spacer(modifier = Modifier.height(5.dp))
                 Icon(

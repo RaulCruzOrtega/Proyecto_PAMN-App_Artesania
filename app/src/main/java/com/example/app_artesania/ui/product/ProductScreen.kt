@@ -42,6 +42,7 @@ import com.example.app_artesania.model.User
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBar
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
 import com.example.app_artesania.ui.templates.SimpleTopNavBar
+import com.example.app_artesania.ui.templates.loader
 import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 import com.example.app_artesania.ui.userProfile.UserProfileViewModel
 
@@ -55,23 +56,7 @@ fun ProductScreen(viewModel: ProductViewModel, navController: NavController) {
     val loadState by viewModel.loadState.observeAsState()
 
     when (loadState) {
-        LoadState.LOADING -> {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Gray)
-            ) {
-                // Muestra el círculo de carga
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(50.dp)
-                        .align(Alignment.Center),
-                    color = Color.Black,
-                )
-            }
-            println("Esperando")
-        }
-
+        LoadState.LOADING -> { loader() }
         LoadState.SUCCESS -> {
             Scaffold(
                 topBar = { SimpleTopNavBar(title = product!!.name, navController = navController) },

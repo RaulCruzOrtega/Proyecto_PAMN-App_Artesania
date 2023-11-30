@@ -49,6 +49,7 @@ import com.example.app_artesania.ui.createProduct.CreateProductBody
 import com.example.app_artesania.ui.createProduct.CreateProductViewModel
 import com.example.app_artesania.ui.register.textError
 import com.example.app_artesania.ui.templates.SimpleTopNavBar
+import com.example.app_artesania.ui.templates.loader
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,22 +82,7 @@ fun EditProductBody(viewModel: EditProductViewModel, navController: NavControlle
     val descriptionError: Boolean by viewModel.descriptionError.observeAsState(initial = false)
 
     when (loadState) {
-        LoadState.LOADING -> {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Gray)
-            ) {
-                // Muestra el círculo de carga
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(50.dp)
-                        .align(Alignment.Center),
-                    color = Color.Black,
-                )
-            }
-            println("Esperando")
-        }
+        LoadState.LOADING -> { loader() }
         LoadState.SUCCESS -> {
             LazyColumn (modifier = Modifier
                 .fillMaxSize(),
