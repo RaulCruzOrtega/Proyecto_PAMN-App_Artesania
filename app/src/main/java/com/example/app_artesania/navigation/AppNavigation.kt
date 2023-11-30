@@ -10,6 +10,8 @@ import com.example.app_artesania.ui.editProfile.EditProfileScreen
 import com.example.app_artesania.ui.editProfile.EditProfileViewModel
 import com.example.app_artesania.ui.createProduct.CreateProduct
 import com.example.app_artesania.ui.createProduct.CreateProductViewModel
+import com.example.app_artesania.ui.editProduct.EditProduct
+import com.example.app_artesania.ui.editProduct.EditProductViewModel
 import com.example.app_artesania.ui.home.HomeScreen
 import com.example.app_artesania.ui.home.HomeViewModel
 import com.example.app_artesania.ui.login.LoginScreen
@@ -54,6 +56,15 @@ fun AppNavigation() {
                     navControler
                 )
             ProductScreen(ProductViewModel, navControler)
+        }
+        composable(route = AppScreens.EditProductScreen.route + "/{productId}",
+            arguments = listOf(navArgument(name = "productId"){
+                type = NavType.StringType
+            })){
+            val EditProductViewModel: EditProductViewModel = EditProductViewModel(
+                it.arguments?.getString("productId")!!
+            )
+            EditProduct(EditProductViewModel, navControler)
         }
     }
 }

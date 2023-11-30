@@ -176,3 +176,15 @@ suspend fun modifyUserImage(user: User, uri: Uri){
     existingUser?.image = uri.toString()
     documentSnapshot.reference.set(existingUser!!).await()
 }
+
+suspend fun modifyProduct(product: newProducto, idProduct: String){
+    val productHashMap = hashMapOf(
+        "name" to product.name,
+        "idCraftsman" to product.idCraftsman,
+        "image" to product.image,
+        "price" to product.price,
+        "category" to product.category,
+        "description" to product.description
+    )
+    val userDocument = data.collection("Articulos").document(idProduct).update(productHashMap as Map<String, Any>).await()
+}

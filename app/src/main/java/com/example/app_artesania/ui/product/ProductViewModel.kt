@@ -43,6 +43,10 @@ class ProductViewModel(productId: String?, navController: NavController) : ViewM
         }
     }
 
+    fun editProduct(navController: NavController){
+        navController.navigate(route = AppScreens.EditProductScreen.route + "/${product.value!!.id}")
+    }
+
     fun delProduct(navController: NavController){
         deleteProduct(_product.value!!.id)
         navController.navigate(route = AppScreens.HomeScreen.route)

@@ -170,7 +170,7 @@ private fun tabs(viewModel: ProductViewModel , navController: NavController) {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        Button(onClick = { /*TODO*/ }) {
+        Button(onClick = { viewModel.editProduct(navController) }) {
             Text(text = "Editar Producto")
         }
         Button(onClick = { viewModel.delProduct(navController) }) {

@@ -10,7 +10,8 @@ enum class CategoryType{
     Vestimenta,
     Zapatería,
     Juguetes,
-    Comida
+    Comida,
+    Otro
 }
 
 sealed class Category(
@@ -57,6 +58,11 @@ sealed class Category(
         image = R.drawable.mermelada
     )
 
+    object Otro: Category(
+        categoryType = CategoryType.Otro,
+        image = R.drawable.otros
+    )
+
     fun getCategories(): ArrayList<Category> {
         return arrayListOf<Category>(
             Alfarería,
@@ -66,7 +72,22 @@ sealed class Category(
             Juguetes,
             Cuchillería,
             Zapateria,
-            Comida
+            Comida,
+            Otro
         )
+    }
+
+    fun getCategory(category: String): Category{
+        when (category) {
+            "Alfarería" -> return Alfarería
+            "Cestería" -> return Cestería
+            "Joyería" -> return Joyería
+            "Vestimenta" -> return Vestimenta
+            "Juguetes" -> return Juguetes
+            "Cuchillería" -> return Cuchillería
+            "Zapateria" -> return Zapateria
+            "Comida" -> return Comida
+            else -> return Otro
+        }
     }
 }
