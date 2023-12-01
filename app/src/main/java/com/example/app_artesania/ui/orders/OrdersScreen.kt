@@ -47,7 +47,8 @@ import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 @Composable
 fun OrdersScreen(viewModel: OrdersViewModel, navController: NavController) {
     val loadState by viewModel.loadState.observeAsState()
-    val orders by viewModel.orders.observeAsState(ArrayList())
+    val myOrders by viewModel.myOrders.observeAsState(ArrayList())
+    val allOrders by viewModel.allOrders.observeAsState(ArrayList())
     val user by viewModel.user.observeAsState()
     val users by viewModel.users.observeAsState()
 
@@ -63,12 +64,20 @@ fun OrdersScreen(viewModel: OrdersViewModel, navController: NavController) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     item { Spacer(modifier = Modifier.padding(40.dp)) }
-                    item { Header(navController) }
+                    item { Header(navController, user!!) }
+                    item { Spacer(modifier = Modifier.padding(5.dp)) }
+                    for (order in myOrders!!) {
+                        item { OrdersTemplate(order, user!!, true) }
+                    }
                     item { Spacer(modifier = Modifier.padding(10.dp)) }
-                    for (i in orders!!.indices) {
-                        val order = orders!![i]
-                        val currentUser = users!!.getOrNull(i)
-                        item { OrderTemplate(order, currentUser, user!!, navController) }
+                    if(user!!.isCraftsman) {
+                        item { Text(text = "Pedidos de otros usuarios", fontSize = 30.sp) }
+                        item { Spacer(modifier = Modifier.padding(5.dp)) }
+                        for (i in allOrders!!.indices) {
+                            val order = allOrders!![i]
+                            val orderUser = users!![i]
+                            item { OrdersTemplate(order, orderUser, false) }
+                        }
                     }
                     item { Spacer(modifier = Modifier.padding(30.dp)) }
                 }
@@ -79,7 +88,7 @@ fun OrdersScreen(viewModel: OrdersViewModel, navController: NavController) {
 }
 
 @Composable
-fun Header(navController: NavController){
+fun Header(navController: NavController, user: User){
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
@@ -99,8 +108,7 @@ fun Header(navController: NavController){
 
 
 @Composable
-fun OrderTemplate(order: Order, currentUser: User?, user: User, navController: NavController) {
-    var actualUser: User? = currentUser
+fun OrdersTemplate(order: Order, user: User, myOrder: Boolean) {
     Surface(
         color = MaterialTheme.colorScheme.tertiary,
         modifier = Modifier
@@ -115,10 +123,7 @@ fun OrderTemplate(order: Order, currentUser: User?, user: User, navController: N
                 .fillMaxWidth()
                 .clickable { /*TODO*/ }
         ) {
-            if(actualUser == null){
-                actualUser = user
-            }
-            ProfileImage(imageURL = actualUser!!.image, size = 75)
+            ProfileImage(imageURL = user!!.image, size = 75)
             Spacer(modifier = Modifier.padding(5.dp))
             Column (modifier = Modifier.weight(1f)){
                 Text(text = order.title, fontSize = 20.sp, fontWeight = FontWeight.Bold)
@@ -127,7 +132,7 @@ fun OrderTemplate(order: Order, currentUser: User?, user: User, navController: N
                 Text(text = order.description, fontSize = 15.sp)
             }
             Spacer(modifier = Modifier.padding(5.dp))
-            DeleteIcon(order)
+            if(myOrder) DeleteIcon(order)
         }
     }
 }

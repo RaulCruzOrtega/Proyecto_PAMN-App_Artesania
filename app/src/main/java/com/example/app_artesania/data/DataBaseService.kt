@@ -205,9 +205,10 @@ suspend fun getProductsFilterByCategory(category: String): ArrayList<Product> {
     return productsList
 }
 
-suspend fun getAllOrders(): ArrayList<Order> {
+suspend fun getAllOrders(excludeEmail: String): ArrayList<Order> {
     val ordersList: ArrayList<Order> = ArrayList()
-    val ordersCollection = data.collection("Orders").get().await()
+    val ordersCollection = data.collection("Orders")
+        .whereNotEqualTo("userEmail", excludeEmail).get().await()
     for (document in ordersCollection.documents) {
         val order = document.toObject<Order>()
         if (order != null) {

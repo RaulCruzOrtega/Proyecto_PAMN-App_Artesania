@@ -16,8 +16,10 @@ import kotlinx.coroutines.launch
 class OrdersViewModel  : ViewModel() {
     private val _loadState = MutableLiveData<LoadState>()
     val loadState: MutableLiveData<LoadState> = _loadState
-    private val _orders = MutableLiveData<ArrayList<Order>?>()
-    val orders: LiveData<ArrayList<Order>?> = _orders
+    private val _myOrders = MutableLiveData<ArrayList<Order>?>()
+    val myOrders: LiveData<ArrayList<Order>?> = _myOrders
+    private val _allOrders = MutableLiveData<ArrayList<Order>?>()
+    val allOrders: LiveData<ArrayList<Order>?> = _allOrders
     private val _user = MutableLiveData<User?>()
     val user: LiveData<User?> = _user
     private val _users = MutableLiveData<ArrayList<User>?>()
@@ -31,15 +33,14 @@ class OrdersViewModel  : ViewModel() {
     private fun loadData() {
         viewModelScope.launch {
             _user.value = getUser(DataRepository.getUser()!!.email)
-            if (! DataRepository.getUser()!!.isCraftsman) {
-                _orders.value = getOrdersByEmail(_user.value!!.email)
-            }
-            else {
-                _orders.value = getAllOrders()
-                println("Orders: " + orders.value)
+            _myOrders.value = getOrdersByEmail(_user.value!!.email)
+            if (DataRepository.getUser()!!.isCraftsman) {
+                _allOrders.value = getAllOrders(_user.value!!.email)
                 val userList = mutableListOf<User>()
-                for (order in _orders.value.orEmpty()) {
-                    userList.add(getUser(order.userEmail))
+                for (order in _allOrders.value.orEmpty()) {
+                    if(order.userEmail != _user.value!!.email) {
+                        userList.add(getUser(order.userEmail))
+                    }
                 }
                 _users.value = ArrayList(userList)
             }
