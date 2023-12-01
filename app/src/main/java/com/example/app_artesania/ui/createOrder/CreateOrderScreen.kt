@@ -12,23 +12,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
@@ -37,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.app_artesania.model.Category
 import com.example.app_artesania.ui.register.textError
+import com.example.app_artesania.ui.templates.CategoryDropdownMenu
 import com.example.app_artesania.ui.templates.SimpleTopNavBar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -75,7 +67,7 @@ fun CreateOrderBody(viewModel: CreateOrderViewModel, navController: NavControlle
             Spacer(modifier = Modifier.padding(16.dp))
             DescriptionField(description, descriptionError) { viewModel.onCreateOrderChanged(title, it, category) }
             Spacer(modifier = Modifier.padding(16.dp))
-            DropdownCategoryMenu(category) { viewModel.onCreateOrderChanged(title, description, it) }
+            CategoryDropdownMenu(category) { viewModel.onCreateOrderChanged(title, description, it) }
             Spacer(modifier = Modifier.padding(16.dp))
             ButtonCreateOrder(viewModel, navController)
         }
@@ -113,58 +105,6 @@ fun DescriptionField(description: String, descriptionError: Boolean ,onTextField
     if(descriptionError){
         Spacer(modifier = Modifier.padding(4.dp))
         textError(texto = "Introduzca una Descripción del producto")
-    }
-}
-
-@Composable
-fun DropdownCategoryMenu(selectedCategory: Category, onCategorySelected: (Category) -> Unit) {
-    var expanded by remember { mutableStateOf(false) }
-    val categories: ArrayList<Category> = Category.Alfarería.getCategories()
-
-    Box(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column {
-            Text("Selecciona una categoría")
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .border(1.dp, MaterialTheme.colorScheme.primary)
-                    .clickable { expanded = true }
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    Text(
-                        text = selectedCategory.categoryType.name,
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(end = 16.dp)
-                    )
-                    Icon(
-                        imageVector = Icons.Default.ArrowDropDown,
-                        contentDescription = null
-                    )
-                }
-            }
-
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                categories.forEach { category ->
-                    DropdownMenuItem(
-                        text = { Text(text = category.categoryType.name) },
-                        onClick = {
-                            onCategorySelected(category)
-                            expanded = false
-                        }
-                    )
-                }
-            }
-        }
     }
 }
 
