@@ -9,3 +9,10 @@ data class Order(
 ){
     constructor() : this("", "", "",  "", "")
 }
+
+data class newOrder(
+    val title: String,
+    val description: String,
+    val category: String,
+    val userEmail: String
+)

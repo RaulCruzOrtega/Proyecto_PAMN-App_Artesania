@@ -34,6 +34,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.Order
 import com.example.app_artesania.model.User
+import com.example.app_artesania.navigation.AppScreens
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBar
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
 import com.example.app_artesania.ui.templates.DefaultTopBar
@@ -61,11 +62,12 @@ fun OrdersScreen(viewModel: OrdersViewModel, navController: NavController) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     item { Spacer(modifier = Modifier.padding(40.dp)) }
-                    item { Header() }
+                    item { Header(navController) }
                     item { Spacer(modifier = Modifier.padding(10.dp)) }
                     for (order in orders!!) {
-                        item {OrderTemplate(order, user!!) }
+                        item {OrderTemplate(order, user!!, navController) }
                     }
+                    item { Spacer(modifier = Modifier.padding(30.dp)) }
                 }
             }
         }
@@ -74,7 +76,7 @@ fun OrdersScreen(viewModel: OrdersViewModel, navController: NavController) {
 }
 
 @Composable
-fun Header(){
+fun Header(navController: NavController){
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
@@ -87,14 +89,14 @@ fun Header(){
         Icon(
             Icons.Filled.Add,
             contentDescription = "Añadir Pedido",
-            modifier = Modifier.clickable { /* TODO */}
+            modifier = Modifier.clickable { navController.navigate(route = AppScreens.CreateOrderScreen.route) }
         )
     }
 }
 
 
 @Composable
-fun OrderTemplate(order: Order, user: User) {
+fun OrderTemplate(order: Order, user: User, navController: NavController) {
     Surface(
         color = MaterialTheme.colorScheme.tertiary,
         modifier = Modifier

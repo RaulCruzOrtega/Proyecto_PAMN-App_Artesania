@@ -4,6 +4,7 @@ import android.net.Uri
 import com.example.app_artesania.model.Order
 import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
+import com.example.app_artesania.model.newOrder
 import com.example.app_artesania.model.newProducto
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -215,4 +216,14 @@ suspend fun getOrdersByEmail(userEmail: String): ArrayList<Order> {
         }
     }
     return ordersList
+}
+
+suspend fun newOrderDB(newOrder: newOrder){
+    val orderHashMap = hashMapOf(
+        "title" to newOrder.title,
+        "description" to newOrder.description,
+        "category" to newOrder.category,
+        "userEmail" to newOrder.userEmail
+    )
+    data.collection("Orders").add(orderHashMap)
 }

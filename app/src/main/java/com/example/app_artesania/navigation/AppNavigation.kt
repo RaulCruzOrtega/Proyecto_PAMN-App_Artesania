@@ -8,6 +8,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.app_artesania.ui.category.CategoryScreen
 import com.example.app_artesania.ui.category.CategoryViewModel
+import com.example.app_artesania.ui.createOrder.CreateOrderScreen
+import com.example.app_artesania.ui.createOrder.CreateOrderViewModel
 import com.example.app_artesania.ui.editProfile.EditProfileScreen
 import com.example.app_artesania.ui.editProfile.EditProfileViewModel
 import com.example.app_artesania.ui.createProduct.CreateProduct
@@ -53,6 +55,9 @@ fun AppNavigation() {
         }
         composable(route = AppScreens.OrdersScreen.route){
             OrdersScreen(OrdersViewModel(), navControler)
+        }
+        composable(route = AppScreens.CreateOrderScreen.route){
+            CreateOrderScreen(CreateOrderViewModel(), navControler)
         }
         composable(route = AppScreens.ProductScreen.route + "/{productId}",
             arguments = listOf(navArgument(name = "productId"){
