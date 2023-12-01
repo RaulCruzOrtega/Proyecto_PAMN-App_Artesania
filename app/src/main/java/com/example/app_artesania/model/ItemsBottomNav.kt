@@ -26,7 +26,7 @@ sealed class ItemsBottomNav(
     object ordersIcon: ItemsBottomNav(
         R.drawable.ordericon,
         "Orders",
-        AppScreens.RegisterScreen.route
+        AppScreens.OrdersScreen.route
     )
     object userIcon: ItemsBottomNav(
         R.drawable.usericon,
