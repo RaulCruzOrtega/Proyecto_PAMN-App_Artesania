@@ -212,6 +212,7 @@ suspend fun getAllOrders(excludeEmail: String): ArrayList<Order> {
     for (document in ordersCollection.documents) {
         val order = document.toObject<Order>()
         if (order != null) {
+            order.id = document.id
             ordersList.add(order)
         }
     }
@@ -225,6 +226,7 @@ suspend fun getOrdersByEmail(userEmail: String): ArrayList<Order> {
     for (document in ordersCollection.documents) {
         val order = document.toObject<Order>()
         if (order != null) {
+            order.id = document.id
             ordersList.add(order)
         }
     }
@@ -239,4 +241,8 @@ suspend fun newOrderDB(newOrder: newOrder){
         "userEmail" to newOrder.userEmail
     )
     data.collection("Orders").add(orderHashMap)
+}
+
+fun deleteOrder(orderId: String){
+    data.collection("Orders").document(orderId).delete()
 }

@@ -26,11 +26,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import com.example.app_artesania.data.deleteOrder
 import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.Order
 import com.example.app_artesania.model.User
@@ -40,7 +39,6 @@ import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
 import com.example.app_artesania.ui.templates.DefaultTopBar
 import com.example.app_artesania.ui.templates.ProfileImage
 import com.example.app_artesania.ui.templates.loader
-import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,10 +62,13 @@ fun OrdersScreen(viewModel: OrdersViewModel, navController: NavController) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     item { Spacer(modifier = Modifier.padding(40.dp)) }
-                    item { Header(navController, user!!) }
+                    item { Header(navController) }
                     item { Spacer(modifier = Modifier.padding(5.dp)) }
+                    if(myOrders!!.isEmpty()){
+                        item { Text(text = "No tienes pedidos, ¡crea uno nuevo!") }
+                    }
                     for (order in myOrders!!) {
-                        item { OrdersTemplate(order, user!!, true) }
+                        item { OrdersTemplate(order, user!!, true, navController) }
                     }
                     item { Spacer(modifier = Modifier.padding(10.dp)) }
                     if(user!!.isCraftsman) {
@@ -76,7 +77,7 @@ fun OrdersScreen(viewModel: OrdersViewModel, navController: NavController) {
                         for (i in allOrders!!.indices) {
                             val order = allOrders!![i]
                             val orderUser = users!![i]
-                            item { OrdersTemplate(order, orderUser, false) }
+                            item { OrdersTemplate(order, orderUser, false, navController) }
                         }
                     }
                     item { Spacer(modifier = Modifier.padding(30.dp)) }
@@ -88,7 +89,7 @@ fun OrdersScreen(viewModel: OrdersViewModel, navController: NavController) {
 }
 
 @Composable
-fun Header(navController: NavController, user: User){
+fun Header(navController: NavController){
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
@@ -108,7 +109,7 @@ fun Header(navController: NavController, user: User){
 
 
 @Composable
-fun OrdersTemplate(order: Order, user: User, myOrder: Boolean) {
+fun OrdersTemplate(order: Order, user: User, myOrder: Boolean, navController: NavController) {
     Surface(
         color = MaterialTheme.colorScheme.tertiary,
         modifier = Modifier
@@ -132,25 +133,19 @@ fun OrdersTemplate(order: Order, user: User, myOrder: Boolean) {
                 Text(text = order.description, fontSize = 15.sp)
             }
             Spacer(modifier = Modifier.padding(5.dp))
-            if(myOrder) DeleteIcon(order)
+            if(myOrder) DeleteIcon(order, navController)
         }
     }
 }
 
 @Composable
-fun DeleteIcon(order: Order) {
+fun DeleteIcon(order: Order, navController: NavController) {
     Icon(
         Icons.Filled.Delete,
         contentDescription = "Delete",
-        modifier = Modifier.clickable { /* TODO */}
+        modifier = Modifier.clickable {
+            deleteOrder(order.id)
+            navController.navigate(route = AppScreens.OrdersScreen.route)
+        }
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun Preview() {
-    App_ArtesaniaTheme {
-        val navController = rememberNavController()
-        OrdersScreen(OrdersViewModel(), navController)
-    }
 }
