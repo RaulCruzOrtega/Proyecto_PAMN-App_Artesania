@@ -49,6 +49,7 @@ fun OrdersScreen(viewModel: OrdersViewModel, navController: NavController) {
     val loadState by viewModel.loadState.observeAsState()
     val orders by viewModel.orders.observeAsState(ArrayList())
     val user by viewModel.user.observeAsState()
+    val users by viewModel.users.observeAsState()
 
     when (loadState) {
         LoadState.LOADING -> { loader() }
@@ -64,8 +65,10 @@ fun OrdersScreen(viewModel: OrdersViewModel, navController: NavController) {
                     item { Spacer(modifier = Modifier.padding(40.dp)) }
                     item { Header(navController) }
                     item { Spacer(modifier = Modifier.padding(10.dp)) }
-                    for (order in orders!!) {
-                        item {OrderTemplate(order, user!!, navController) }
+                    for (i in orders!!.indices) {
+                        val order = orders!![i]
+                        val currentUser = users!!.getOrNull(i)
+                        item { OrderTemplate(order, currentUser, user!!, navController) }
                     }
                     item { Spacer(modifier = Modifier.padding(30.dp)) }
                 }
@@ -96,7 +99,8 @@ fun Header(navController: NavController){
 
 
 @Composable
-fun OrderTemplate(order: Order, user: User, navController: NavController) {
+fun OrderTemplate(order: Order, currentUser: User?, user: User, navController: NavController) {
+    var actualUser: User? = currentUser
     Surface(
         color = MaterialTheme.colorScheme.tertiary,
         modifier = Modifier
@@ -111,7 +115,10 @@ fun OrderTemplate(order: Order, user: User, navController: NavController) {
                 .fillMaxWidth()
                 .clickable { /*TODO*/ }
         ) {
-            ProfileImage(imageURL = user.image, size = 75)
+            if(actualUser == null){
+                actualUser = user
+            }
+            ProfileImage(imageURL = actualUser!!.image, size = 75)
             Spacer(modifier = Modifier.padding(5.dp))
             Column (modifier = Modifier.weight(1f)){
                 Text(text = order.title, fontSize = 20.sp, fontWeight = FontWeight.Bold)

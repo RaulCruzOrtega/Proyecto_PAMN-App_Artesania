@@ -4,13 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.app_artesania.data.getAllOrders
 import com.example.app_artesania.data.getOrdersByEmail
 import com.example.app_artesania.data.getUser
 import com.example.app_artesania.model.DataRepository
 import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.Order
 import com.example.app_artesania.model.User
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class OrdersViewModel  : ViewModel() {
@@ -20,6 +20,8 @@ class OrdersViewModel  : ViewModel() {
     val orders: LiveData<ArrayList<Order>?> = _orders
     private val _user = MutableLiveData<User?>()
     val user: LiveData<User?> = _user
+    private val _users = MutableLiveData<ArrayList<User>?>()
+    val users: LiveData<ArrayList<User>?> = _users.apply { value = ArrayList() }
 
     init{
         _loadState.value = LoadState.LOADING
@@ -29,9 +31,18 @@ class OrdersViewModel  : ViewModel() {
     private fun loadData() {
         viewModelScope.launch {
             _user.value = getUser(DataRepository.getUser()!!.email)
-            _orders.value = getOrdersByEmail(_user.value!!.email)
-            println("Orders: " + orders.value)
-            delay(500)
+            if (! DataRepository.getUser()!!.isCraftsman) {
+                _orders.value = getOrdersByEmail(_user.value!!.email)
+            }
+            else {
+                _orders.value = getAllOrders()
+                println("Orders: " + orders.value)
+                val userList = mutableListOf<User>()
+                for (order in _orders.value.orEmpty()) {
+                    userList.add(getUser(order.userEmail))
+                }
+                _users.value = ArrayList(userList)
+            }
             _loadState.value = LoadState.SUCCESS
         }
     }

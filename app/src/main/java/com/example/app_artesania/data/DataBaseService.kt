@@ -205,6 +205,18 @@ suspend fun getProductsFilterByCategory(category: String): ArrayList<Product> {
     return productsList
 }
 
+suspend fun getAllOrders(): ArrayList<Order> {
+    val ordersList: ArrayList<Order> = ArrayList()
+    val ordersCollection = data.collection("Orders").get().await()
+    for (document in ordersCollection.documents) {
+        val order = document.toObject<Order>()
+        if (order != null) {
+            ordersList.add(order)
+        }
+    }
+    return ordersList
+}
+
 suspend fun getOrdersByEmail(userEmail: String): ArrayList<Order> {
     val ordersList: ArrayList<Order> = ArrayList()
     val ordersCollection = data.collection("Orders")
