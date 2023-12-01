@@ -33,6 +33,8 @@ class EditProfileViewModel : ViewModel() {
     private val _imageselect = MutableLiveData<String>()
     val imageselect: LiveData<String> = _imageselect
 
+    private val _oldPassword = MutableLiveData<String>().apply{value = ""}
+    val oldPassword: LiveData<String> = _oldPassword
     private val _password = MutableLiveData<String>().apply{value = ""}
     val password: LiveData<String> = _password
     private val _password_rep = MutableLiveData<String>().apply{value = ""}
@@ -41,6 +43,8 @@ class EditProfileViewModel : ViewModel() {
     val password_error: LiveData<Boolean> = _password_error
     private val _password_rep_error = MutableLiveData<Boolean>().apply { value = false }
     val password_rep_error: LiveData<Boolean> = _password_rep_error
+    private val _oldPasswordError = MutableLiveData<Boolean>().apply { value = false }
+    val oldPasswordError: LiveData<Boolean> = _oldPasswordError
 
     init{
         _loadState.value = LoadState.LOADING
@@ -58,7 +62,8 @@ class EditProfileViewModel : ViewModel() {
         _userName.value = userName
     }
 
-    fun onPasswordChanged(password1: String, password2: String) {
+    fun onPasswordChanged(oldPassword: String, password1: String, password2: String) {
+        _oldPassword.value = oldPassword
         _password.value = password1
         _password_rep.value = password2
     }
@@ -70,8 +75,13 @@ class EditProfileViewModel : ViewModel() {
         viewModelScope.launch {
             if (isValidPassword(_password.value!!)) {
                 if (equalPasswords(_password.value!!, _password_rep.value!!)) {
-                    changePassword(_password.value!!)
-                    navController.navigate(route = AppScreens.UserProfileScreen.route)
+                    try {
+                        changePassword(_oldPassword.value!!, _password.value!!)
+                        navController.navigate(route = AppScreens.UserProfileScreen.route)
+                    }
+                    catch(e: Exception) {
+                        _oldPasswordError.value = true
+                    }
                 }
                 else{
                     _password_rep_error.value = true

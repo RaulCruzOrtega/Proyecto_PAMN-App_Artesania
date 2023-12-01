@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun EditProfileScreen(viewModel: EditProfileViewModel, navController: NavController){
     Scaffold (
-        topBar = { SimpleTopNavBar(title = "Editar Perfil", navController = navController)
+        topBar = { SimpleTopNavBar(title = "Editar Perfil de Usuario", navController = navController)
         }) {
         Box(
             Modifier
@@ -59,10 +59,12 @@ fun EditProfileBody(viewModel: EditProfileViewModel, navController: NavControlle
     val userName: String by viewModel.userName.observeAsState(initial = "")
     val coroutineScope = rememberCoroutineScope()
     val imageSelect: String by viewModel.imageselect.observeAsState(initial = "")
+    val oldPassword: String by viewModel.oldPassword.observeAsState(initial = "")
     val password1: String by viewModel.password.observeAsState(initial = "")
     val password2: String by viewModel.password_rep.observeAsState(initial = "")
     val passwordError: Boolean by viewModel.password_error.observeAsState(initial = false)
     val passwordRepError: Boolean by viewModel.password_rep_error.observeAsState(initial = false)
+    val oldPasswordError: Boolean by viewModel.oldPasswordError.observeAsState(initial = false)
 
     Column(
         modifier = Modifier
@@ -70,8 +72,6 @@ fun EditProfileBody(viewModel: EditProfileViewModel, navController: NavControlle
             .padding(10.dp),
         horizontalAlignment = Alignment.Start
     ) {
-        Text(text = "Editar Perfil de Usuario", fontSize = 20.sp)
-        Spacer(modifier = Modifier.padding(16.dp))
         Text(text = "Modificar Nombre de usuario:", fontSize = 15.sp)
         UserNameField(userName) { viewModel.onNameChanged(it) }
         ButtonModifyUser{
@@ -90,8 +90,11 @@ fun EditProfileBody(viewModel: EditProfileViewModel, navController: NavControlle
                 viewModel.editUserImage(navController)
             }
         }
-        PasswordField1(password1, passwordError) { viewModel.onPasswordChanged(it, password2) }
-        PasswordField2(password2, passwordRepError) { viewModel.onPasswordChanged(password1, it) }
+        Spacer(modifier = Modifier.padding(16.dp))
+        Text(text = "Modificar Contraseña:", fontSize = 15.sp)
+        OldPasswordField(oldPassword, oldPasswordError) { viewModel.onPasswordChanged(it, password1, password2) }
+        PasswordField1(password1, passwordError) { viewModel.onPasswordChanged(oldPassword, it, password2) }
+        PasswordField2(password2, passwordRepError) { viewModel.onPasswordChanged(oldPassword, password1, it) }
 
         ButtonModifyPassword{
             coroutineScope.launch {
@@ -145,6 +148,24 @@ fun ButtonImage(viewModel: EditProfileViewModel) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun OldPasswordField(oldPassword: String, oldPasswordError: Boolean, onTextFieldChanged: (String) -> Unit){
+    OutlinedTextField(
+        value = oldPassword, onValueChange = { onTextFieldChanged(it) },
+        modifier = Modifier.fillMaxWidth(),
+        label = { Text(text = "Anterior Contraseña") },
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Password),
+        singleLine = true,
+        maxLines = 1,
+        visualTransformation = PasswordVisualTransformation()
+    )
+    if(oldPasswordError){
+        Spacer(modifier = Modifier.padding(4.dp))
+        textError(texto = "Contraseña actual incorrecta")
+    }
+    Spacer(modifier = Modifier.padding(4.dp))
+}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PasswordField1(password1: String, passwordError: Boolean, onTextFieldChanged: (String) -> Unit){
