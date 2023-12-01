@@ -1,6 +1,7 @@
 package com.example.app_artesania.data
 
 import android.net.Uri
+import com.example.app_artesania.model.Order
 import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
 import com.example.app_artesania.model.newProducto
@@ -201,4 +202,17 @@ suspend fun getProductsFilterByCategory(category: String): ArrayList<Product> {
         }
     }
     return productsList
+}
+
+suspend fun getOrdersByEmail(userEmail: String): ArrayList<Order> {
+    val ordersList: ArrayList<Order> = ArrayList()
+    val ordersCollection = data.collection("Orders")
+        .whereEqualTo("userEmail", userEmail).get().await()
+    for (document in ordersCollection.documents) {
+        val order = document.toObject<Order>()
+        if (order != null) {
+            ordersList.add(order)
+        }
+    }
+    return ordersList
 }

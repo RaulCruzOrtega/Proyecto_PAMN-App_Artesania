@@ -5,7 +5,7 @@ data class Order(
     val title: String,
     val description: String,
     val category: String,
-    val userId: String
+    val userEmail: String
 ){
     constructor() : this("", "", "",  "", "")
 }

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -26,17 +25,19 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.app_artesania.R
 import com.example.app_artesania.model.LoadState
+import com.example.app_artesania.model.Order
+import com.example.app_artesania.model.User
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBar
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
 import com.example.app_artesania.ui.templates.DefaultTopBar
+import com.example.app_artesania.ui.templates.ProfileImage
 import com.example.app_artesania.ui.templates.loader
 import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 
@@ -45,6 +46,8 @@ import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 @Composable
 fun OrdersScreen(viewModel: OrdersViewModel, navController: NavController) {
     val loadState by viewModel.loadState.observeAsState()
+    val orders by viewModel.orders.observeAsState(ArrayList())
+    val user by viewModel.user.observeAsState()
 
     when (loadState) {
         LoadState.LOADING -> { loader() }
@@ -60,11 +63,9 @@ fun OrdersScreen(viewModel: OrdersViewModel, navController: NavController) {
                     item { Spacer(modifier = Modifier.padding(40.dp)) }
                     item { Header() }
                     item { Spacer(modifier = Modifier.padding(10.dp)) }
-                    item { OrderTemplate() }
-                    item { OrderTemplate() }
-                    item { OrderTemplate() }
-                    item { OrderTemplate() }
-                    item { OrderTemplate() }
+                    for (order in orders!!) {
+                        item {OrderTemplate(order, user!!) }
+                    }
                 }
             }
         }
@@ -93,7 +94,7 @@ fun Header(){
 
 
 @Composable
-fun OrderTemplate() {
+fun OrderTemplate(order: Order, user: User) {
     Surface(
         color = MaterialTheme.colorScheme.tertiary,
         modifier = Modifier
@@ -106,25 +107,29 @@ fun OrderTemplate() {
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth()
+                .clickable { /*TODO*/ }
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.usericon),
-                contentDescription = "",
-                modifier = Modifier.size(50.dp)
-            )
-            Spacer(modifier = Modifier.padding(15.dp))
-            Column {
-                Text(text = "OrderTitle")
-                Text(text = "OrderDescription")
+            ProfileImage(imageURL = user.image, size = 75)
+            Spacer(modifier = Modifier.padding(5.dp))
+            Column (modifier = Modifier.weight(1f)){
+                Text(text = order.title, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                Text(text = "Categoría: " + order.category, fontSize = 15.sp, fontWeight = FontWeight.Light)
+                Spacer(modifier = Modifier.padding(5.dp))
+                Text(text = order.description, fontSize = 15.sp)
             }
-            Spacer(modifier = Modifier.weight(1f))
-            Icon(
-                Icons.Filled.Delete,
-                contentDescription = "Delete",
-                modifier = Modifier.clickable { /* TODO */}
-            )
+            Spacer(modifier = Modifier.padding(5.dp))
+            DeleteIcon(order)
         }
     }
+}
+
+@Composable
+fun DeleteIcon(order: Order) {
+    Icon(
+        Icons.Filled.Delete,
+        contentDescription = "Delete",
+        modifier = Modifier.clickable { /* TODO */}
+    )
 }
 
 @Preview(showBackground = true)
