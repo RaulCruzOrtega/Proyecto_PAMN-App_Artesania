@@ -27,6 +27,9 @@ class ProductViewModel(productId: String?, navController: NavController) : ViewM
     private val _craftsman = MutableLiveData<User>()
     val craftsman: LiveData<User> = _craftsman
 
+    private val _favo = MutableLiveData<Boolean>().apply { value = false }
+    val favo: LiveData<Boolean> = _favo
+
     init {
         if (navController.currentDestination?.route != AppScreens.HomeScreen.route) {
             _loadState.value = LoadState.LOADING
@@ -50,6 +53,10 @@ class ProductViewModel(productId: String?, navController: NavController) : ViewM
     fun delProduct(navController: NavController){
         deleteProduct(_product.value!!.id)
         navController.navigate(route = AppScreens.HomeScreen.route)
+    }
+
+    fun favo(){
+        _favo.value = !_favo.value!!
     }
 }
 
