@@ -1,26 +1,18 @@
 package com.example.app_artesania.ui.userProfile
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -31,15 +23,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import coil.compose.rememberImagePainter
 import com.example.app_artesania.model.DataRepository
 import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.User
@@ -48,6 +37,8 @@ import com.example.app_artesania.ui.bottomNavBar.BottomNavBar
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
 import com.example.app_artesania.ui.defaultTopBar.DefaultTopBar
 import com.example.app_artesania.ui.templates.ProductSmallViewTemplate
+import com.example.app_artesania.ui.templates.ProfileImage
+import com.example.app_artesania.ui.templates.loader
 import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -65,23 +56,7 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
     }
 
     when (loadState) {
-        LoadState.LOADING -> {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Gray)
-            ) {
-                // Muestra el círculo de carga
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(50.dp)
-                        .align(Alignment.Center),
-                    color = Color.Black,
-                )
-            }
-            println("Esperando")
-        }
-
+        LoadState.LOADING -> { loader() }
         LoadState.SUCCESS -> {
             Scaffold(
                 topBar = {  DefaultTopBar(navController = navController) },
@@ -136,18 +111,7 @@ private fun profileHead(user: User) {
             .fillMaxWidth()
             .wrapContentHeight()
     ) {
-        var image: Any = user.image
-        if(user.image == ""){
-            image = "https://firebasestorage.googleapis.com/v0/b/app-artesania.appspot.com/o/usericon.png?alt=media&token=3b8d9258-3e22-49c8-ad51-47776f99f5a2"
-        }
-        Image(
-            painter = rememberImagePainter(data = image),
-            contentDescription = "UserProfile",
-            modifier = Modifier
-                .size(150.dp)
-                .clip(CircleShape)
-                .border(2.dp, Color.Gray, CircleShape)
-        )
+        ProfileImage(imageURL = user.image, size = 150)
         Spacer(modifier = Modifier.height(10.dp))
         Text(text = user.name, fontWeight = FontWeight.Bold, fontSize = 24.sp)
         Spacer(modifier = Modifier.height(5.dp))

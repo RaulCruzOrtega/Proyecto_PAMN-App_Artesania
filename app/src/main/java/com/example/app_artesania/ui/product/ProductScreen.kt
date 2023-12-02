@@ -42,6 +42,7 @@ import com.example.app_artesania.model.User
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBar
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
 import com.example.app_artesania.ui.templates.SimpleTopNavBar
+import com.example.app_artesania.ui.templates.loader
 import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 import com.example.app_artesania.ui.userProfile.UserProfileViewModel
 
@@ -55,23 +56,7 @@ fun ProductScreen(viewModel: ProductViewModel, navController: NavController) {
     val loadState by viewModel.loadState.observeAsState()
 
     when (loadState) {
-        LoadState.LOADING -> {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Gray)
-            ) {
-                // Muestra el círculo de carga
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(50.dp)
-                        .align(Alignment.Center),
-                    color = Color.Black,
-                )
-            }
-            println("Esperando")
-        }
-
+        LoadState.LOADING -> { loader() }
         LoadState.SUCCESS -> {
             Scaffold(
                 topBar = { SimpleTopNavBar(title = product!!.name, navController = navController) },
@@ -106,7 +91,6 @@ fun ProductDetailView(product: Product, craftsman: User, viewModel: ProductViewM
         if(product.image == ""){
             image = "https://firebasestorage.googleapis.com/v0/b/app-artesania.appspot.com/o/ImagenRota.jpg?alt=media&token=14b0a319-edd5-4a75-879c-3d6f1150b2de"
         }
-
         Image(
             painter = rememberImagePainter(data = image),
             contentDescription = "Producto ${product.name}",

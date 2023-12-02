@@ -1,5 +1,6 @@
 package com.example.app_artesania.data
 
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.tasks.await
@@ -44,11 +45,7 @@ suspend fun signIn(email: String, password: String): Boolean {
 }
 
 fun currentUser(): Boolean{
-    if (auth.currentUser != null){
-        return true
-    } else {
-        return false
-    }
+    return auth.currentUser != null
 }
 
 fun currentUserEmail(): String?{
@@ -57,4 +54,11 @@ fun currentUserEmail(): String?{
 
 fun SingOut(){
     auth.signOut()
+}
+
+suspend fun changePassword(oldPassword: String, newPassword: String) {
+    val user = auth.currentUser!!
+    val credential = EmailAuthProvider.getCredential(user.email!!, oldPassword) // Reemplaza "old_password" con la contraseña actual del usuario
+    user.reauthenticate(credential).await()
+    user.updatePassword(newPassword).await()
 }

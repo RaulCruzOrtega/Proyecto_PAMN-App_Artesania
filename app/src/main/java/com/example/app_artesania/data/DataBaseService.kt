@@ -1,8 +1,10 @@
 package com.example.app_artesania.data
 
 import android.net.Uri
+import com.example.app_artesania.model.Order
 import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
+import com.example.app_artesania.model.newOrder
 import com.example.app_artesania.model.newProducto
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -187,4 +189,69 @@ suspend fun modifyProduct(product: newProducto, idProduct: String){
         "description" to product.description
     )
     val userDocument = data.collection("Articulos").document(idProduct).update(productHashMap as Map<String, Any>).await()
+}
+
+suspend fun getProductsFilterByCategory(category: String): ArrayList<Product> {
+    val productsList: ArrayList<Product> = ArrayList()
+    val productCollection = data.collection("Articulos")
+        .whereEqualTo("category", category).get().await()
+    for (document in productCollection.documents) {
+        val product = document.toObject<Product>()
+        if (product != null) {
+            product.id = document.id
+            productsList.add(product)
+        }
+    }
+    return productsList
+}
+
+suspend fun getAllOrders(excludeEmail: String): ArrayList<Order> {
+    val ordersList: ArrayList<Order> = ArrayList()
+    val ordersCollection = data.collection("Orders")
+        .whereNotEqualTo("userEmail", excludeEmail).get().await()
+    for (document in ordersCollection.documents) {
+        val order = document.toObject<Order>()
+        if (order != null) {
+            order.id = document.id
+            ordersList.add(order)
+        }
+    }
+    return ordersList
+}
+
+suspend fun getOrdersByEmail(userEmail: String): ArrayList<Order> {
+    val ordersList: ArrayList<Order> = ArrayList()
+    val ordersCollection = data.collection("Orders")
+        .whereEqualTo("userEmail", userEmail).get().await()
+    for (document in ordersCollection.documents) {
+        val order = document.toObject<Order>()
+        if (order != null) {
+            order.id = document.id
+            ordersList.add(order)
+        }
+    }
+    return ordersList
+}
+
+suspend fun getOrder(id: String): Order {
+    val document = data.collection("Orders").document(id).get().await()
+    val order = document.toObject<Order>()
+    if (order != null){
+        order.id = document.id
+    }
+    return order!!
+}
+
+suspend fun newOrderDB(newOrder: newOrder){
+    val orderHashMap = hashMapOf(
+        "title" to newOrder.title,
+        "description" to newOrder.description,
+        "category" to newOrder.category,
+        "userEmail" to newOrder.userEmail
+    )
+    data.collection("Orders").add(orderHashMap)
+}
+
+fun deleteOrder(orderId: String){
+    data.collection("Orders").document(orderId).delete()
 }

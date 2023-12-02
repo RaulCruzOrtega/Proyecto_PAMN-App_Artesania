@@ -6,6 +6,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.app_artesania.ui.category.CategoryScreen
+import com.example.app_artesania.ui.category.CategoryViewModel
+import com.example.app_artesania.ui.createOrder.CreateOrderScreen
+import com.example.app_artesania.ui.createOrder.CreateOrderViewModel
 import com.example.app_artesania.ui.editProfile.EditProfileScreen
 import com.example.app_artesania.ui.editProfile.EditProfileViewModel
 import com.example.app_artesania.ui.createProduct.CreateProduct
@@ -16,6 +20,10 @@ import com.example.app_artesania.ui.home.HomeScreen
 import com.example.app_artesania.ui.home.HomeViewModel
 import com.example.app_artesania.ui.login.LoginScreen
 import com.example.app_artesania.ui.login.LoginViewModel
+import com.example.app_artesania.ui.order.OrderScreen
+import com.example.app_artesania.ui.order.OrderViewModel
+import com.example.app_artesania.ui.orders.OrdersScreen
+import com.example.app_artesania.ui.orders.OrdersViewModel
 import com.example.app_artesania.ui.product.ProductScreen
 import com.example.app_artesania.ui.product.ProductViewModel
 import com.example.app_artesania.ui.register.RegisterScreen
@@ -47,14 +55,18 @@ fun AppNavigation() {
         composable(route = AppScreens.EditProfileScreen.route){
             EditProfileScreen(EditProfileViewModel(), navControler)
         }
+        composable(route = AppScreens.OrdersScreen.route){
+            OrdersScreen(OrdersViewModel(), navControler)
+        }
+        composable(route = AppScreens.CreateOrderScreen.route){
+            CreateOrderScreen(CreateOrderViewModel(), navControler)
+        }
         composable(route = AppScreens.ProductScreen.route + "/{productId}",
             arguments = listOf(navArgument(name = "productId"){
                 type = NavType.StringType
             })){
             val ProductViewModel: ProductViewModel = ProductViewModel(
-                    it.arguments?.getString("productId"),
-                    navControler
-                )
+                    it.arguments?.getString("productId"), navControler)
             ProductScreen(ProductViewModel, navControler)
         }
         composable(route = AppScreens.EditProductScreen.route + "/{productId}",
@@ -62,9 +74,24 @@ fun AppNavigation() {
                 type = NavType.StringType
             })){
             val EditProductViewModel: EditProductViewModel = EditProductViewModel(
-                it.arguments?.getString("productId")!!
-            )
+                it.arguments?.getString("productId")!!)
             EditProduct(EditProductViewModel, navControler)
+        }
+        composable(route = AppScreens.CategoryScreen.route + "/{category}",
+            arguments = listOf(navArgument(name = "category"){
+                type = NavType.StringType
+            })){
+            val CategoryViewModel: CategoryViewModel = CategoryViewModel(
+                it.arguments?.getString("category"), navControler)
+            CategoryScreen(CategoryViewModel, navControler)
+        }
+        composable(route = AppScreens.OrderScreen.route + "/{orderId}",
+            arguments = listOf(navArgument(name = "orderId"){
+                type = NavType.StringType
+            })){
+            val OrderViewModel: OrderViewModel = OrderViewModel(
+                it.arguments?.getString("orderId"), navControler)
+            OrderScreen(OrderViewModel, navControler)
         }
     }
 }

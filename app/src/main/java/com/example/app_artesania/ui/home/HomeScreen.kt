@@ -30,8 +30,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,8 +50,11 @@ import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
 import com.example.app_artesania.ui.templates.ProductSmallViewTemplate
 import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 import com.example.app_artesania.model.Category
+import com.example.app_artesania.navigation.AppScreens
 import com.example.app_artesania.ui.defaultTopBar.DefaultTopBar
+
 import com.example.app_artesania.ui.templates.SimpleTopNavBar
+import com.example.app_artesania.ui.templates.loader
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,34 +67,12 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController){
     val loadState by viewModel.loadState.observeAsState(LoadState.LOADING)
 
 
-
-
     when (loadState) {
-        LoadState.LOADING -> {
-            //Puedes mostrar un indicador de carga
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                // Muestra el círculo de carga
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(50.dp)
-                        .align(Alignment.Center),
-                    color = MaterialTheme.colorScheme.primary,
-                )
-            }
-            println("Esperando")
-        }
-
+        LoadState.LOADING -> { loader() }
         LoadState.SUCCESS -> {
-
-            println("SE PRESENTA")
             Scaffold (
-                topBar = {   DefaultTopBar(navController) },
-                bottomBar = {
-                    BottomNavBar(BottomNavBarViewModel(), navController)
-                }
+                topBar = { DefaultTopBar(navController = navController) },
+                bottomBar = { BottomNavBar(BottomNavBarViewModel(), navController) }
             ) {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
@@ -103,7 +82,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController){
                     item(span = { GridItemSpan(2) }) {
                         Spacer(modifier = Modifier.padding(35.dp))
                     }
-                    item(span = { GridItemSpan(2) }) { CategoriesSlider(categories) }
+                    item(span = { GridItemSpan(2) }) { CategoriesSlider(categories, navController) }
                     item(span = { GridItemSpan(2) }) {
                         Spacer(modifier = Modifier.padding(8.dp))
                     }
@@ -138,7 +117,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController){
 }
 
 @Composable
-fun CategoriesSlider(categories: ArrayList<Category>){
+fun CategoriesSlider(categories: ArrayList<Category>, navController: NavController){
     LazyRow {
         itemsIndexed(categories) { index, item ->
             Column(
@@ -148,7 +127,7 @@ fun CategoriesSlider(categories: ArrayList<Category>){
                     .fillMaxWidth()
                     .height(100.dp)
                     .width(100.dp)
-                    .clickable { println("Categoría $index: ${item.categoryType.name}") }
+                    .clickable { navController.navigate(route = AppScreens.CategoryScreen.route + "/${item.categoryType.name}") }
             ) {
                 Spacer(modifier = Modifier.height(5.dp))
                 Icon(
