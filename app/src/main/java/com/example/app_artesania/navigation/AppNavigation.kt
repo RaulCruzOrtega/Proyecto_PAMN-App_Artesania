@@ -20,6 +20,8 @@ import com.example.app_artesania.ui.home.HomeScreen
 import com.example.app_artesania.ui.home.HomeViewModel
 import com.example.app_artesania.ui.login.LoginScreen
 import com.example.app_artesania.ui.login.LoginViewModel
+import com.example.app_artesania.ui.order.OrderScreen
+import com.example.app_artesania.ui.order.OrderViewModel
 import com.example.app_artesania.ui.orders.OrdersScreen
 import com.example.app_artesania.ui.orders.OrdersViewModel
 import com.example.app_artesania.ui.product.ProductScreen
@@ -64,9 +66,7 @@ fun AppNavigation() {
                 type = NavType.StringType
             })){
             val ProductViewModel: ProductViewModel = ProductViewModel(
-                    it.arguments?.getString("productId"),
-                    navControler
-                )
+                    it.arguments?.getString("productId"), navControler)
             ProductScreen(ProductViewModel, navControler)
         }
         composable(route = AppScreens.EditProductScreen.route + "/{productId}",
@@ -74,8 +74,7 @@ fun AppNavigation() {
                 type = NavType.StringType
             })){
             val EditProductViewModel: EditProductViewModel = EditProductViewModel(
-                it.arguments?.getString("productId")!!
-            )
+                it.arguments?.getString("productId")!!)
             EditProduct(EditProductViewModel, navControler)
         }
         composable(route = AppScreens.CategoryScreen.route + "/{category}",
@@ -83,10 +82,16 @@ fun AppNavigation() {
                 type = NavType.StringType
             })){
             val CategoryViewModel: CategoryViewModel = CategoryViewModel(
-                it.arguments?.getString("category"),
-                navControler
-            )
+                it.arguments?.getString("category"), navControler)
             CategoryScreen(CategoryViewModel, navControler)
+        }
+        composable(route = AppScreens.OrderScreen.route + "/{orderId}",
+            arguments = listOf(navArgument(name = "orderId"){
+                type = NavType.StringType
+            })){
+            val OrderViewModel: OrderViewModel = OrderViewModel(
+                it.arguments?.getString("orderId"), navControler)
+            OrderScreen(OrderViewModel, navControler)
         }
     }
 }

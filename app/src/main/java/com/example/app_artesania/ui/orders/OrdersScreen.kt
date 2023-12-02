@@ -122,9 +122,9 @@ fun OrdersTemplate(order: Order, user: User, myOrder: Boolean, navController: Na
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth()
-                .clickable { /*TODO*/ }
+                .clickable { navController.navigate(route = AppScreens.OrderScreen.route + "/${order.id}") }
         ) {
-            ProfileImage(imageURL = user!!.image, size = 75)
+            ProfileImage(imageURL = user.image, size = 75)
             Spacer(modifier = Modifier.padding(5.dp))
             Column (modifier = Modifier.weight(1f)){
                 Text(text = order.title, fontSize = 20.sp, fontWeight = FontWeight.Bold)

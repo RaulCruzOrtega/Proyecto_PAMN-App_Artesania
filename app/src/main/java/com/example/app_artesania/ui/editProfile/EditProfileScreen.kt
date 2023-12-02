@@ -44,9 +44,7 @@ fun EditProfileScreen(viewModel: EditProfileViewModel, navController: NavControl
     Scaffold (
         topBar = { SimpleTopNavBar(title = "Editar Perfil de Usuario", navController = navController)
         }) {
-        Box(
-            Modifier
-                .fillMaxSize()
+        Box( Modifier.fillMaxSize()
                 .padding(16.dp, top = 70.dp, 16.dp, 16.dp)
         ) {
             EditProfileBody(viewModel, navController)
@@ -60,10 +58,10 @@ fun EditProfileBody(viewModel: EditProfileViewModel, navController: NavControlle
     val coroutineScope = rememberCoroutineScope()
     val imageSelect: String by viewModel.imageselect.observeAsState(initial = "")
     val oldPassword: String by viewModel.oldPassword.observeAsState(initial = "")
-    val password1: String by viewModel.password.observeAsState(initial = "")
-    val password2: String by viewModel.password_rep.observeAsState(initial = "")
-    val passwordError: Boolean by viewModel.password_error.observeAsState(initial = false)
-    val passwordRepError: Boolean by viewModel.password_rep_error.observeAsState(initial = false)
+    val password1: String by viewModel.password1.observeAsState(initial = "")
+    val password2: String by viewModel.password2.observeAsState(initial = "")
+    val passwordError: Boolean by viewModel.passwordError.observeAsState(initial = false)
+    val passwordRepError: Boolean by viewModel.passwordRepError.observeAsState(initial = false)
     val oldPasswordError: Boolean by viewModel.oldPasswordError.observeAsState(initial = false)
 
     Column(
@@ -192,7 +190,7 @@ fun PasswordField2(password2: String, passwordRepError: Boolean, onTextFieldChan
         value = password2, onValueChange = { onTextFieldChanged(it) },
         modifier = Modifier.fillMaxWidth(),
         label = { Text(text = "Repetir Contraseña") },
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Password),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         singleLine = true,
         maxLines = 1,
         visualTransformation = PasswordVisualTransformation()

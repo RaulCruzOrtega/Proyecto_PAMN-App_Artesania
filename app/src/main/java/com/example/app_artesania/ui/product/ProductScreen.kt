@@ -91,7 +91,6 @@ fun ProductDetailView(product: Product, craftsman: User, viewModel: ProductViewM
         if(product.image == ""){
             image = "https://firebasestorage.googleapis.com/v0/b/app-artesania.appspot.com/o/ImagenRota.jpg?alt=media&token=14b0a319-edd5-4a75-879c-3d6f1150b2de"
         }
-
         Image(
             painter = rememberImagePainter(data = image),
             contentDescription = "Producto ${product.name}",

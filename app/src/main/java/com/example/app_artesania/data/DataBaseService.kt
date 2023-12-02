@@ -233,6 +233,15 @@ suspend fun getOrdersByEmail(userEmail: String): ArrayList<Order> {
     return ordersList
 }
 
+suspend fun getOrder(id: String): Order {
+    val document = data.collection("Orders").document(id).get().await()
+    val order = document.toObject<Order>()
+    if (order != null){
+        order.id = document.id
+    }
+    return order!!
+}
+
 suspend fun newOrderDB(newOrder: newOrder){
     val orderHashMap = hashMapOf(
         "title" to newOrder.title,

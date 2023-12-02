@@ -69,13 +69,9 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController){
     when (loadState) {
         LoadState.LOADING -> { loader() }
         LoadState.SUCCESS -> {
-
-            println("SE PRESENTA")
             Scaffold (
                 topBar = { DefaultTopBar(navController = navController) },
-                bottomBar = {
-                    BottomNavBar(BottomNavBarViewModel(), navController)
-                }
+                bottomBar = { BottomNavBar(BottomNavBarViewModel(), navController) }
             ) {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
