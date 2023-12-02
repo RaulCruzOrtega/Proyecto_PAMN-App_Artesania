@@ -3,6 +3,7 @@ package com.example.app_artesania.ui.product
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
+import com.example.app_artesania.R
 import com.example.app_artesania.model.DataRepository
 import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.Product
@@ -54,6 +57,7 @@ fun ProductScreen(viewModel: ProductViewModel, navController: NavController) {
     val product by viewModel.product.observeAsState()
     val craftsman by viewModel.craftsman.observeAsState()
     val loadState by viewModel.loadState.observeAsState()
+    val favo: Boolean by viewModel.favo.observeAsState(initial = false)
 
     when (loadState) {
         LoadState.LOADING -> { loader() }
@@ -68,7 +72,7 @@ fun ProductScreen(viewModel: ProductViewModel, navController: NavController) {
                 ) {
                     item {
                         Spacer(modifier = Modifier.padding(20.dp))
-                        ProductDetailView(product!!, craftsman!!, viewModel, navController)
+                        ProductDetailView(product!!, craftsman!!, viewModel, navController, favo)
                         Spacer(modifier = Modifier.padding(20.dp))
                     }
                 }
@@ -80,7 +84,7 @@ fun ProductScreen(viewModel: ProductViewModel, navController: NavController) {
 
 
 @Composable
-fun ProductDetailView(product: Product, craftsman: User, viewModel: ProductViewModel, navController: NavController) {
+fun ProductDetailView(product: Product, craftsman: User, viewModel: ProductViewModel, navController: NavController, favo:Boolean) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -100,12 +104,40 @@ fun ProductDetailView(product: Product, craftsman: User, viewModel: ProductViewM
                 .clip(RoundedCornerShape(10))
         )
         Spacer(modifier = Modifier.height(30.dp))
-
-        Text(
-            text = product.name,
-            fontSize = 20.sp,
-            color = Color.Black,
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp, end = 16.dp),
+        ) {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 25.dp)
+            ) {
+                Text(
+                    text = product.name,
+                    fontSize = 20.sp,
+                    color = Color.Black,
+                    textAlign = TextAlign.Center
+                )
+                Text(
+                    text = "Categoría: " + product.category,
+                    fontSize = 15.sp,
+                    color = Color.Black,
+                )
+            }
+            Icon(
+                painter = painterResource(R.drawable.hearticon),
+                tint = if (favo) Color.Red else Color.LightGray,
+                contentDescription = "favo",
+                modifier = Modifier.size(25.dp)
+                    .clickable { viewModel.favo() }
+            )
+        }
         Spacer(modifier = Modifier.height(30.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -169,6 +201,6 @@ private fun tabs(viewModel: ProductViewModel , navController: NavController) {
 fun GreetingPreview() {
     App_ArtesaniaTheme {
         val navController = rememberNavController()
-        ProductScreen(ProductViewModel("1", navController), navController)
+        ProductScreen(ProductViewModel("1slFS2X3THA2jvLPSmcI", navController), navController)
     }
 }
