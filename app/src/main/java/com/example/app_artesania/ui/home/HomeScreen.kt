@@ -30,6 +30,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,7 +52,7 @@ import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
 import com.example.app_artesania.ui.templates.ProductSmallViewTemplate
 import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 import com.example.app_artesania.model.Category
-import com.example.app_artesania.ui.templates.DefaultTopBar
+import com.example.app_artesania.ui.defaultTopBar.DefaultTopBar
 import com.example.app_artesania.ui.templates.SimpleTopNavBar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -62,6 +64,8 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController){
     val craftsmansDB by viewModel.craftsmansDB.observeAsState(ArrayList())
     val productsDB by viewModel.productsDB.observeAsState(ArrayList())
     val loadState by viewModel.loadState.observeAsState(LoadState.LOADING)
+
+
 
 
     when (loadState) {
@@ -86,7 +90,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController){
 
             println("SE PRESENTA")
             Scaffold (
-                topBar = { DefaultTopBar(navController = navController) },
+                topBar = {   DefaultTopBar(navController) },
                 bottomBar = {
                     BottomNavBar(BottomNavBarViewModel(), navController)
                 }

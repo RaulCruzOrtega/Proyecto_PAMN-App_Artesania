@@ -1,4 +1,4 @@
-package com.example.app_artesania.ui.templates
+package com.example.app_artesania.ui.defaultTopBar
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,6 +14,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
@@ -97,9 +99,7 @@ fun DefaultTopBar(navController: NavController) {
                         tint = Color.White
                     )
                 }
-                IconButton(onClick = { /* TODO: Manejar clic de ajustes */ }) {
-                    Icon(Icons.Default.Settings, contentDescription = "Settings", tint = Color.White)
-                }
+
             }
         },
         colors = TopAppBarDefaults.largeTopAppBarColors(
