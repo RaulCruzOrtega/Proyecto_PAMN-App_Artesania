@@ -6,6 +6,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.app_artesania.ui.buyProduct.BuyProductScreen
+import com.example.app_artesania.ui.buyProduct.BuyProductViewModel
 import com.example.app_artesania.ui.category.CategoryScreen
 import com.example.app_artesania.ui.category.CategoryViewModel
 import com.example.app_artesania.ui.createOrder.CreateOrderScreen
@@ -61,6 +63,10 @@ fun AppNavigation() {
         composable(route = AppScreens.CreateOrderScreen.route){
             CreateOrderScreen(CreateOrderViewModel(), navControler)
         }
+        composable(route = AppScreens.BuyProductScreen.route){
+            BuyProductScreen(BuyProductViewModel(), navControler)
+        }
+
         composable(route = AppScreens.ProductScreen.route + "/{productId}",
             arguments = listOf(navArgument(name = "productId"){
                 type = NavType.StringType
