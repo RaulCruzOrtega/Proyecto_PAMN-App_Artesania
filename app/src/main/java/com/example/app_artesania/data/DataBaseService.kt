@@ -247,11 +247,23 @@ suspend fun newOrderDB(newOrder: newOrder){
         "title" to newOrder.title,
         "description" to newOrder.description,
         "category" to newOrder.category,
-        "userEmail" to newOrder.userEmail
+        "userEmail" to newOrder.userEmail,
+        "offers" to newOrder.offers
     )
     data.collection("Orders").add(orderHashMap)
 }
 
 fun deleteOrder(orderId: String){
     data.collection("Orders").document(orderId).delete()
+}
+
+suspend fun modifyOrder(newOrder: Order){
+    val orderHashMap = hashMapOf(
+        "title" to newOrder.title,
+        "description" to newOrder.description,
+        "category" to newOrder.category,
+        "userEmail" to newOrder.userEmail,
+        "offers" to newOrder.offers
+    )
+    data.collection("Orders").document(newOrder.id).update(orderHashMap as Map<String, Any>).await()
 }

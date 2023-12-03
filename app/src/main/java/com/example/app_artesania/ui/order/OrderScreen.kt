@@ -25,6 +25,7 @@ import androidx.navigation.NavController
 import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.Order
 import com.example.app_artesania.model.User
+import com.example.app_artesania.navigation.AppScreens
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBar
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
 import com.example.app_artesania.ui.templates.ProfileImage
@@ -105,7 +106,7 @@ fun Tabs(order: Order, viewModel: OrderViewModel, navController: NavController){
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        Button(onClick = { /*TODO*/ }) {
+        Button(onClick = { navController.navigate(route = AppScreens.EditOrderScreen.route + "/${order.id}") }) {
             Text(text = "Editar Pedido")
         }
         Button(onClick = {
