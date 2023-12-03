@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.app_artesania.data.SingOut
+import com.example.app_artesania.data.getProducts
 import com.example.app_artesania.data.getProducts_Craftsman
 import com.example.app_artesania.data.getUser
 import com.example.app_artesania.model.DataRepository
@@ -27,6 +28,8 @@ class UserProfileViewModel : ViewModel()  {
     private val _user = MutableLiveData<User>()
     val user: MutableLiveData<User> = _user
 
+    private val _searchResults = MutableLiveData<ArrayList<Product>>()
+    val searchResults: LiveData<ArrayList<Product>> = _searchResults
     init{
         _loadState.value = LoadState.LOADING
         loadData()
@@ -46,5 +49,18 @@ class UserProfileViewModel : ViewModel()  {
     fun cerrarSesión(navController: NavController){
         SingOut()
         navController.navigate(route = AppScreens.LoginScreen.route)
+    }
+
+    fun searchProducts(query: String) {
+        viewModelScope.launch {
+            val allProducts = getProducts()
+            _searchResults.value = allProducts.filter {
+                it.name.contains(query, ignoreCase = true)
+            } as ArrayList<Product>
+        }
+    }
+
+    fun resetSearch() {
+        _searchResults.value = arrayListOf() // Restablecer los resultados de búsqueda
     }
 }

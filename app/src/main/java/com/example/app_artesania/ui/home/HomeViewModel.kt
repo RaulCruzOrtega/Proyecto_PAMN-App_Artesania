@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 class HomeViewModel : ViewModel() {
 
     private val _loadState = MutableLiveData<LoadState>()
-    val loadState: MutableLiveData<LoadState> = _loadState
+    val loadState: LiveData<LoadState> = _loadState
 
     private val _craftsmansDB = MutableLiveData<ArrayList<User>?>()
     val craftsmansDB: LiveData<ArrayList<User>?> = _craftsmansDB
@@ -28,10 +28,11 @@ class HomeViewModel : ViewModel() {
     private val _categories = MutableLiveData<ArrayList<Category>>()
     val categories: LiveData<ArrayList<Category>> = _categories
 
+    private val _searchResults = MutableLiveData<ArrayList<Product>>()
+    val searchResults: LiveData<ArrayList<Product>> = _searchResults
 
     init {
         lanzamiento()
-        println("OTRAVEZ")
     }
 
     private fun lanzamiento() {
@@ -39,32 +40,41 @@ class HomeViewModel : ViewModel() {
             _loadState.value = LoadState.LOADING
             loadCategories()
             loadData()
-
         }
-        catch (e: Exception){
+        catch (e: Exception) {
             println("Error ${e.message}")
             _loadState.value = LoadState.ERROR
         }
     }
 
     private fun loadCategories() {
+
         _categories.value = getCategories()
     }
 
     private fun loadData() {
-        try {
-            viewModelScope.launch {
+        viewModelScope.launch {
+            try {
                 _craftsmansDB.value = getCraftsmans()
                 _productsDB.value = getProducts()
-                println(craftsmansDB.value)
-                println("Products: " + productsDB.value)
-                delay(500)
                 _loadState.value = LoadState.SUCCESS
+            } catch (e: Exception) {
+                _loadState.value = LoadState.ERROR
+                println("Error load craftmans: ${e.message}")
             }
         }
-        catch (e: Exception){
-            println("Error load craftmans")
+    }
+
+    fun searchProducts(query: String) {
+        viewModelScope.launch {
+            val allProducts = getProducts()
+            _searchResults.value = allProducts.filter {
+                it.name.contains(query, ignoreCase = true)
+            } as ArrayList<Product>
         }
+    }
+    fun resetSearch() {
+        _searchResults.value = arrayListOf() // Restablecer los resultados de búsqueda
     }
 
 }

@@ -1,4 +1,4 @@
-package com.example.app_artesania.ui.defaultTopBar
+package com.example.app_artesania.ui.templates
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,13 +9,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
@@ -38,9 +35,10 @@ import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DefaultTopBar(navController: NavController) {
+fun DefaultTopBar(navController: NavController, onSearch: (String) -> Unit) {
     val showSearchBar = remember { mutableStateOf(false) }
     val searchText = remember { mutableStateOf("") }
+
     TopAppBar(
         modifier = Modifier.height(65.dp),
         title = {
@@ -67,30 +65,37 @@ fun DefaultTopBar(navController: NavController) {
                 }
             }
         },
-
         actions = {
             if (showSearchBar.value) {
                 Column {
                     TextField(
                         value = searchText.value,
-                        onValueChange = { newText -> searchText.value = newText },
-                        placeholder = { Text("Buscar...") },
+                        onValueChange = { newText ->
+                            searchText.value = newText
+                            onSearch(newText) // Llama al callback con el texto actualizado
+                        },
+                        placeholder = { Text("Encuentra un producto...") },
                         singleLine = true,
-
                         trailingIcon = {
                             if (searchText.value.isNotEmpty()) {
-                                IconButton(onClick = { searchText.value = "" }) {
+                                IconButton(onClick = {
+                                    searchText.value = ""
+                                    onSearch("") // Resetea la búsqueda cuando se limpia el texto
+                                }) {
                                     Icon(Icons.Default.Close, contentDescription = "Clear")
                                 }
                             }
                         }
                     )
                 }
-                IconButton(onClick = { showSearchBar.value = false }) {
+                IconButton(onClick = {
+                    showSearchBar.value = false
+                    searchText.value = ""
+                    onSearch("") // Resetea la búsqueda cuando se cierra la barra de búsqueda
+                }) {
                     Icon(Icons.Default.Close, contentDescription = "Close Search", tint=Color.White)
                 }
             } else {
-
                 IconButton(onClick = { showSearchBar.value = true }) {
                     Icon(
                         painter = painterResource(id = R.drawable.lupa),
@@ -99,7 +104,6 @@ fun DefaultTopBar(navController: NavController) {
                         tint = Color.White
                     )
                 }
-
             }
         },
         colors = TopAppBarDefaults.largeTopAppBarColors(
@@ -108,12 +112,13 @@ fun DefaultTopBar(navController: NavController) {
     )
 }
 
+
 @Preview(showBackground = true)
 @Composable
 fun Preview() {
-    App_ArtesaniaTheme {
+    App_ArtesaniaTheme { // Asegúrate de que este tema exista en tu proyecto
         val navController = rememberNavController()
-        DefaultTopBar(navController)
+        DefaultTopBar(navController, onSearch = { /* acción de búsqueda */ })
     }
 }
 

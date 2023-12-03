@@ -30,6 +30,10 @@ class InfoCrafsmanViewModel(private val craftsmanId: String?, navController: Nav
     private val _craftsman = MutableLiveData<User?>()
     val craftsman: MutableLiveData<User?> = _craftsman
 
+    private val _searchResults = MutableLiveData<ArrayList<Product>>()
+    val searchResults: LiveData<ArrayList<Product>> = _searchResults
+
+
     init {
         _loadState.value = LoadState.LOADING
         if (craftsmanId != null) {
@@ -53,6 +57,19 @@ class InfoCrafsmanViewModel(private val craftsmanId: String?, navController: Nav
                 _loadState.value = LoadState.ERROR
             }
         }
+    }
+
+    fun searchProducts(query: String) {
+        viewModelScope.launch {
+            val allProducts = getProducts()
+            _searchResults.value = allProducts.filter {
+                it.name.contains(query, ignoreCase = true)
+            } as ArrayList<Product>
+        }
+    }
+
+    fun resetSearch() {
+        _searchResults.value = arrayListOf() // Restablecer los resultados de búsqueda
     }
 }
 

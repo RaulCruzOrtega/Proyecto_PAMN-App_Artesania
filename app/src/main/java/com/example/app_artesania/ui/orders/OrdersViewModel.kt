@@ -6,10 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.app_artesania.data.getAllOrders
 import com.example.app_artesania.data.getOrdersByEmail
+import com.example.app_artesania.data.getProducts
 import com.example.app_artesania.data.getUser
 import com.example.app_artesania.model.DataRepository
 import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.Order
+import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
 import kotlinx.coroutines.launch
 
@@ -25,6 +27,8 @@ class OrdersViewModel  : ViewModel() {
     private val _users = MutableLiveData<ArrayList<User>?>()
     val users: LiveData<ArrayList<User>?> = _users.apply { value = ArrayList() }
 
+    private val _searchResults = MutableLiveData<ArrayList<Product>>()
+    val searchResults: LiveData<ArrayList<Product>> = _searchResults
     init{
         _loadState.value = LoadState.LOADING
         loadData()
@@ -46,5 +50,18 @@ class OrdersViewModel  : ViewModel() {
             }
             _loadState.value = LoadState.SUCCESS
         }
+    }
+
+    fun searchProducts(query: String) {
+        viewModelScope.launch {
+            val allProducts = getProducts()
+            _searchResults.value = allProducts.filter {
+                it.name.contains(query, ignoreCase = true)
+            } as ArrayList<Product>
+        }
+    }
+
+    fun resetSearch() {
+        _searchResults.value = arrayListOf() // Restablecer los resultados de búsqueda
     }
 }

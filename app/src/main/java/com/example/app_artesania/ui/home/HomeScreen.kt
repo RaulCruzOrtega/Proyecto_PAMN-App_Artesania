@@ -3,17 +3,13 @@ package com.example.app_artesania.ui.home
 import android.annotation.SuppressLint
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -21,7 +17,6 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -51,70 +46,101 @@ import com.example.app_artesania.ui.templates.ProductSmallViewTemplate
 import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 import com.example.app_artesania.model.Category
 import com.example.app_artesania.navigation.AppScreens
-import com.example.app_artesania.ui.defaultTopBar.DefaultTopBar
+import com.example.app_artesania.ui.templates.DefaultTopBar
 
-import com.example.app_artesania.ui.templates.SimpleTopNavBar
 import com.example.app_artesania.ui.templates.loader
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: HomeViewModel, navController: NavController){
-
-    val categories: ArrayList<Category> = viewModel.categories.value!!
-    val craftsmansDB by viewModel.craftsmansDB.observeAsState(ArrayList())
-    val productsDB by viewModel.productsDB.observeAsState(ArrayList())
+fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
+    val categories by viewModel.categories.observeAsState(arrayListOf())
+    val craftsmansDB by viewModel.craftsmansDB.observeAsState(arrayListOf())
+    val productsDB by viewModel.productsDB.observeAsState(arrayListOf())
+    val searchResults by viewModel.searchResults.observeAsState(arrayListOf())
     val loadState by viewModel.loadState.observeAsState(LoadState.LOADING)
+    val isSearching = searchResults.isNotEmpty()
 
-
-    when (loadState) {
-        LoadState.LOADING -> { loader() }
-        LoadState.SUCCESS -> {
-            Scaffold (
-                topBar = { DefaultTopBar(navController = navController) },
-                bottomBar = { BottomNavBar(BottomNavBarViewModel(), navController) }
-            ) {
+    Scaffold(
+        topBar = {
+            DefaultTopBar(navController = navController) { query ->
+                if (query.isEmpty()) {
+                    // Si la búsqueda se ha borrado, resetear los resultados de búsqueda
+                    viewModel.resetSearch()
+                } else {
+                    viewModel.searchProducts(query)
+                }
+            }
+        },
+        bottomBar = { BottomNavBar(BottomNavBarViewModel(), navController) }
+    ) {
+        when (loadState) {
+            LoadState.LOADING -> { loader() }
+            LoadState.SUCCESS -> {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     horizontalArrangement = Arrangement.Center,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    item(span = { GridItemSpan(2) }) {
-                        Spacer(modifier = Modifier.padding(35.dp))
-                    }
-                    item(span = { GridItemSpan(2) }) { CategoriesSlider(categories, navController) }
-                    item(span = { GridItemSpan(2) }) {
-                        Spacer(modifier = Modifier.padding(8.dp))
-                    }
-                    item(span = { GridItemSpan(2) }) { CraftsmanSlider(craftsmansDB!!, navController) }
-                    item(span = { GridItemSpan(2) }) {
-                        Spacer(modifier = Modifier.padding(4.dp))
-                    }
-                    item(span = { GridItemSpan(2) }) { ProductsSlider("Productos Nuevos", productsDB!!, navController) }
-                    item(span = { GridItemSpan(2) }) { ProductsSlider("Productos en Tendencia", productsDB!!, navController) }
-                    item(span = { GridItemSpan(2) }) {
-                        Spacer(modifier = Modifier.padding(4.dp))
-                    }
-                    item(span = { GridItemSpan(2) }) {
-                        Text(
-                            text = "Otros Productos",
-                            color = MaterialTheme.colorScheme.primary,
-                            fontSize = 20.sp,
-                            modifier = Modifier.padding(8.dp)
-                        )
-                    }
-                    for (product in productsDB!!) {
-                        item(span = { GridItemSpan(1) }) {ProductSmallViewTemplate(product, 180, navController) }
-                    }
-                    item(span = { GridItemSpan(2) }) {
-                        Spacer(modifier = Modifier.padding(28.dp))
+                    if (isSearching) {
+                        item(span = { GridItemSpan(2) }) {
+                            Spacer(modifier = Modifier.padding(35.dp))
+                        }
+                        items(searchResults.size) { index ->
+                            ProductSmallViewTemplate(searchResults[index], 180, navController)
+                        }
+                    } else {
+                        item(span = { GridItemSpan(2) }) {
+                            Spacer(modifier = Modifier.padding(35.dp))
+                        }
+                        item(span = { GridItemSpan(2) }) { CategoriesSlider(categories, navController) }
+                        item(span = { GridItemSpan(2) }) {
+                            Spacer(modifier = Modifier.padding(8.dp))
+                        }
+                        item(span = { GridItemSpan(2) }) { craftsmansDB?.let { it1 ->
+                            CraftsmanSlider(
+                                it1, navController)
+                        } }
+                        item(span = { GridItemSpan(2) }) {
+                            Spacer(modifier = Modifier.padding(4.dp))
+                        }
+                        item(span = { GridItemSpan(2) }) { productsDB?.let { it1 ->
+                            ProductsSlider("Productos Nuevos",
+                                it1, navController)
+                        } }
+                        item(span = { GridItemSpan(2) }) { productsDB?.let { it1 ->
+                            ProductsSlider("Productos en Tendencia",
+                                it1, navController)
+                        } }
+                        item(span = { GridItemSpan(2) }) {
+                            Spacer(modifier = Modifier.padding(4.dp))
+                        }
+                        item(span = { GridItemSpan(2) }) {
+                            Text(
+                                text = "Otros Productos",
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = 20.sp,
+                                modifier = Modifier.padding(8.dp)
+                            )
+                        }
+                        productsDB?.forEach { product ->
+                            item(span = { GridItemSpan(1) }) {
+                                ProductSmallViewTemplate(product, 180, navController)
+                            }
+                        }
+                        item(span = { GridItemSpan(2) }) {
+                            Spacer(modifier = Modifier.padding(28.dp))
+                        }
                     }
                 }
             }
+            else -> {
+            }
         }
-        else -> {}
     }
 }
+
+
 
 @Composable
 fun CategoriesSlider(categories: ArrayList<Category>, navController: NavController){

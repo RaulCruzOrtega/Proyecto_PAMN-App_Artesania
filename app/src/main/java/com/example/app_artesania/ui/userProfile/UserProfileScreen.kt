@@ -19,8 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -29,13 +27,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.app_artesania.model.DataRepository
 import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.User
 import com.example.app_artesania.navigation.AppScreens
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBar
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
-import com.example.app_artesania.ui.defaultTopBar.DefaultTopBar
+import com.example.app_artesania.ui.templates.DefaultTopBar
 import com.example.app_artesania.ui.templates.ProductSmallViewTemplate
 import com.example.app_artesania.ui.templates.ProfileImage
 import com.example.app_artesania.ui.templates.loader
@@ -45,20 +42,28 @@ import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavController) {
-    val loadState by viewModel.loadState.observeAsState()
-    val products by viewModel.products.observeAsState()
+    val loadState by viewModel.loadState.observeAsState(LoadState.LOADING)
+    val products by viewModel.products.observeAsState(arrayListOf())
     val user by viewModel.user.observeAsState()
-    val isDarkTheme = remember { mutableStateOf(false) }
+    val searchResults by viewModel.searchResults.observeAsState(arrayListOf())
+    val isSearching = searchResults.isNotEmpty()
 
-
-
-    when (loadState) {
-        LoadState.LOADING -> { loader() }
-        LoadState.SUCCESS -> {
-            Scaffold(
-                topBar = {  DefaultTopBar(navController = navController) },
-                bottomBar = { BottomNavBar(BottomNavBarViewModel(), navController) }
-            ) {
+    Scaffold(
+        topBar = {
+            DefaultTopBar(navController = navController) { query ->
+                if (query.isEmpty()) {
+                    // Si la búsqueda se ha borrado, resetear los resultados de búsqueda
+                    viewModel.resetSearch()
+                } else {
+                    viewModel.searchProducts(query)
+                }
+            }
+        },
+        bottomBar = { BottomNavBar(BottomNavBarViewModel(), navController) }
+    ) {
+        when (loadState) {
+            LoadState.LOADING -> { loader() }
+            LoadState.SUCCESS -> {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     modifier = Modifier
@@ -67,35 +72,44 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
                     horizontalArrangement = Arrangement.Center,
                     verticalArrangement = Arrangement.Top
                 ) {
-                    item(span = { GridItemSpan(2) }) {
-                        Spacer(modifier = Modifier.height(40.dp))
-                    }
-                    item(span = { GridItemSpan(2) }) { profileHead(user!!) }
-                    item(span = { GridItemSpan(2) }) {
-                        Spacer(modifier = Modifier.height(20.dp))
-                    }
-                    item(span = { GridItemSpan(2) }) { tabs(viewModel, navController) }
-                    item(span = { GridItemSpan(2) }) {
-                        Spacer(modifier = Modifier.height(20.dp))
-                    }
-                    if (DataRepository.getUser()!!.isCraftsman) {
-                        for (product in products!!) {
-                            item(span = { GridItemSpan(1) }) {
-                                ProductSmallViewTemplate(
-                                    product,
-                                    180,
-                                    navController
-                                )
+                    if (isSearching) {
+                        item(span = { GridItemSpan(2) }) {
+                            Spacer(modifier = Modifier.padding(35.dp))
+                        }
+                        items(searchResults.size) { index ->
+                            ProductSmallViewTemplate(
+                                searchResults[index],
+                                180,
+                                navController
+                            )
+                        }
+                    } else {
+                        // Mostrar información del usuario solo si no hay búsqueda activa
+                        item(span = { GridItemSpan(2) }) { Spacer(modifier = Modifier.height(40.dp)) }
+                        item(span = { GridItemSpan(2) }) { user?.let { profileHead(it) } }
+                        item(span = { GridItemSpan(2) }) { Spacer(modifier = Modifier.height(20.dp)) }
+                        item(span = { GridItemSpan(2) }) { tabs(viewModel, navController) }
+                        item(span = { GridItemSpan(2) }) { Spacer(modifier = Modifier.height(20.dp)) }
+
+                        if (user?.isCraftsman == true) {
+                            products?.forEach { product ->
+                                item(span = { GridItemSpan(1) }) {
+                                    ProductSmallViewTemplate(
+                                        product,
+                                        180,
+                                        navController
+                                    )
+                                }
                             }
                         }
                     }
-                    item(span = { GridItemSpan(2) }) {
-                        Spacer(modifier = Modifier.padding(28.dp))
-                    }
+                    item(span = { GridItemSpan(2) }) { Spacer(modifier = Modifier.padding(28.dp)) }
                 }
             }
+            else -> {
+                // Aquí puedes manejar otros estados como errores
+            }
         }
-        else -> {}
     }
 }
 

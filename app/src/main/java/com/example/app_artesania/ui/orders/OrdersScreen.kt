@@ -36,7 +36,8 @@ import com.example.app_artesania.model.User
 import com.example.app_artesania.navigation.AppScreens
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBar
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
-import com.example.app_artesania.ui.defaultTopBar.DefaultTopBar
+import com.example.app_artesania.ui.templates.DefaultTopBar
+import com.example.app_artesania.ui.templates.ProductSmallViewTemplate
 
 import com.example.app_artesania.ui.templates.ProfileImage
 import com.example.app_artesania.ui.templates.loader
@@ -49,43 +50,75 @@ fun OrdersScreen(viewModel: OrdersViewModel, navController: NavController) {
     val myOrders by viewModel.myOrders.observeAsState(ArrayList())
     val allOrders by viewModel.allOrders.observeAsState(ArrayList())
     val user by viewModel.user.observeAsState()
-    val users by viewModel.users.observeAsState()
+    val users by viewModel.users.observeAsState(ArrayList())
+    val searchResults by viewModel.searchResults.observeAsState(ArrayList())
+    val isSearching = searchResults.isNotEmpty()
 
-    when (loadState) {
-        LoadState.LOADING -> { loader() }
-        LoadState.SUCCESS -> {
-            Scaffold(
-                topBar = { DefaultTopBar(navController = navController) },
-                bottomBar = { BottomNavBar(BottomNavBarViewModel(), navController) }
-            ) {
+    Scaffold(
+        topBar = {
+            DefaultTopBar(navController = navController) { query ->
+                if (query.isEmpty()) {
+                    viewModel.resetSearch()
+                } else {
+                    viewModel.searchProducts(query)
+                }
+            }
+        },
+        bottomBar = { BottomNavBar(BottomNavBarViewModel(), navController) }
+    ) {
+        when (loadState) {
+            LoadState.LOADING -> { loader() }
+            LoadState.SUCCESS -> {
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    item { Spacer(modifier = Modifier.padding(40.dp)) }
-                    item { Header(navController) }
-                    item { Spacer(modifier = Modifier.padding(5.dp)) }
-                    if(myOrders!!.isEmpty()){
-                        item { Text(text = "No tienes pedidos, ¡crea uno nuevo!") }
-                    }
-                    for (order in myOrders!!) {
-                        item { OrdersTemplate(order, user!!, true, navController) }
-                    }
-                    item { Spacer(modifier = Modifier.padding(10.dp)) }
-                    if(user!!.isCraftsman) {
-                        item { Text(text = "Pedidos de otros usuarios", fontSize = 30.sp) }
-                        item { Spacer(modifier = Modifier.padding(5.dp)) }
-                        for (i in allOrders!!.indices) {
-                            val order = allOrders!![i]
-                            val orderUser = users!![i]
-                            item { OrdersTemplate(order, orderUser, false, navController) }
+                    if (isSearching) {
+                        item { Spacer(modifier = Modifier.padding(35.dp)) }
+                        // Divide los resultados de búsqueda en grupos de dos elementos
+                        val chunks = searchResults.chunked(2)
+                        // Itera sobre cada grupo de dos elementos
+                        chunks.forEach { chunk ->
+                            // Para cada grupo, crea una fila
+                            item {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(), // La fila ocupa todo el ancho disponible
+                                    horizontalArrangement = Arrangement.SpaceEvenly
+                                ) {
+                                    chunk.forEach { product ->
+                                        ProductSmallViewTemplate(product, 180, navController)
+                                    }
+                                }
+                            }
+                        }
+                    }  else {
+                        item { Spacer(modifier = Modifier.padding(40.dp)) }
+                        item { Header(navController) }
+                        if (myOrders?.isEmpty() == true) {
+                            item { Text(text = "No tienes pedidos, ¡crea uno nuevo!") }
+                        } else {
+                            myOrders?.forEach { order ->
+                                item { OrdersTemplate(order, user!!, true, navController) }
+                            }
+                        }
+                        if (user?.isCraftsman == true) {
+                            item { Text(text = "Pedidos de otros usuarios", fontSize = 30.sp) }
+                            allOrders?.forEachIndexed { index, order ->
+                                val orderUser = users?.getOrNull(index)
+                                if (orderUser != null) {
+                                    item {
+                                        OrdersTemplate(order, orderUser, false, navController)
+                                    }
+                                }
+                            }
                         }
                     }
                     item { Spacer(modifier = Modifier.padding(30.dp)) }
                 }
             }
+            else -> {
+            }
         }
-        else -> {}
     }
 }
 
