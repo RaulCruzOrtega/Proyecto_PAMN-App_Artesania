@@ -40,17 +40,16 @@ import com.example.app_artesania.ui.templates.loader
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InfoCrafsmanScreen(viewModel: InfoCrafsmanViewModel,  navController: NavController) {
-    val products by viewModel.products.observeAsState()
+fun InfoCrafsmanScreen(viewModel: InfoCrafsmanViewModel, navController: NavController) {
     val loadState by viewModel.loadState.observeAsState(LoadState.LOADING)
+    val products by viewModel.products.observeAsState()
     val craftsman by viewModel.craftsman.observeAsState()
-
 
     when (loadState) {
         LoadState.LOADING -> { loader() }
         LoadState.SUCCESS -> {
             Scaffold(
-                topBar = {  DefaultTopBar(navController = navController) },
+                topBar = { DefaultTopBar(navController = navController) },
                 bottomBar = { BottomNavBar(BottomNavBarViewModel(), navController) }
             ) {
                 LazyVerticalGrid(
@@ -64,15 +63,14 @@ fun InfoCrafsmanScreen(viewModel: InfoCrafsmanViewModel,  navController: NavCont
                     item(span = { GridItemSpan(2) }) {
                         Spacer(modifier = Modifier.height(40.dp))
                     }
-                    item(span = { GridItemSpan(2) }) { profileHead(craftsman!!) }
+                    item(span = { GridItemSpan(2) }) {
+                        craftsman?.let { profileHead(it) } ?: Spacer(modifier = Modifier.height(40.dp))
+                    }
                     item(span = { GridItemSpan(2) }) {
                         Spacer(modifier = Modifier.height(20.dp))
                     }
 
-                    item(span = { GridItemSpan(2) }) {
-                        Spacer(modifier = Modifier.height(20.dp))
-                    }
-                    if (DataRepository.getUser()!!.isCraftsman) {
+                    if (craftsman?.isCraftsman == true && !products.isNullOrEmpty()) {
                         for (product in products!!) {
                             item(span = { GridItemSpan(1) }) {
                                 ProductSmallViewTemplate(
@@ -94,7 +92,7 @@ fun InfoCrafsmanScreen(viewModel: InfoCrafsmanViewModel,  navController: NavCont
 }
 
 @Composable
-private fun profileHead(crafsman: User) {
+private fun profileHead(craftsman: User) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -102,11 +100,11 @@ private fun profileHead(crafsman: User) {
             .fillMaxWidth()
             .wrapContentHeight()
     ) {
-        ProfileImage(imageURL = crafsman.image, size = 150)
+        ProfileImage(imageURL = craftsman.image, size = 150)
         Spacer(modifier = Modifier.height(10.dp))
-        Text(text = crafsman.name, fontWeight = FontWeight.Bold, fontSize = 24.sp)
+        Text(text = craftsman.name, fontWeight = FontWeight.Bold, fontSize = 24.sp)
         Spacer(modifier = Modifier.height(5.dp))
-        Text(text = crafsman.email, fontSize = 16.sp)
+        Text(text = craftsman.email, fontSize = 16.sp)
     }
 }
 
