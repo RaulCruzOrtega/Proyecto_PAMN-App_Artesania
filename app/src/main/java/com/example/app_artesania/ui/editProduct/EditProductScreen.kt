@@ -48,6 +48,7 @@ import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.ui.createProduct.CreateProductBody
 import com.example.app_artesania.ui.createProduct.CreateProductViewModel
 import com.example.app_artesania.ui.register.textError
+import com.example.app_artesania.ui.templates.CategoryDropdownMenu
 import com.example.app_artesania.ui.templates.SimpleTopNavBar
 import com.example.app_artesania.ui.templates.loader
 
@@ -103,7 +104,7 @@ fun EditProductBody(viewModel: EditProductViewModel, navController: NavControlle
                         textError(texto = "Introduzca un Precio para el producto")
                     }
                     Spacer(modifier = Modifier.padding(16.dp))
-                    DropdownCategoryMenu(category) { viewModel.onEditProductChanged(name, price, it, description) }
+                    CategoryDropdownMenu(category) { viewModel.onEditProductChanged(name, price, it, description) }
                     Spacer(modifier = Modifier.padding(16.dp))
                     DescriptionField(description) { viewModel.onEditProductChanged(name, price, category, it) }
                     if(descriptionError){
@@ -122,7 +123,6 @@ fun EditProductBody(viewModel: EditProductViewModel, navController: NavControlle
         }
         else -> {}
     }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -163,59 +163,6 @@ fun DescriptionField(description: String, onTextFieldChanged: (String) -> Unit) 
         maxLines = 10
     )
 }
-
-@Composable
-fun DropdownCategoryMenu(selectedCategory: Category, onCategorySelected: (Category) -> Unit) {
-    var expanded by remember { mutableStateOf(false) }
-    val categories: ArrayList<Category> = Category.Alfarería.getCategories()
-
-    Box(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column {
-            Text("Selecciona una categoría")
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .border(1.dp, MaterialTheme.colorScheme.primary)
-                    .clickable { expanded = true }
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    Text(
-                        text = selectedCategory.categoryType.name,
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(end = 16.dp)
-                    )
-                    Icon(
-                        imageVector = Icons.Default.ArrowDropDown,
-                        contentDescription = null
-                    )
-                }
-            }
-
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                categories.forEach { category ->
-                    DropdownMenuItem(
-                        text = { Text(text = category.categoryType.name) },
-                        onClick = {
-                            onCategorySelected(category)
-                            expanded = false
-                        }
-                    )
-                }
-            }
-        }
-    }
-}
-
 
 @Composable
 fun ButtonProductImage(viewModel: EditProductViewModel) {

@@ -7,8 +7,10 @@ import androidx.navigation.NavController
 import com.example.app_artesania.data.deleteOrder
 import com.example.app_artesania.data.getOrder
 import com.example.app_artesania.data.getUser
+import com.example.app_artesania.data.modifyOrder
 import com.example.app_artesania.model.DataRepository
 import com.example.app_artesania.model.LoadState
+import com.example.app_artesania.model.Offer
 import com.example.app_artesania.model.Order
 import com.example.app_artesania.model.User
 import com.example.app_artesania.navigation.AppScreens
@@ -19,23 +21,30 @@ class OrderViewModel(orderId: String?, navController: NavController) : ViewModel
     val loadState: MutableLiveData<LoadState> = _loadState
     private val _order = MutableLiveData<Order?>()
     val order: MutableLiveData<Order?> = _order
-    private val _userOrder = MutableLiveData<User?>()
-    val userOrder: MutableLiveData<User?> = _userOrder
-    private val _currentUser = MutableLiveData<User?>()
-    val currentUser: MutableLiveData<User?> = _currentUser
+    private val _userOrder = MutableLiveData<User>()
+    val userOrder: MutableLiveData<User> = _userOrder
+    private val _currentUser = MutableLiveData<User>()
+    val currentUser: MutableLiveData<User> = _currentUser
+    private val _offerPrice = MutableLiveData<String?>()
+    val offerPrice: MutableLiveData<String?> = _offerPrice
+    private val _offerComments = MutableLiveData<String?>()
+    val offerComments: MutableLiveData<String?> = _offerComments
+    private val _offerPriceError = MutableLiveData<Boolean?>()
+    val offerPriceError: MutableLiveData<Boolean?> = _offerPriceError
+    private val _offerCommentsError = MutableLiveData<Boolean?>()
+    val offerCommentsError: MutableLiveData<Boolean?> = _offerCommentsError
 
     init {
         _loadState.value = LoadState.LOADING
-         loaddata(orderId!!, navController)
-        println("inicia order")
+        loaddata(orderId!!, navController)
     }
 
     private fun loaddata(orderId: String, navController: NavController) {
         if (navController.currentDestination?.route != AppScreens.OrdersScreen.route) {
             viewModelScope.launch {
                 _order.value = getOrder(orderId)
-                _currentUser.value = getUser(DataRepository.getUser()!!.email)
-                _userOrder.value = getUser(_order.value!!.userEmail)
+                _currentUser.value = getUser(DataRepository.getUser()!!.email)!!
+                _userOrder.value = getUser(_order.value!!.userEmail)!!
                 _loadState.value = LoadState.SUCCESS
             }
         }
@@ -44,5 +53,43 @@ class OrderViewModel(orderId: String?, navController: NavController) : ViewModel
     fun delOrder(navController: NavController){
         deleteOrder(_order.value!!.id)
         navController.navigate(route = AppScreens.OrdersScreen.route)
+    }
+
+    fun editOrder(navController: NavController){
+        navController.navigate(route = AppScreens.EditOrderScreen.route + "/${_order.value!!.id}")
+    }
+
+    fun onEditOfferChanged(offerPrice: String, offerComments: String) {
+        _offerPrice.value = filterPriceInput(offerPrice)
+        _offerComments.value = offerComments
+    }
+
+    private fun filterPriceInput(input: String): String {
+        return input.filterIndexed { index, char ->
+            if (char == '.') {
+                // Permitir solo un punto decimal
+                input.indexOf(char) == index
+            } else {
+                // Permitir solo dígitos
+                char.isDigit()
+            }
+        }
+    }
+
+    private fun isValidText(text: String?): Boolean = !text.isNullOrBlank()
+
+    fun makeOffer(navController: NavController){
+        if(isValidText(_offerPrice.value) && isValidText(_offerComments.value)){
+            val offer = Offer(
+                DataRepository.getUser()!!.idCraftsman,
+                _offerPrice.value!!.toDouble(),
+                _offerComments.value!!
+            )
+            _order.value!!.offers.add(offer)
+            viewModelScope.launch {
+                modifyOrder(_order.value!!)
+            }
+            navController.navigate(route = AppScreens.OrderScreen.route + "/${_order.value!!.id}")
+        }
     }
 }
