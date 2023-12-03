@@ -38,7 +38,6 @@ import com.example.app_artesania.ui.bottomNavBar.BottomNavBar
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
 import com.example.app_artesania.ui.templates.DefaultTopBar
 import com.example.app_artesania.ui.templates.ProductSmallViewTemplate
-
 import com.example.app_artesania.ui.templates.ProfileImage
 import com.example.app_artesania.ui.templates.loader
 
@@ -140,7 +139,6 @@ fun Header(navController: NavController){
         )
     }
 }
-
 
 @Composable
 fun OrdersTemplate(order: Order, user: User, myOrder: Boolean, navController: NavController) {

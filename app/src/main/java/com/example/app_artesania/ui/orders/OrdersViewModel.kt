@@ -13,6 +13,7 @@ import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.Order
 import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class OrdersViewModel  : ViewModel() {
@@ -47,6 +48,7 @@ class OrdersViewModel  : ViewModel() {
                     }
                 }
                 _users.value = ArrayList(userList)
+                delay(500)
             }
             _loadState.value = LoadState.SUCCESS
         }

@@ -1,6 +1,7 @@
 package com.example.app_artesania.ui.order
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,18 +9,27 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -27,9 +37,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.app_artesania.model.LoadState
+import com.example.app_artesania.model.Offer
 import com.example.app_artesania.model.Order
 import com.example.app_artesania.model.User
-import com.example.app_artesania.navigation.AppScreens
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBar
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
 import com.example.app_artesania.ui.register.textError
@@ -65,6 +75,7 @@ fun OrderBody(viewModel: OrderViewModel, navController: NavController){
     val userOrder by viewModel.userOrder.observeAsState()
     val currentUser by viewModel.currentUser.observeAsState()
     val order by viewModel.order.observeAsState()
+    val editingOffer by viewModel.editingOffer.observeAsState(initial = false)
 
     LazyColumn(
         modifier = Modifier.fillMaxWidth(),
@@ -77,11 +88,28 @@ fun OrderBody(viewModel: OrderViewModel, navController: NavController){
         }
         if(currentUser!!.email == userOrder!!.email){
             item { Tabs(viewModel, navController) }
-            item { ViewOffers(order!!) }
+            item { Spacer(modifier = Modifier.padding(10.dp)) }
+            item { Text(text = "Ofertas de artesanos", fontSize = 20.sp) }
+            for(offer in order!!.offers) {
+                item { ShowOffer(order!!, offer, false, viewModel, navController) }
+            }
         }
         else {
-            item { MakeOffer(viewModel, navController) }
+            val matchingOffer = order!!.offers.find { it.idCraftsman == currentUser?.idCraftsman }
+            println("otra $matchingOffer")
+            if (matchingOffer != null) {
+                if (editingOffer){
+                    item { EditOffer(matchingOffer, viewModel, navController) }
+                }
+                else{
+                    item { ShowOffer(order!!, matchingOffer, true, viewModel, navController) }
+                }
+            }
+            else{
+                item { MakeOffer(viewModel, navController) }
+            }
         }
+        item { Spacer(modifier = Modifier.padding(10.dp)) }
     }
 }
 
@@ -128,17 +156,44 @@ fun Tabs(viewModel: OrderViewModel, navController: NavController){
 }
 
 @Composable
-fun ViewOffers(order: Order){
-    Column (
-        modifier = Modifier.fillMaxWidth().padding(20.dp)
+fun ShowOffer(order: Order, offer: Offer, myOffer: Boolean, viewModel: OrderViewModel, navController: NavController){
+    println(offer)
+    val craftsmans by viewModel.offeredCraftsmans.observeAsState()
+    val craftsman: User = craftsmans!!.find { it.idCraftsman == offer.idCraftsman }!!
+
+    Surface(
+        color = MaterialTheme.colorScheme.tertiary,
+        modifier = Modifier
+            .padding(10.dp)
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp))
     ) {
-        for(offer in order.offers){
-            Text(text = offer.idCraftsman)
-            Text(text = offer.price.toString())
-            Text(text = offer.comment)
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                ProfileImage(imageURL = craftsman.image, size = 75)
+                Text(text = craftsman.name, fontSize = 15.sp, fontWeight = FontWeight.Light)
+            }
+            Spacer(modifier = Modifier.padding(5.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = offer.price.toString() + " €",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(text = offer.comment, fontSize = 15.sp)
+            }
+            Spacer(modifier = Modifier.padding(5.dp))
+            if (myOffer) {
+                IconEditOffer(offer, viewModel)
+                IconDeleteOffer(order, craftsman.idCraftsman, viewModel, navController)
+            }
         }
     }
-    Spacer(modifier = Modifier.padding(8.dp))
 }
 
 @Composable
@@ -150,7 +205,9 @@ fun MakeOffer(viewModel: OrderViewModel, navController: NavController){
 
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth().padding(20.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(20.dp)
     ){
         CommentsField(offerComments!!, offerCommentsError!!) { viewModel.onEditOfferChanged(offerPrice!!, it) }
         Spacer(modifier = Modifier.padding(8.dp))
@@ -201,6 +258,55 @@ fun CommentsField(comments: String, commentsError: Boolean ,onTextFieldChanged: 
 fun ButtonMakeOffer(viewModel: OrderViewModel, navController: NavController){
     Button(onClick = { viewModel.makeOffer(navController) }) {
         Text(text = "Hacer Oferta")
+    }
+    Spacer(modifier = Modifier.padding(8.dp))
+}
+
+@Composable
+fun IconEditOffer(offer: Offer, viewModel: OrderViewModel){
+    Icon(
+        Icons.Filled.Edit,
+        contentDescription = "Edit Offer",
+        modifier = Modifier.clickable { viewModel.isEditingOffer(offer) }
+    )
+}
+@Composable
+fun IconDeleteOffer(order: Order, idCraftsman: String, viewModel: OrderViewModel, navController: NavController){
+    Icon(
+        Icons.Filled.Delete,
+        contentDescription = "Delete Offer",
+        modifier = Modifier.clickable { viewModel.deleteOffer(order, idCraftsman, navController)}
+    )
+}
+
+@Composable
+fun EditOffer(offer: Offer, viewModel: OrderViewModel, navController: NavController){
+    val offerPrice by viewModel.offerPrice.observeAsState(initial = "")
+    val offerComments by viewModel.offerComments.observeAsState(initial = "")
+    val offerCommentsError by viewModel.offerCommentsError.observeAsState(initial = false)
+    val offerPriceError by viewModel.offerPriceError.observeAsState(initial = false)
+
+    Column (
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(20.dp)
+    ){
+        CommentsField(offerComments!!, offerCommentsError!!) { viewModel.onEditOfferChanged(offerPrice!!, it) }
+        Spacer(modifier = Modifier.padding(8.dp))
+        PriceField(offerPrice!!, offerPriceError!!) { viewModel.onEditOfferChanged(it, offerComments!!) }
+        Spacer(modifier = Modifier.padding(8.dp))
+        ButtonEditOffer(offer, viewModel, navController)
+    }
+    Spacer(modifier = Modifier.padding(8.dp))
+}
+
+@Composable
+fun ButtonEditOffer(offer: Offer, viewModel: OrderViewModel, navController: NavController){
+    val order by viewModel.order.observeAsState()
+    println(offer.idCraftsman)
+    Button(onClick = { viewModel.editOffer(order!!, offer, offer.idCraftsman, navController) }) {
+        Text(text = "Editar Oferta")
     }
     Spacer(modifier = Modifier.padding(8.dp))
 }
