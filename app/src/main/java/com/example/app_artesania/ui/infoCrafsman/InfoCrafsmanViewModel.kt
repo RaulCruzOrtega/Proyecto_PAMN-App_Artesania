@@ -42,10 +42,8 @@ class InfoCrafsmanViewModel(private val craftsmanId: String?, navController: Nav
     private fun loadData(craftsmanId: String) {
         viewModelScope.launch {
             try {
-                // Obtener la información del artesano
                 _craftsman.value = getCraftsman(craftsmanId)
 
-                // Si el usuario es un artesano, cargar sus productos
                 if (_craftsman.value?.isCraftsman == true) {
                     _products.value = getProducts_Craftsman(craftsmanId)
                 }
@@ -53,7 +51,6 @@ class InfoCrafsmanViewModel(private val craftsmanId: String?, navController: Nav
                 _loadState.value = LoadState.SUCCESS
             } catch (e: Exception) {
                 _loadState.value = LoadState.ERROR
-                // Log the error or handle it as needed
             }
         }
     }
