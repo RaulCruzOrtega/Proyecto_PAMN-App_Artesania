@@ -36,6 +36,8 @@ import com.example.app_artesania.ui.register.RegisterScreen
 import com.example.app_artesania.ui.register.RegisterViewModel
 import com.example.app_artesania.ui.userProfile.UserProfileScreen
 import com.example.app_artesania.ui.userProfile.UserProfileViewModel
+import com.example.app_artesania.ui.favouriteProducts.FavouriteProducts
+import com.example.app_artesania.ui.favouriteProducts.FavouriteProductsViewModel
 
 
 @Composable
@@ -70,6 +72,9 @@ fun AppNavigation() {
         composable(route = AppScreens.BuyProductScreen.route){
             BuyProductScreen(BuyProductViewModel(), navControler)
         }
+        composable(route = AppScreens.FavouriteProducts.route){
+            FavouriteProducts(FavouriteProductsViewModel(), navControler)
+        }
 
         composable(route = AppScreens.ProductScreen.route + "/{productId}",
             arguments = listOf(navArgument(name = "productId"){
@@ -103,7 +108,6 @@ fun AppNavigation() {
                 it.arguments?.getString("orderId"), navControler)
             OrderScreen(OrderViewModel, navControler)
         }
-
         composable(route = AppScreens.CraftsmanProfileScreen.route + "/{craftsmanId}",
             arguments = listOf(navArgument(name = "craftsmanId") { type = NavType.StringType })
         ) {

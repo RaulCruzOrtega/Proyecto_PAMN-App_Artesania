@@ -9,6 +9,9 @@ import androidx.navigation.NavController
 import com.example.app_artesania.data.deleteProduct
 import com.example.app_artesania.data.getCraftsman
 import com.example.app_artesania.data.getProduct
+import com.example.app_artesania.data.getUser
+import com.example.app_artesania.data.modifyUserFavo
+import com.example.app_artesania.model.DataRepository
 import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
@@ -31,7 +34,7 @@ class ProductViewModel(productId: String?, navController: NavController) : ViewM
     val favo: LiveData<Boolean> = _favo
 
     init {
-        if (navController.currentDestination?.route != AppScreens.HomeScreen.route) {
+        if (navController.currentDestination?.route != AppScreens.UserProfileScreen.route) {
             _loadState.value = LoadState.LOADING
             loaddata(productId!!)
         }
@@ -41,6 +44,11 @@ class ProductViewModel(productId: String?, navController: NavController) : ViewM
         viewModelScope.launch {
             _product.value = getProduct(productId)!!
             _craftsman.value = getCraftsman(_product.value!!.idCraftsman)!!
+            val user = getUser(DataRepository.getUser()!!.email)
+            println(user.favoproducts.contains(_product.value!!.id))
+            if (user.favoproducts.contains(_product.value!!.id)){
+                _favo.value = true
+            }
             delay(500)
             _loadState.value = LoadState.SUCCESS
         }
@@ -52,11 +60,22 @@ class ProductViewModel(productId: String?, navController: NavController) : ViewM
 
     fun delProduct(navController: NavController){
         deleteProduct(_product.value!!.id)
-        navController.navigate(route = AppScreens.HomeScreen.route)
+        navController.navigate(route = AppScreens.UserProfileScreen.route)
     }
 
     fun favo(){
         _favo.value = !_favo.value!!
+        if (favo.value!!) {
+            val user = DataRepository.getUser()!!
+            user.favoproducts.add(_product.value!!.id)
+            DataRepository.setUser(user)
+            modifyUserFavo(DataRepository.getUser()!!.email, DataRepository.getUser()!!.favoproducts)
+        } else {
+            val user = DataRepository.getUser()!!
+            user.favoproducts.remove(_product.value!!.id)
+            DataRepository.setUser(user)
+            modifyUserFavo(DataRepository.getUser()!!.email, DataRepository.getUser()!!.favoproducts)
+        }
     }
 }
 

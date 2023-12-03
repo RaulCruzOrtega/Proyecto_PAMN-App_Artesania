@@ -110,7 +110,7 @@ class RegisterViewModel: ViewModel() {
                             idCraftsman = ID_craftsman.value!!,
                             image = "",
                             orders = ArrayList(),
-                            products = ArrayList())
+                            favoproducts = ArrayList())
                         DataRepository.setUser(new_user)
                         newUser(new_user)
                         navController.navigate(route = AppScreens.HomeScreen.route)
@@ -127,7 +127,7 @@ class RegisterViewModel: ViewModel() {
                             idCraftsman = "",
                             image = "",
                             orders = ArrayList(),
-                            products = ArrayList())
+                            favoproducts = ArrayList())
                         DataRepository.setUser(new_user)
                         newUser(new_user)
                         navController.navigate(route = AppScreens.HomeScreen.route)

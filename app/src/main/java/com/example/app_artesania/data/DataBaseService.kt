@@ -9,6 +9,9 @@ import com.example.app_artesania.model.newProducto
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 private val data = FirebaseFirestore.getInstance()
@@ -49,7 +52,7 @@ suspend fun newUser(newuser: User){
         "idCraftsman" to newuser.idCraftsman,
         "image" to newuser.image,
         "orders" to newuser.orders,
-        "products" to newuser.products
+        "favoproducts" to newuser.favoproducts
     )
     data.collection("Users").add(userHashMap)
 }
@@ -148,35 +151,55 @@ fun deleteProduct(idProduct: String){
     data.collection("Articulos").document(idProduct).delete()
 }
 
-suspend fun modifyUserName(user: User, newName: String){
-    val userDocument = data.collection("Users")
-        .whereEqualTo("email", user.email)
-        .get().await()
-
-    if (!userDocument.isEmpty) {
-        val documentSnapshot = userDocument.documents[0]
-
-        // Get the existing user data
-        val existingUser = documentSnapshot.toObject<User>()
-
-        // Update the fields you want to modify
-        existingUser?.name = newName
-
-        // Update the user in the database
-        documentSnapshot.reference.set(existingUser!!).await()
-    } else {
-        // Handle the case where the user with the provided email doesn't exist
-        println("User with email $user.email not found.")
-    }
+suspend fun modifyUserName(userdata: User, newName: String){
+    val user = getUser(userdata.email)
+    val userdoc = getUserDoc(user.email)
+    // Update the fields you want to modify
+    val userHashMap = hashMapOf(
+        "name" to newName,
+        "email" to user.email,
+        "isCraftsman" to user.isCraftsman,
+        "idCraftsman" to user.idCraftsman,
+        "image" to user.image,
+        "orders" to user.orders,
+        "favoproducts" to user.favoproducts
+    )
+    data.collection("Users").document(userdoc!!.id).update(userHashMap as Map<String, Any>).await()
 }
 
-suspend fun modifyUserImage(user: User, uri: Uri){
-    val documentSnapshot = getUserDoc(user.email)
-    val existingUser = documentSnapshot!!.toObject<User>()
+suspend fun modifyUserImage(userdata: User, uri: Uri){
+    val user = getUser(userdata.email)
+    val userdoc = getUserDoc(user.email)
 
     // Update the fields you want to modify
-    existingUser?.image = uri.toString()
-    documentSnapshot.reference.set(existingUser!!).await()
+    val userHashMap = hashMapOf(
+        "name" to user.name,
+        "email" to user.email,
+        "isCraftsman" to user.isCraftsman,
+        "idCraftsman" to user.idCraftsman,
+        "image" to uri.toString(),
+        "orders" to user.orders,
+        "favoproducts" to user.favoproducts
+    )
+    data.collection("Users").document(userdoc!!.id).update(userHashMap as Map<String, Any>).await()
+}
+
+fun modifyUserFavo(emailUser: String, favoArray: ArrayList<String>){
+    GlobalScope.launch(Dispatchers.IO) {
+        val user = getUser(emailUser)
+        val userdoc = getUserDoc(emailUser)
+
+        val userHashMap = hashMapOf(
+            "name" to user.name,
+            "email" to user.email,
+            "isCraftsman" to user.isCraftsman,
+            "idCraftsman" to user.idCraftsman,
+            "image" to user.image,
+            "orders" to user.orders,
+            "favoproducts" to favoArray
+        )
+        data.collection("Users").document(userdoc!!.id).update(userHashMap as Map<String, Any>).await()
+    }
 }
 
 suspend fun modifyProduct(product: newProducto, idProduct: String){
