@@ -1,9 +1,8 @@
-package com.example.app_artesania.ui.userProfile
+package com.example.app_artesania.ui.infoCrafsman
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -24,32 +22,28 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavHostController
 import com.example.app_artesania.model.DataRepository
 import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.User
-import com.example.app_artesania.navigation.AppScreens
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBar
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
 import com.example.app_artesania.ui.defaultTopBar.DefaultTopBar
 import com.example.app_artesania.ui.templates.ProductSmallViewTemplate
 import com.example.app_artesania.ui.templates.ProfileImage
 import com.example.app_artesania.ui.templates.loader
-import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
+
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavController) {
-    val loadState by viewModel.loadState.observeAsState()
+fun InfoCrafsmanScreen(viewModel: InfoCrafsmanViewModel,  navController: NavController) {
     val products by viewModel.products.observeAsState()
-    val user by viewModel.user.observeAsState()
-    val isDarkTheme = remember { mutableStateOf(false) }
-
+    val loadState by viewModel.loadState.observeAsState(LoadState.LOADING)
+    val craftsman by viewModel.craftsman.observeAsState()
 
 
     when (loadState) {
@@ -70,11 +64,11 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
                     item(span = { GridItemSpan(2) }) {
                         Spacer(modifier = Modifier.height(40.dp))
                     }
-                    item(span = { GridItemSpan(2) }) { profileHead(user!!) }
+                    item(span = { GridItemSpan(2) }) { profileHead(craftsman!!) }
                     item(span = { GridItemSpan(2) }) {
                         Spacer(modifier = Modifier.height(20.dp))
                     }
-                    item(span = { GridItemSpan(2) }) { tabs(viewModel, navController) }
+
                     item(span = { GridItemSpan(2) }) {
                         Spacer(modifier = Modifier.height(20.dp))
                     }
@@ -100,7 +94,7 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
 }
 
 @Composable
-private fun profileHead(user: User) {
+private fun profileHead(crafsman: User) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -108,34 +102,15 @@ private fun profileHead(user: User) {
             .fillMaxWidth()
             .wrapContentHeight()
     ) {
-        ProfileImage(imageURL = user.image, size = 150)
+        ProfileImage(imageURL = crafsman.image, size = 150)
         Spacer(modifier = Modifier.height(10.dp))
-        Text(text = user.name, fontWeight = FontWeight.Bold, fontSize = 24.sp)
+        Text(text = crafsman.name, fontWeight = FontWeight.Bold, fontSize = 24.sp)
         Spacer(modifier = Modifier.height(5.dp))
-        Text(text = user.email, fontSize = 16.sp)
+        Text(text = crafsman.email, fontSize = 16.sp)
     }
 }
 
-@Composable
-private fun tabs(viewModel: UserProfileViewModel, navController: NavController) {
-    Row (
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
-        Button(onClick = { navController.navigate(route = AppScreens.EditProfileScreen.route) }) {
-            Text(text = "Editar Perfil")
-        }
-        Button(onClick = { viewModel.cerrarSesión(navController) }) {
-            Text(text = "Cerrar Sesión")
-        }
-    }
-    Spacer(modifier = Modifier.padding(8.dp))
-}
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewUserProfileBasicScreen() {
-    App_ArtesaniaTheme {
-        UserProfileScreen(UserProfileViewModel(), rememberNavController())
-    }
-}
+
+
+

@@ -86,7 +86,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController){
                     item(span = { GridItemSpan(2) }) {
                         Spacer(modifier = Modifier.padding(8.dp))
                     }
-                    item(span = { GridItemSpan(2) }) { CraftsmanSlider(craftsmansDB!!) }
+                    item(span = { GridItemSpan(2) }) { CraftsmanSlider(craftsmansDB!!, navController) }
                     item(span = { GridItemSpan(2) }) {
                         Spacer(modifier = Modifier.padding(4.dp))
                     }
@@ -150,7 +150,7 @@ fun CategoriesSlider(categories: ArrayList<Category>, navController: NavControll
 }
 
 @Composable
-fun CraftsmanSlider(craftsmans: ArrayList<User>){
+fun CraftsmanSlider(craftsmans: ArrayList<User>,navController: NavController){
     println("SE COLOCA LOS ARTESANOS")
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -170,7 +170,9 @@ fun CraftsmanSlider(craftsmans: ArrayList<User>){
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .padding(8.dp)
-                        .clickable { println("Artesano $index: $item") }
+                        .clickable {
+                            navController.navigate(AppScreens.CraftsmanProfileScreen.route + "/${craftsmans[index].idCraftsman}")
+                        }
                 ) {
                     Spacer(modifier = Modifier.height(5.dp))
                     var image: Any = item.image

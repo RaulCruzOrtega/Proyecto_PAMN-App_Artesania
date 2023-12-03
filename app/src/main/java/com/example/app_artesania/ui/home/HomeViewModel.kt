@@ -28,6 +28,7 @@ class HomeViewModel : ViewModel() {
     private val _categories = MutableLiveData<ArrayList<Category>>()
     val categories: LiveData<ArrayList<Category>> = _categories
 
+
     init {
         lanzamiento()
         println("OTRAVEZ")
@@ -65,4 +66,5 @@ class HomeViewModel : ViewModel() {
             println("Error load craftmans")
         }
     }
+
 }

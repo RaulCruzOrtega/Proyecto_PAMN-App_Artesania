@@ -20,6 +20,8 @@ import com.example.app_artesania.ui.editProduct.EditProduct
 import com.example.app_artesania.ui.editProduct.EditProductViewModel
 import com.example.app_artesania.ui.home.HomeScreen
 import com.example.app_artesania.ui.home.HomeViewModel
+import com.example.app_artesania.ui.infoCrafsman.InfoCrafsmanScreen
+import com.example.app_artesania.ui.infoCrafsman.InfoCrafsmanViewModel
 import com.example.app_artesania.ui.login.LoginScreen
 import com.example.app_artesania.ui.login.LoginViewModel
 import com.example.app_artesania.ui.order.OrderScreen
@@ -72,7 +74,7 @@ fun AppNavigation() {
                 type = NavType.StringType
             })){
             val ProductViewModel: ProductViewModel = ProductViewModel(
-                    it.arguments?.getString("productId"), navControler)
+                it.arguments?.getString("productId"), navControler)
             ProductScreen(ProductViewModel, navControler)
         }
         composable(route = AppScreens.EditProductScreen.route + "/{productId}",
@@ -99,5 +101,14 @@ fun AppNavigation() {
                 it.arguments?.getString("orderId"), navControler)
             OrderScreen(OrderViewModel, navControler)
         }
+
+        composable(route = AppScreens.CraftsmanProfileScreen.route + "/{craftsmanId}",
+            arguments = listOf(navArgument(name = "craftsmanId") { type = NavType.StringType })
+        ) {
+            val craftsmanId = it.arguments?.getString("craftsmanId")
+            val viewModel = InfoCrafsmanViewModel(craftsmanId, navControler)
+            InfoCrafsmanScreen(viewModel, navControler)
+        }
+
     }
 }
