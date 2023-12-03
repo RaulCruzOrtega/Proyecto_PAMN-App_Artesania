@@ -7,7 +7,7 @@ data class User(
     val idCraftsman: String,
     var image: String,
     val orders: ArrayList<String>,
-    val products: ArrayList<String>
+    var favoproducts: ArrayList<String>
 ){
     fun getisCraftsman(): Boolean{
         return isCraftsman

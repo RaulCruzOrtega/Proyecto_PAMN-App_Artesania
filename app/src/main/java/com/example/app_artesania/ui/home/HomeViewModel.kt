@@ -57,6 +57,7 @@ class HomeViewModel : ViewModel() {
             try {
                 _craftsmansDB.value = getCraftsmans()
                 _productsDB.value = getProducts()
+                delay(500)
                 _loadState.value = LoadState.SUCCESS
             } catch (e: Exception) {
                 _loadState.value = LoadState.ERROR
