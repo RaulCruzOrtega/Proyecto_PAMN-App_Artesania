@@ -71,7 +71,8 @@ class EditOrderViewModel (idOrder: String?): ViewModel() {
                     description = description.value!!,
                     category = category.value!!.categoryType.name,
                     userEmail = DataRepository.getUser()!!.email,
-                    offers = _order.value!!.offers
+                    offers = _order.value!!.offers,
+                    isAssigned = false
                 )
                 modifyOrder(editedOrder)
                 navController.navigate(route = AppScreens.OrderScreen.route + "/${_idOrder.value}")

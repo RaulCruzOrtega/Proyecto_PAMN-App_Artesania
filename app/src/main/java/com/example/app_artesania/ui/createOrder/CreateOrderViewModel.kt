@@ -45,7 +45,8 @@ class CreateOrderViewModel: ViewModel() {
                     description = description.value!!,
                     category = category.value!!.categoryType.name,
                     userEmail = DataRepository.getUser()!!.email,
-                    offers = ArrayList<Offer>()
+                    offers = ArrayList<Offer>(),
+                    isAssigned = false
                     )
                 newOrderDB(newOrder)
                 navController.navigate(route = AppScreens.OrdersScreen.route)
