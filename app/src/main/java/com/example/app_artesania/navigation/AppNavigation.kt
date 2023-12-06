@@ -69,10 +69,15 @@ fun AppNavigation() {
         composable(route = AppScreens.CreateOrderScreen.route){
             CreateOrderScreen(CreateOrderViewModel(), navControler)
         }
-        composable(route = AppScreens.BuyProductScreen.route){
-            BuyProductScreen(BuyProductViewModel(), navControler)
+        composable(route = AppScreens.BuyProductScreen.route + "/{productId}",
+            arguments = listOf(navArgument(name = "productId"){
+                type = NavType.StringType
+            })){
+            val BuyProductViewModel: BuyProductViewModel = BuyProductViewModel(
+                it.arguments?.getString("productId")!!)
+            BuyProductScreen(BuyProductViewModel, navControler)
         }
-        composable(route = AppScreens.FavouriteProducts.route){
+        composable(route = AppScreens.FavouriteProducts.route ){
             FavouriteProducts(FavouriteProductsViewModel(), navControler)
         }
 

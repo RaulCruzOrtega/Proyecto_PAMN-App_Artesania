@@ -51,7 +51,7 @@ suspend fun newUser(newuser: User){
         "isCraftsman" to newuser.isCraftsman,
         "idCraftsman" to newuser.idCraftsman,
         "image" to newuser.image,
-        "orders" to newuser.orders,
+        "purchased" to newuser.purchased,
         "favoproducts" to newuser.favoproducts
     )
     data.collection("Users").add(userHashMap)
@@ -160,7 +160,7 @@ suspend fun modifyUserName(userdata: User, newName: String){
         "isCraftsman" to user.isCraftsman,
         "idCraftsman" to user.idCraftsman,
         "image" to user.image,
-        "orders" to user.orders,
+        "purchased" to user.purchased,
         "favoproducts" to user.favoproducts
     )
     data.collection("Users").document(userdoc!!.id).update(userHashMap as Map<String, Any>).await()
@@ -177,7 +177,7 @@ suspend fun modifyUserImage(userdata: User, uri: Uri){
         "isCraftsman" to user.isCraftsman,
         "idCraftsman" to user.idCraftsman,
         "image" to uri.toString(),
-        "orders" to user.orders,
+        "purchased" to user.purchased,
         "favoproducts" to user.favoproducts
     )
     data.collection("Users").document(userdoc!!.id).update(userHashMap as Map<String, Any>).await()
@@ -194,7 +194,7 @@ fun modifyUserFavo(emailUser: String, favoArray: ArrayList<String>){
             "isCraftsman" to user.isCraftsman,
             "idCraftsman" to user.idCraftsman,
             "image" to user.image,
-            "orders" to user.orders,
+            "purchased" to user.purchased,
             "favoproducts" to favoArray
         )
         data.collection("Users").document(userdoc!!.id).update(userHashMap as Map<String, Any>).await()
@@ -310,4 +310,31 @@ suspend fun modifyOrder(newOrder: Order){
         "isAssigned" to newOrder.isAssigned
     )
     data.collection("Orders").document(newOrder.id).update(orderHashMap as Map<String, Any>).await()
+}
+
+fun product_purchase(user_email: String, newpurchased: ArrayList<String>){
+    GlobalScope.launch(Dispatchers.IO) {
+        val user = getUser(user_email)
+        val userdoc = getUserDoc(user_email)
+
+        val userHashMap = hashMapOf(
+            "name" to user.name,
+            "email" to user.email,
+            "isCraftsman" to user.isCraftsman,
+            "idCraftsman" to user.idCraftsman,
+            "image" to user.image,
+            "purchased" to newpurchased,
+            "favoproducts" to user.favoproducts
+        )
+        data.collection("Users").document(userdoc!!.id).update(userHashMap as Map<String, Any>).await()
+    }
+}
+
+suspend fun getPurchased(arraypurchased: ArrayList<String>): ArrayList<Product>{
+    val purchased = ArrayList<Product>()
+    for (item in arraypurchased){
+        val product = getProduct(item)
+        purchased.add(product)
+    }
+    return purchased
 }

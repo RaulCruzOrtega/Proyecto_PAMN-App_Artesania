@@ -77,5 +77,9 @@ class ProductViewModel(productId: String?, navController: NavController) : ViewM
             modifyUserFavo(DataRepository.getUser()!!.email, DataRepository.getUser()!!.favoproducts)
         }
     }
+
+    fun comprar(navController: NavController){
+        navController.navigate(route = AppScreens.BuyProductScreen.route + "/${_product.value!!.id}")
+    }
 }
 

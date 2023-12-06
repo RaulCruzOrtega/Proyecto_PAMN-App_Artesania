@@ -169,7 +169,7 @@ fun ProductDetailView(product: Product, craftsman: User, viewModel: ProductViewM
         if (DataRepository.getUser()!!.idCraftsman == craftsman.idCraftsman){
             tabs(viewModel, navController)
         } else {
-            Button(onClick = { navController.navigate(route = AppScreens.BuyProductScreen.route) }) {
+            Button(onClick = { viewModel.comprar(navController) }) {
                 Text(text = "Comprar")
             }
         }
