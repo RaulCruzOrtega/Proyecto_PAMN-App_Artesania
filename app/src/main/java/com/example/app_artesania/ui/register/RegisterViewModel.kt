@@ -109,7 +109,7 @@ class RegisterViewModel: ViewModel() {
                             isCraftsman = true,
                             idCraftsman = ID_craftsman.value!!,
                             image = "",
-                            orders = ArrayList(),
+                            purchased = ArrayList(),
                             favoproducts = ArrayList())
                         DataRepository.setUser(new_user)
                         newUser(new_user)
@@ -126,7 +126,7 @@ class RegisterViewModel: ViewModel() {
                             isCraftsman = false,
                             idCraftsman = "",
                             image = "",
-                            orders = ArrayList(),
+                            purchased = ArrayList(),
                             favoproducts = ArrayList())
                         DataRepository.setUser(new_user)
                         newUser(new_user)
