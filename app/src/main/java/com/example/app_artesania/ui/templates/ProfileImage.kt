@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 
@@ -20,9 +21,10 @@ fun ProfileImage(imageURL: String, size: Int) {
     Image(
         painter = rememberImagePainter(data = image),
         contentDescription = "UserProfile",
+        contentScale = ContentScale.Crop,
         modifier = Modifier
             .size(size.dp)
             .clip(CircleShape)
-            .border(2.dp, Color.Gray, CircleShape)
+            .border(1.dp, Color.LightGray, CircleShape)
     )
 }

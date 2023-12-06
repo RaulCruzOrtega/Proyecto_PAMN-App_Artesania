@@ -20,17 +20,13 @@ import kotlinx.coroutines.launch
 class EditProfileViewModel : ViewModel() {
     private val _loadState = MutableLiveData<LoadState>()
     val loadState: MutableLiveData<LoadState> = _loadState
-
     private val _user = MutableLiveData<User>()
     val user: LiveData<User> = _user
-
     private val _userName = MutableLiveData<String>()
     val userName: LiveData<String> = _userName
-
     private val _imageuri = MutableLiveData<Uri>()
     private val _imageselect = MutableLiveData<String>()
     val imageselect: LiveData<String> = _imageselect
-
     private val _oldPassword = MutableLiveData<String>().apply{value = ""}
     val oldPassword: LiveData<String> = _oldPassword
     private val _password1 = MutableLiveData<String>().apply{value = ""}

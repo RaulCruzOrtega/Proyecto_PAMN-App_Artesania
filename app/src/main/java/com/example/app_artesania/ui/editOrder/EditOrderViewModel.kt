@@ -27,8 +27,6 @@ class EditOrderViewModel (idOrder: String?): ViewModel() {
     val description: LiveData<String> = _description
     private val _category = MutableLiveData<Category>()
     val category: LiveData<Category> = _category
-
-
     private val _titleError = MutableLiveData<Boolean>()
     val titleError: LiveData<Boolean> = _titleError
     private val _descriptionError = MutableLiveData<Boolean>()

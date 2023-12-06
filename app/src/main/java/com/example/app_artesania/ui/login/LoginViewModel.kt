@@ -89,5 +89,4 @@ class LoginViewModel(navController: NavController) : ViewModel() {
         navController.navigate(route = AppScreens.RegisterScreen.route)
     }
 
-
 }

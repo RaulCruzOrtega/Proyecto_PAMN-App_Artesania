@@ -116,7 +116,7 @@ fun DefaultTopBar(navController: NavController, onSearch: (String) -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun Preview() {
-    App_ArtesaniaTheme { // Asegúrate de que este tema exista en tu proyecto
+    App_ArtesaniaTheme {
         val navController = rememberNavController()
         DefaultTopBar(navController, onSearch = { /* acción de búsqueda */ })
     }

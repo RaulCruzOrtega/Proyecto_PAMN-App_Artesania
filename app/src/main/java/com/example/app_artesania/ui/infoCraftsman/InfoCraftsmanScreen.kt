@@ -1,4 +1,4 @@
-package com.example.app_artesania.ui.infoCrafsman
+package com.example.app_artesania.ui.infoCraftsman
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
@@ -36,7 +36,7 @@ import com.example.app_artesania.ui.templates.loader
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InfoCrafsmanScreen(viewModel: InfoCrafsmanViewModel, navController: NavController) {
+fun InfoCrafsmanScreen(viewModel: InfoCraftsmanViewModel, navController: NavController) {
     val loadState by viewModel.loadState.observeAsState(LoadState.LOADING)
     val products by viewModel.products.observeAsState()
     val craftsman by viewModel.craftsman.observeAsState()
@@ -46,12 +46,8 @@ fun InfoCrafsmanScreen(viewModel: InfoCrafsmanViewModel, navController: NavContr
     Scaffold(
         topBar = {
             DefaultTopBar(navController = navController) { query ->
-                if (query.isEmpty()) {
-                    // Si la búsqueda se ha borrado, resetear los resultados de búsqueda
-                    viewModel.resetSearch()
-                } else {
-                    viewModel.searchProducts(query)
-                }
+                if (query.isEmpty()) { viewModel.resetSearch() }
+                else { viewModel.searchProducts(query) }
             }
         },
         bottomBar = { BottomNavBar(BottomNavBarViewModel(), navController) }

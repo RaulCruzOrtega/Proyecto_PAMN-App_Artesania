@@ -2,7 +2,6 @@ package com.example.app_artesania.ui.home
 
 import android.annotation.SuppressLint
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,7 +15,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -27,7 +25,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -36,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import coil.compose.rememberImagePainter
 import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
@@ -47,7 +43,7 @@ import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 import com.example.app_artesania.model.Category
 import com.example.app_artesania.navigation.AppScreens
 import com.example.app_artesania.ui.templates.DefaultTopBar
-
+import com.example.app_artesania.ui.templates.ProfileImage
 import com.example.app_artesania.ui.templates.loader
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -64,12 +60,8 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
     Scaffold(
         topBar = {
             DefaultTopBar(navController = navController) { query ->
-                if (query.isEmpty()) {
-                    // Si la búsqueda se ha borrado, resetear los resultados de búsqueda
-                    viewModel.resetSearch()
-                } else {
-                    viewModel.searchProducts(query)
-                }
+                if (query.isEmpty()) { viewModel.resetSearch() }
+                else { viewModel.searchProducts(query) }
             }
         },
         bottomBar = { BottomNavBar(BottomNavBarViewModel(), navController) }
@@ -134,8 +126,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
                     }
                 }
             }
-            else -> {
-            }
+            else -> { }
         }
     }
 }
@@ -177,7 +168,6 @@ fun CategoriesSlider(categories: ArrayList<Category>, navController: NavControll
 
 @Composable
 fun CraftsmanSlider(craftsmans: ArrayList<User>,navController: NavController){
-    println("SE COLOCA LOS ARTESANOS")
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -201,19 +191,7 @@ fun CraftsmanSlider(craftsmans: ArrayList<User>,navController: NavController){
                         }
                 ) {
                     Spacer(modifier = Modifier.height(5.dp))
-                    var image: Any = item.image
-                    if(item.image == ""){
-                        image = "https://firebasestorage.googleapis.com/v0/b/app-artesania.appspot.com/o/usericon.png?alt=media&token=3b8d9258-3e22-49c8-ad51-47776f99f5a2"
-                    }
-                    Image(
-                        painter = rememberImagePainter(data = image),
-                        contentDescription = "Artesano $index: $item",
-                        modifier = Modifier
-                            .height(70.dp)
-                            .width(70.dp)
-                            .clip(CircleShape)
-                    )
-
+                    ProfileImage(item.image, 70)
                     Text(
                         text = craftsmans[index].name,
                         color = MaterialTheme.colorScheme.primary,

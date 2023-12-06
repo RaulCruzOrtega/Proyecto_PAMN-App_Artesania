@@ -69,6 +69,6 @@ class OrdersViewModel  : ViewModel() {
     }
 
     fun resetSearch() {
-        _searchResults.value = arrayListOf() // Restablecer los resultados de búsqueda
+        _searchResults.value = arrayListOf()
     }
 }

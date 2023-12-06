@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -37,6 +38,7 @@ fun ProductSmallViewTemplate(product: Product, height: Int, navController: NavCo
         Image(
             painter = rememberImagePainter(data = image),
             contentDescription = "Producto ${product.name}",
+            contentScale = ContentScale.Crop,
             alignment = Alignment.Center,
             modifier = Modifier
                 .height(height.dp)

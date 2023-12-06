@@ -41,7 +41,6 @@ import com.example.app_artesania.model.DataRepository
 import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
-import com.example.app_artesania.navigation.AppScreens
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBar
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
 import com.example.app_artesania.ui.templates.DeleteConfirmationDialog

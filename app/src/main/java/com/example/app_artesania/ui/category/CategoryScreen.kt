@@ -23,7 +23,6 @@ import com.example.app_artesania.ui.templates.ProductSmallViewTemplate
 import com.example.app_artesania.ui.templates.SimpleTopNavBar
 import com.example.app_artesania.ui.templates.loader
 
-
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
