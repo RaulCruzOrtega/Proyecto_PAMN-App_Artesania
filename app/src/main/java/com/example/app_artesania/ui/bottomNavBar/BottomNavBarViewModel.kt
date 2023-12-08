@@ -10,12 +10,8 @@ import com.example.app_artesania.model.User
 import kotlinx.coroutines.launch
 
 class BottomNavBarViewModel : ViewModel() {
-
-    private val _user = MutableLiveData<User?>()
-
     private val _items = MutableLiveData<List<ItemsBottomNav>>()
     val items: LiveData<List<ItemsBottomNav>> = _items
-
 
     init {
         viewModelScope.launch {

@@ -27,8 +27,6 @@ class EditOrderViewModel (idOrder: String?): ViewModel() {
     val description: LiveData<String> = _description
     private val _category = MutableLiveData<Category>()
     val category: LiveData<Category> = _category
-
-
     private val _titleError = MutableLiveData<Boolean>()
     val titleError: LiveData<Boolean> = _titleError
     private val _descriptionError = MutableLiveData<Boolean>()
@@ -71,7 +69,8 @@ class EditOrderViewModel (idOrder: String?): ViewModel() {
                     description = description.value!!,
                     category = category.value!!.categoryType.name,
                     userEmail = DataRepository.getUser()!!.email,
-                    offers = _order.value!!.offers
+                    offers = _order.value!!.offers,
+                    isAssigned = false
                 )
                 modifyOrder(editedOrder)
                 navController.navigate(route = AppScreens.OrderScreen.route + "/${_idOrder.value}")

@@ -22,8 +22,7 @@ import com.example.app_artesania.ui.editProduct.EditProduct
 import com.example.app_artesania.ui.editProduct.EditProductViewModel
 import com.example.app_artesania.ui.home.HomeScreen
 import com.example.app_artesania.ui.home.HomeViewModel
-import com.example.app_artesania.ui.infoCrafsman.InfoCrafsmanScreen
-import com.example.app_artesania.ui.infoCrafsman.InfoCrafsmanViewModel
+import com.example.app_artesania.ui.infoCraftsman.InfoCrafsmanScreen
 import com.example.app_artesania.ui.login.LoginScreen
 import com.example.app_artesania.ui.login.LoginViewModel
 import com.example.app_artesania.ui.order.OrderScreen
@@ -38,6 +37,7 @@ import com.example.app_artesania.ui.userProfile.UserProfileScreen
 import com.example.app_artesania.ui.userProfile.UserProfileViewModel
 import com.example.app_artesania.ui.favouriteProducts.FavouriteProducts
 import com.example.app_artesania.ui.favouriteProducts.FavouriteProductsViewModel
+import com.example.app_artesania.ui.infoCraftsman.InfoCraftsmanViewModel
 
 
 @Composable
@@ -69,10 +69,15 @@ fun AppNavigation() {
         composable(route = AppScreens.CreateOrderScreen.route){
             CreateOrderScreen(CreateOrderViewModel(), navControler)
         }
-        composable(route = AppScreens.BuyProductScreen.route){
-            BuyProductScreen(BuyProductViewModel(), navControler)
+        composable(route = AppScreens.BuyProductScreen.route + "/{productId}",
+            arguments = listOf(navArgument(name = "productId"){
+                type = NavType.StringType
+            })){
+            val BuyProductViewModel: BuyProductViewModel = BuyProductViewModel(
+                it.arguments?.getString("productId")!!)
+            BuyProductScreen(BuyProductViewModel, navControler)
         }
-        composable(route = AppScreens.FavouriteProducts.route){
+        composable(route = AppScreens.FavouriteProducts.route ){
             FavouriteProducts(FavouriteProductsViewModel(), navControler)
         }
 
@@ -112,7 +117,7 @@ fun AppNavigation() {
             arguments = listOf(navArgument(name = "craftsmanId") { type = NavType.StringType })
         ) {
             val craftsmanId = it.arguments?.getString("craftsmanId")
-            val viewModel = InfoCrafsmanViewModel(craftsmanId, navControler)
+            val viewModel = InfoCraftsmanViewModel(craftsmanId)
             InfoCrafsmanScreen(viewModel, navControler)
         }
         composable(route = AppScreens.EditOrderScreen.route + "/{orderId}",

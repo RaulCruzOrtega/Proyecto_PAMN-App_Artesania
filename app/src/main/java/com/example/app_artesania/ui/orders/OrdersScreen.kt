@@ -22,6 +22,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,6 +40,7 @@ import com.example.app_artesania.navigation.AppScreens
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBar
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
 import com.example.app_artesania.ui.templates.DefaultTopBar
+import com.example.app_artesania.ui.templates.DeleteConfirmationDialog
 import com.example.app_artesania.ui.templates.ProductSmallViewTemplate
 import com.example.app_artesania.ui.templates.ProfileImage
 import com.example.app_artesania.ui.templates.loader
@@ -47,6 +51,7 @@ import com.example.app_artesania.ui.templates.loader
 fun OrdersScreen(viewModel: OrdersViewModel, navController: NavController) {
     val loadState by viewModel.loadState.observeAsState()
     val myOrders by viewModel.myOrders.observeAsState(ArrayList())
+    val myAssignedOrders by viewModel.myAssignedOrders.observeAsState(ArrayList())
     val allOrders by viewModel.allOrders.observeAsState(ArrayList())
     val user by viewModel.user.observeAsState()
     val users by viewModel.users.observeAsState(ArrayList())
@@ -97,7 +102,14 @@ fun OrdersScreen(viewModel: OrdersViewModel, navController: NavController) {
                             item { Text(text = "No tienes pedidos, ¡crea uno nuevo!") }
                         } else {
                             myOrders?.forEach { order ->
-                                item { OrdersTemplate(order, user!!, true, navController) }
+                                item { OrdersTemplate(order, user!!, true, viewModel, navController) }
+                            }
+                        }
+                        if(myAssignedOrders?.isEmpty() == false){
+                            item { Spacer(modifier = Modifier.padding(10.dp)) }
+                            item { Text(text = "Mis pedidos asignados", fontSize = 30.sp) }
+                            myAssignedOrders?.forEach { order ->
+                                item { OrdersTemplate(order, user!!, true, viewModel, navController) }
                             }
                         }
                         if (user?.isCraftsman == true) {
@@ -106,7 +118,7 @@ fun OrdersScreen(viewModel: OrdersViewModel, navController: NavController) {
                                 val orderUser = users?.getOrNull(index)
                                 if (orderUser != null) {
                                     item {
-                                        OrdersTemplate(order, orderUser, false, navController)
+                                        OrdersTemplate(order, orderUser, false, viewModel, navController)
                                     }
                                 }
                             }
@@ -141,7 +153,7 @@ fun Header(navController: NavController){
 }
 
 @Composable
-fun OrdersTemplate(order: Order, user: User, myOrder: Boolean, navController: NavController) {
+fun OrdersTemplate(order: Order, user: User, myOrder: Boolean, viewModel: OrdersViewModel, navController: NavController) {
     Surface(
         color = MaterialTheme.colorScheme.tertiary,
         modifier = Modifier
@@ -172,12 +184,21 @@ fun OrdersTemplate(order: Order, user: User, myOrder: Boolean, navController: Na
 
 @Composable
 fun DeleteIcon(order: Order, navController: NavController) {
+    var showDialog by rememberSaveable { mutableStateOf(false) }
     Icon(
         Icons.Filled.Delete,
         contentDescription = "Delete",
-        modifier = Modifier.clickable {
-            deleteOrder(order.id)
-            navController.navigate(route = AppScreens.OrdersScreen.route)
-        }
+        modifier = Modifier.clickable { showDialog = true }
     )
+    if (showDialog) {
+        DeleteConfirmationDialog(
+            "¿Está seguro de que desea eliminar el Pedido con título \"${order.title}\"?"
+        ) { confirmed ->
+            if (confirmed) {
+                deleteOrder(order.id)
+                navController.navigate(route = AppScreens.OrdersScreen.route)
+            }
+            showDialog = false
+        }
+    }
 }

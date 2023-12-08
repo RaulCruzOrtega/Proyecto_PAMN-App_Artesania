@@ -22,10 +22,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,13 +43,12 @@ import com.example.app_artesania.model.DataRepository
 import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
-import com.example.app_artesania.navigation.AppScreens
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBar
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
+import com.example.app_artesania.ui.templates.DeleteConfirmationDialog
 import com.example.app_artesania.ui.templates.SimpleTopNavBar
 import com.example.app_artesania.ui.templates.loader
 import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
-
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -96,6 +99,7 @@ fun ProductDetailView(product: Product, craftsman: User, viewModel: ProductViewM
             painter = rememberImagePainter(data = image),
             contentDescription = "Producto ${product.name}",
             alignment = Alignment.Center,
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(300.dp)
                 .clip(RoundedCornerShape(10))
@@ -167,7 +171,7 @@ fun ProductDetailView(product: Product, craftsman: User, viewModel: ProductViewM
         if (DataRepository.getUser()!!.idCraftsman == craftsman.idCraftsman){
             tabs(viewModel, navController)
         } else {
-            Button(onClick = { navController.navigate(route = AppScreens.BuyProductScreen.route) }) {
+            Button(onClick = { viewModel.comprar(navController) }) {
                 Text(text = "Comprar")
             }
         }
@@ -176,6 +180,18 @@ fun ProductDetailView(product: Product, craftsman: User, viewModel: ProductViewM
 
 @Composable
 private fun tabs(viewModel: ProductViewModel , navController: NavController) {
+    val product by viewModel.product.observeAsState()
+    var showDialog by rememberSaveable { mutableStateOf(false) }
+
+    if (showDialog) {
+        DeleteConfirmationDialog(
+            "¿Está seguro de que desea eliminar el Producto \"${product!!.name}\"?"
+        ) { confirmed ->
+            if (confirmed) { viewModel.delProduct(navController) }
+            showDialog = false
+        }
+    }
+
     Row (
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
@@ -183,7 +199,7 @@ private fun tabs(viewModel: ProductViewModel , navController: NavController) {
         Button(onClick = { viewModel.editProduct(navController) }) {
             Text(text = "Editar Producto")
         }
-        Button(onClick = { viewModel.delProduct(navController) }) {
+        Button(onClick = { showDialog = true }) {
             Text(text = "Eliminar Producto")
         }
     }

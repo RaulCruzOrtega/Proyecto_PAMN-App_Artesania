@@ -15,25 +15,18 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
-
     private val _loadState = MutableLiveData<LoadState>()
     val loadState: LiveData<LoadState> = _loadState
-
     private val _craftsmansDB = MutableLiveData<ArrayList<User>?>()
     val craftsmansDB: LiveData<ArrayList<User>?> = _craftsmansDB
-
     private val _productsDB = MutableLiveData<ArrayList<Product>?>()
     val productsDB: LiveData<ArrayList<Product>?> = _productsDB
-
     private val _categories = MutableLiveData<ArrayList<Category>>()
     val categories: LiveData<ArrayList<Category>> = _categories
-
     private val _searchResults = MutableLiveData<ArrayList<Product>>()
     val searchResults: LiveData<ArrayList<Product>> = _searchResults
 
-    init {
-        lanzamiento()
-    }
+    init { lanzamiento() }
 
     private fun lanzamiento() {
         try {
@@ -48,7 +41,6 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun loadCategories() {
-
         _categories.value = getCategories()
     }
 
@@ -74,8 +66,5 @@ class HomeViewModel : ViewModel() {
             } as ArrayList<Product>
         }
     }
-    fun resetSearch() {
-        _searchResults.value = arrayListOf() // Restablecer los resultados de búsqueda
-    }
-
+    fun resetSearch() { _searchResults.value = arrayListOf() }
 }

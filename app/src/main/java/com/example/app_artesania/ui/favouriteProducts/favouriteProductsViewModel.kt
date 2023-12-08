@@ -18,7 +18,6 @@ class FavouriteProductsViewModel: ViewModel() {
 
     private val _favoProducts = MutableLiveData<ArrayList<Product>>()
     val favoProducts: LiveData<ArrayList<Product>> = _favoProducts
-
     private val _searchResults = MutableLiveData<ArrayList<Product>>()
     val searchResults: LiveData<ArrayList<Product>> = _searchResults
 
@@ -52,6 +51,6 @@ class FavouriteProductsViewModel: ViewModel() {
     }
 
     fun resetSearch() {
-        _searchResults.value = arrayListOf() // Restablecer los resultados de búsqueda
+        _searchResults.value = arrayListOf()
     }
 }

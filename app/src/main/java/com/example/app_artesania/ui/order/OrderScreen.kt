@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
@@ -26,6 +27,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,6 +47,7 @@ import com.example.app_artesania.model.User
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBar
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
 import com.example.app_artesania.ui.register.textError
+import com.example.app_artesania.ui.templates.DeleteConfirmationDialog
 import com.example.app_artesania.ui.templates.ProfileImage
 import com.example.app_artesania.ui.templates.SimpleTopNavBar
 import com.example.app_artesania.ui.templates.loader
@@ -87,7 +92,7 @@ fun OrderBody(viewModel: OrderViewModel, navController: NavController){
             Spacer(modifier = Modifier.padding(10.dp))
         }
         if(currentUser!!.email == userOrder!!.email){
-            item { Tabs(viewModel, navController) }
+            item { Tabs(order!!.isAssigned, viewModel, navController) }
             item { Spacer(modifier = Modifier.padding(10.dp)) }
             item { Text(text = "Ofertas de artesanos", fontSize = 20.sp) }
             for(offer in order!!.offers) {
@@ -109,7 +114,7 @@ fun OrderBody(viewModel: OrderViewModel, navController: NavController){
                 item { MakeOffer(viewModel, navController) }
             }
         }
-        item { Spacer(modifier = Modifier.padding(10.dp)) }
+        item { Spacer(modifier = Modifier.padding(30.dp)) }
     }
 }
 
@@ -140,15 +145,29 @@ fun OrderDetailView(order: Order, userOrder: User){
 }
 
 @Composable
-fun Tabs(viewModel: OrderViewModel, navController: NavController){
+fun Tabs(isAssigned: Boolean, viewModel: OrderViewModel, navController: NavController){
+    val order by viewModel.order.observeAsState()
+    var showDialog by rememberSaveable { mutableStateOf(false) }
+
+    if (showDialog) {
+        DeleteConfirmationDialog(
+            "¿Está seguro de que desea eliminar el Pedido con título \"${order!!.title}\"?"
+        ) { confirmed ->
+            if (confirmed) { viewModel.delOrder(navController) }
+            showDialog = false
+        }
+    }
+
     Row (
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        Button(onClick = { viewModel.editOrder(navController) }) {
-            Text(text = "Editar Pedido")
+        if(!isAssigned) {
+            Button(onClick = { viewModel.editOrder(navController) }) {
+                Text(text = "Editar Pedido")
+            }
         }
-        Button(onClick = { viewModel.delOrder(navController) }) {
+        Button(onClick = { showDialog = true }) {
             Text(text = "Eliminar Pedido")
         }
     }
@@ -191,6 +210,9 @@ fun ShowOffer(order: Order, offer: Offer, myOffer: Boolean, viewModel: OrderView
             if (myOffer) {
                 IconEditOffer(offer, viewModel)
                 IconDeleteOffer(order, craftsman.idCraftsman, viewModel, navController)
+            }
+            else if (!order.isAssigned){
+                IconAcceptOffer(order, craftsman.idCraftsman, viewModel, navController)
             }
         }
     }
@@ -272,10 +294,30 @@ fun IconEditOffer(offer: Offer, viewModel: OrderViewModel){
 }
 @Composable
 fun IconDeleteOffer(order: Order, idCraftsman: String, viewModel: OrderViewModel, navController: NavController){
+    var showDialog by rememberSaveable { mutableStateOf(false) }
+
+    if (showDialog) {
+        DeleteConfirmationDialog(
+            "¿Está seguro de que desea eliminar su oferta?"
+        ) { confirmed ->
+            if (confirmed) { viewModel.deleteOffer(order, idCraftsman, navController) }
+            showDialog = false
+        }
+    }
+
     Icon(
         Icons.Filled.Delete,
         contentDescription = "Delete Offer",
-        modifier = Modifier.clickable { viewModel.deleteOffer(order, idCraftsman, navController)}
+        modifier = Modifier.clickable { showDialog = true}
+    )
+}
+
+@Composable
+fun IconAcceptOffer(order: Order, idCraftsman: String, viewModel: OrderViewModel, navController: NavController){
+    Icon(
+        Icons.Filled.CheckCircle,
+        contentDescription = "Accept Offer",
+        modifier = Modifier.clickable { viewModel.acceptOffer(order, idCraftsman, navController)}
     )
 }
 
@@ -305,7 +347,7 @@ fun EditOffer(offer: Offer, viewModel: OrderViewModel, navController: NavControl
 fun ButtonEditOffer(offer: Offer, viewModel: OrderViewModel, navController: NavController){
     val order by viewModel.order.observeAsState()
     println(offer.idCraftsman)
-    Button(onClick = { viewModel.editOffer(order!!, offer, offer.idCraftsman, navController) }) {
+    Button(onClick = { viewModel.editOffer(order!!, offer.idCraftsman, navController) }) {
         Text(text = "Editar Oferta")
     }
     Spacer(modifier = Modifier.padding(8.dp))

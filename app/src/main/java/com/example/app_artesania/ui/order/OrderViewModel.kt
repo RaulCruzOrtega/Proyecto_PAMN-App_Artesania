@@ -115,14 +115,15 @@ class OrderViewModel(orderId: String?, navController: NavController) : ViewModel
                 description = order.description,
                 category = order.category,
                 userEmail = order.userEmail,
-                offers = newOffersList
+                offers = newOffersList,
+                isAssigned = order.isAssigned
             )
             modifyOrder(editedOrder)
             navController.navigate(route = AppScreens.OrderScreen.route + "/${order.id}")
         }
     }
 
-    fun editOffer(order: Order, offer: Offer, idCraftsman: String, navController: NavController){
+    fun editOffer(order: Order, idCraftsman: String, navController: NavController){
         deleteOffer(order, idCraftsman, navController)
         viewModelScope.launch {
             _order.value = getOrder(order.id)
@@ -135,5 +136,22 @@ class OrderViewModel(orderId: String?, navController: NavController) : ViewModel
         _offerComments.value = offer.comment
         _editingOffer.value = true
         return true
+    }
+
+    fun acceptOffer(order: Order, idCraftsman: String, navController: NavController){
+        val newOffersList: ArrayList<Offer> = ArrayList(order.offers.filter { it.idCraftsman == idCraftsman })
+        viewModelScope.launch {
+            val editedOrder: Order = Order(
+                id = order.id,
+                title = order.title,
+                description = order.description,
+                category = order.category,
+                userEmail = order.userEmail,
+                offers = newOffersList,
+                isAssigned = true
+            )
+            modifyOrder(editedOrder)
+            navController.navigate(route = AppScreens.OrderScreen.route + "/${order.id}")
+        }
     }
 }

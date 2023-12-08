@@ -1,26 +1,19 @@
-package com.example.app_artesania.ui.infoCrafsman
+package com.example.app_artesania.ui.infoCraftsman
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
-import com.example.app_artesania.data.SingOut
 import com.example.app_artesania.data.getCraftsman
-import com.example.app_artesania.data.getCraftsmans
 import com.example.app_artesania.data.getProducts
 import com.example.app_artesania.data.getProducts_Craftsman
-import com.example.app_artesania.data.getUser
-import com.example.app_artesania.model.Category
-import com.example.app_artesania.model.DataRepository
 import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
-import com.example.app_artesania.navigation.AppScreens
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class InfoCrafsmanViewModel(private val craftsmanId: String?, navController: NavController): ViewModel() {
+class InfoCraftsmanViewModel(craftsmanId: String?): ViewModel() {
     private val _loadState = MutableLiveData<LoadState>()
     val loadState: LiveData<LoadState> = _loadState
 
@@ -47,11 +40,10 @@ class InfoCrafsmanViewModel(private val craftsmanId: String?, navController: Nav
         viewModelScope.launch {
             try {
                 _craftsman.value = getCraftsman(craftsmanId)
-
                 if (_craftsman.value?.isCraftsman == true) {
                     _products.value = getProducts_Craftsman(craftsmanId)
                 }
-
+                delay(500)
                 _loadState.value = LoadState.SUCCESS
             } catch (e: Exception) {
                 _loadState.value = LoadState.ERROR
@@ -69,7 +61,7 @@ class InfoCrafsmanViewModel(private val craftsmanId: String?, navController: Nav
     }
 
     fun resetSearch() {
-        _searchResults.value = arrayListOf() // Restablecer los resultados de búsqueda
+        _searchResults.value = arrayListOf()
     }
 }
 

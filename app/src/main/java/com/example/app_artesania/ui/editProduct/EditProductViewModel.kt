@@ -35,7 +35,6 @@ class EditProductViewModel (idProduct: String): ViewModel() {
     private val _image = MutableLiveData<String>()
     private val _idProduct = MutableLiveData<String>()
 
-
     private val _nameError = MutableLiveData<Boolean>()
     val nameError: LiveData<Boolean> = _nameError
     private val _priceError = MutableLiveData<Boolean>()
@@ -67,7 +66,6 @@ class EditProductViewModel (idProduct: String): ViewModel() {
         _price.value = filterPriceInput(price)
         _category.value = category
         _description.value = description
-        println("CAmbia")
     }
 
     private fun filterPriceInput(input: String): String {
@@ -88,11 +86,9 @@ class EditProductViewModel (idProduct: String): ViewModel() {
         println(_imageuri.value)
     }
 
-    private fun isValidName(name: String): Boolean = name.isNotEmpty()
-    private fun isValidPrice(price: String): Boolean = price.isNotEmpty()
-    private fun isValidDescription(description: String): Boolean = description.isNotEmpty()
+    private fun isValidText(text: String): Boolean = text.isNotEmpty()
     private fun areFieldsValid(): Boolean {
-        return isValidName(_name.value!!) && isValidPrice(_price.value!!) && isValidDescription(_description.value!!)
+        return isValidText(_name.value!!) && isValidText(_price.value!!) && isValidText(_description.value!!)
     }
 
     fun editarProducto(navController: NavController){
@@ -127,9 +123,9 @@ class EditProductViewModel (idProduct: String): ViewModel() {
                     navController.navigate(route = AppScreens.ProductScreen.route + "/${_idProduct.value}")
                 }
             } else {
-            _nameError.value = !isValidName(_name.value!!)
-            _priceError.value = !isValidPrice(_price.value!!)
-            _descriptionError.value = !isValidDescription(_description.value!!)
+            _nameError.value = !isValidText(_name.value!!)
+            _priceError.value = !isValidText(_price.value!!)
+            _descriptionError.value = !isValidText(_description.value!!)
             }
         }
     }

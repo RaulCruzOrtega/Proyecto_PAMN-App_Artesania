@@ -1,8 +1,8 @@
 package com.example.app_artesania.ui.home
 
 import android.annotation.SuppressLint
-
 import androidx.compose.foundation.Image
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -47,7 +47,7 @@ import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 import com.example.app_artesania.model.Category
 import com.example.app_artesania.navigation.AppScreens
 import com.example.app_artesania.ui.templates.DefaultTopBar
-
+import com.example.app_artesania.ui.templates.ProfileImage
 import com.example.app_artesania.ui.templates.loader
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -64,12 +64,8 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
     Scaffold(
         topBar = {
             DefaultTopBar(navController = navController) { query ->
-                if (query.isEmpty()) {
-                    // Si la búsqueda se ha borrado, resetear los resultados de búsqueda
-                    viewModel.resetSearch()
-                } else {
-                    viewModel.searchProducts(query)
-                }
+                if (query.isEmpty()) { viewModel.resetSearch() }
+                else { viewModel.searchProducts(query) }
             }
         },
         bottomBar = { BottomNavBar(BottomNavBarViewModel(), navController) }
@@ -134,8 +130,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
                     }
                 }
             }
-            else -> {
-            }
+            else -> { }
         }
     }
 }
@@ -177,7 +172,6 @@ fun CategoriesSlider(categories: ArrayList<Category>, navController: NavControll
 
 @Composable
 fun CraftsmanSlider(craftsmans: ArrayList<User>,navController: NavController){
-    println("SE COLOCA LOS ARTESANOS")
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -188,7 +182,7 @@ fun CraftsmanSlider(craftsmans: ArrayList<User>,navController: NavController){
             text = "Artesanos",
             fontSize = 20.sp,
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.secondary
+            color = MaterialTheme.colorScheme.primary
         )
         LazyRow {
             itemsIndexed(craftsmans) { index, item ->
@@ -201,21 +195,7 @@ fun CraftsmanSlider(craftsmans: ArrayList<User>,navController: NavController){
                         }
                 ) {
                     Spacer(modifier = Modifier.height(5.dp))
-                    var image: Any = item.image
-                    if(item.image == ""){
-                        image = "https://firebasestorage.googleapis.com/v0/b/app-artesania.appspot.com/o/usericon.png?alt=media&token=3b8d9258-3e22-49c8-ad51-47776f99f5a2"
-                    }
-                    Image(
-                        painter = rememberImagePainter(data = image),
-                        contentDescription = "Artesano $index: $item",
-                        modifier = Modifier
-                            .height(70.dp)
-                            .width(70.dp)
-                            .clip(CircleShape)
-
-
-                    )
-
+                    ProfileImage(item.image, 70)
                     Text(
                         text = craftsmans[index].name,
                         color = MaterialTheme.colorScheme.secondary,

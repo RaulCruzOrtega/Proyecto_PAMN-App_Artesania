@@ -138,7 +138,7 @@ fun BuyProductScreen(viewModel: BuyProductViewModel = viewModel(), navController
 fun BuyProductScreenPreview() {
     App_ArtesaniaTheme {
         val navController = rememberNavController()
-        BuyProductScreen(BuyProductViewModel(), navController)
+        BuyProductScreen(BuyProductViewModel("1slFS2X3THA2jvLPSmcI"), navController)
     }
 }
 

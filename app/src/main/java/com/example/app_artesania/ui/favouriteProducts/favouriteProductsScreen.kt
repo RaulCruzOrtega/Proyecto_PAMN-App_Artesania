@@ -22,7 +22,6 @@ import androidx.navigation.NavController
 import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBar
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
-import com.example.app_artesania.ui.home.HomeViewModel
 import com.example.app_artesania.ui.templates.DefaultTopBar
 import com.example.app_artesania.ui.templates.ProductSmallViewTemplate
 import com.example.app_artesania.ui.templates.loader
@@ -39,21 +38,14 @@ fun FavouriteProducts(viewModel: FavouriteProductsViewModel, navController: NavC
     Scaffold(
         topBar = {
             DefaultTopBar(navController = navController) { query ->
-                if (query.isEmpty()) {
-                    // Si la búsqueda se ha borrado, resetear los resultados de búsqueda
-                    viewModel.resetSearch()
-                } else {
-                    viewModel.searchProducts(query)
-                }
+                if (query.isEmpty()) { viewModel.resetSearch() }
+                else { viewModel.searchProducts(query) }
             }
         },
         bottomBar = { BottomNavBar(BottomNavBarViewModel(), navController) }
     ) {
         when (loadState) {
-            LoadState.LOADING -> {
-                loader()
-            }
-
+            LoadState.LOADING -> { loader() }
             LoadState.SUCCESS -> {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
