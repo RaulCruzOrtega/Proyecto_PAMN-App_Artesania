@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -117,13 +118,13 @@ fun ProductDetailView(product: Product, craftsman: User, viewModel: ProductViewM
                 Text(
                     text = product.name,
                     fontSize = 20.sp,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.secondary,
                     textAlign = TextAlign.Center
                 )
                 Text(
                     text = "Categoría: " + product.category,
                     fontSize = 15.sp,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.secondary,
                 )
             }
             Icon(
@@ -150,7 +151,7 @@ fun ProductDetailView(product: Product, craftsman: User, viewModel: ProductViewM
             Text(
                 text = product.price.toString() + " €",
                 fontSize = 18.sp,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.secondary
             )
         }
 
@@ -159,7 +160,7 @@ fun ProductDetailView(product: Product, craftsman: User, viewModel: ProductViewM
             text = product.description,
             fontSize = 16.sp,
             textAlign = TextAlign.Justify,
-            color = Color.Gray,
+            color = MaterialTheme.colorScheme.secondary,
         )
 
         Spacer(modifier = Modifier.height(30.dp))

@@ -118,7 +118,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
                         item(span = { GridItemSpan(2) }) {
                             Text(
                                 text = "Otros Productos",
-                                color = MaterialTheme.colorScheme.primary,
+                                color = MaterialTheme.colorScheme.secondary,
                                 fontSize = 20.sp,
                                 modifier = Modifier.padding(8.dp)
                             )
@@ -159,7 +159,7 @@ fun CategoriesSlider(categories: ArrayList<Category>, navController: NavControll
                 Icon(
                     painter = painterResource(id = categories[index].image),
                     contentDescription = "Categoría: $item",
-                    tint = MaterialTheme.colorScheme.secondary,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .height(60.dp)
                         .width(60.dp)
@@ -168,7 +168,7 @@ fun CategoriesSlider(categories: ArrayList<Category>, navController: NavControll
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
                     text = categories[index].categoryType.name,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.secondary
                 )
             }
         }
@@ -188,7 +188,7 @@ fun CraftsmanSlider(craftsmans: ArrayList<User>,navController: NavController){
             text = "Artesanos",
             fontSize = 20.sp,
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.secondary
         )
         LazyRow {
             itemsIndexed(craftsmans) { index, item ->
@@ -212,11 +212,13 @@ fun CraftsmanSlider(craftsmans: ArrayList<User>,navController: NavController){
                             .height(70.dp)
                             .width(70.dp)
                             .clip(CircleShape)
+
+
                     )
 
                     Text(
                         text = craftsmans[index].name,
-                        color = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.secondary,
                         textAlign = TextAlign.Center,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -238,7 +240,7 @@ fun ProductsSlider(title: String, products: ArrayList<Product>, navController: N
         Text(
             text = title,
             fontSize = 20.sp,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.secondary
         )
         Spacer(modifier = Modifier.height(5.dp))
         LazyRow {

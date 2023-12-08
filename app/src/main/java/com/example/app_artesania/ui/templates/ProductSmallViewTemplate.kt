@@ -51,7 +51,7 @@ fun ProductSmallViewTemplate(product: Product, height: Int, navController: NavCo
         ) {
             Text(
                 text = product.name,
-                color = MaterialTheme.colorScheme.primary,
+                color = MaterialTheme.colorScheme.secondary,
                 fontSize = 16.sp,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
