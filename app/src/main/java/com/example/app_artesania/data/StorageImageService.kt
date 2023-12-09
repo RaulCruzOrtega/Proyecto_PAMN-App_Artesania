@@ -16,6 +16,14 @@ suspend fun addImageProductToFirebaseStorage(image: Uri, user: User): Uri{
     return downloadUrl
 }
 
+suspend fun addImageOrderToFirebaseStorage(image: Uri, user: User): Uri{
+    val downloadUrl = storage.reference.child("ImagenesOrders").child(user.email).child(image.lastPathSegment!!)
+        .putFile(image).await()
+        .storage.downloadUrl.await()
+
+    return downloadUrl
+}
+
 suspend fun addImageUserToFirebaseStorage(image: Uri, user: User): Uri{
     val downloadUrl = storage.reference.child("ImagenesUsuarios").child(user.email).child(image.lastPathSegment!!)
         .putFile(image).await()

@@ -59,6 +59,9 @@ fun FavouriteProducts(viewModel: FavouriteProductsViewModel, navController: NavC
                         items(searchResults.size) { index ->
                             ProductSmallViewTemplate(searchResults[index], 180, navController)
                         }
+                        item(span = { GridItemSpan(2) }) {
+                            Spacer(modifier = Modifier.padding(28.dp))
+                        }
                     } else {
                         item(span = { GridItemSpan(2) }) {
                             Spacer(modifier = Modifier.padding(45.dp))

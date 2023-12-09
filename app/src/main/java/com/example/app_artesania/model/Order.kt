@@ -7,9 +7,10 @@ data class Order(
     val category: String,
     val userEmail: String,
     val offers: ArrayList<Offer>,
-    var isAssigned: Boolean
+    var isAssigned: Boolean,
+    var image: String
 ){
-    constructor() : this("", "", "",  "", "", ArrayList<Offer>(), false)
+    constructor() : this("", "", "",  "", "", ArrayList<Offer>(), false, "")
 }
 
 data class newOrder(
@@ -18,5 +19,6 @@ data class newOrder(
     val category: String,
     val userEmail: String,
     val offers: ArrayList<Offer>,
-    val isAssigned: Boolean
+    val isAssigned: Boolean,
+    var image: String
 )

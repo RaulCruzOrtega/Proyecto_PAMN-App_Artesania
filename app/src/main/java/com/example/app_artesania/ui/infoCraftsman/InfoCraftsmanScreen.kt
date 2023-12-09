@@ -72,6 +72,9 @@ fun InfoCrafsmanScreen(viewModel: InfoCraftsmanViewModel, navController: NavCont
                                 ProductSmallViewTemplate(product, 180, navController)
                             }
                         }
+                        item(span = { GridItemSpan(2) }) {
+                            Spacer(modifier = Modifier.padding(28.dp))
+                        }
                     } else {
                         item(span = { GridItemSpan(2) }) {
                         Spacer(modifier = Modifier.height(35.dp))

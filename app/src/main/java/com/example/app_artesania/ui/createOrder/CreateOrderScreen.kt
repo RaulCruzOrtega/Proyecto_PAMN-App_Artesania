@@ -1,6 +1,8 @@
 package com.example.app_artesania.ui.createOrder
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -23,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.app_artesania.model.Category
+import com.example.app_artesania.ui.createProduct.CreateProductViewModel
 import com.example.app_artesania.ui.register.textError
 import com.example.app_artesania.ui.templates.CategoryDropdownMenu
 import com.example.app_artesania.ui.templates.SimpleTopNavBar
@@ -49,7 +53,8 @@ fun CreateOrderBody(viewModel: CreateOrderViewModel, navController: NavControlle
     val title: String by viewModel.title.observeAsState(initial = "")
     val description: String by viewModel.description.observeAsState(initial = "")
     val category: Category by viewModel.category.observeAsState(initial = Category.Otro)
-
+    val imageselect: String by viewModel.imageselect.observeAsState(initial = "")
+    
     val titleError: Boolean by viewModel.titleError.observeAsState(initial = false)
     val descriptionError: Boolean by viewModel.descriptionError.observeAsState(initial = false)
 
@@ -64,6 +69,11 @@ fun CreateOrderBody(viewModel: CreateOrderViewModel, navController: NavControlle
             DescriptionField(description, descriptionError) { viewModel.onCreateOrderChanged(title, it, category) }
             Spacer(modifier = Modifier.padding(16.dp))
             CategoryDropdownMenu(category) { viewModel.onCreateOrderChanged(title, description, it) }
+            Spacer(modifier = Modifier.padding(16.dp))
+            ButtonImage(viewModel)
+            if(imageselect != ""){
+                Text(text = imageselect)
+            }
             Spacer(modifier = Modifier.padding(16.dp))
             ButtonCreateOrder(viewModel, navController)
         }
@@ -101,6 +111,21 @@ fun DescriptionField(description: String, descriptionError: Boolean ,onTextField
     if(descriptionError){
         Spacer(modifier = Modifier.padding(4.dp))
         textError(texto = "Introduzca una Descripción del producto")
+    }
+}
+
+@Composable
+fun ButtonImage(viewModel: CreateOrderViewModel) {
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ){imageUri ->
+        imageUri?.let {
+            viewModel.imageselect(imageUri)
+        }
+    }
+
+    OutlinedButton(onClick = { galleryLauncher.launch("image/*") }) {
+        Text(text = "Seleccionar Imagen de la Galería")
     }
 }
 

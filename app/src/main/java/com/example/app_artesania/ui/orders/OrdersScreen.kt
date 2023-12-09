@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -95,6 +96,7 @@ fun OrdersScreen(viewModel: OrdersViewModel, navController: NavController) {
                                 }
                             }
                         }
+                        item { Spacer(modifier = Modifier.padding(28.dp)) }
                     }  else {
                         item { Spacer(modifier = Modifier.padding(40.dp)) }
                         item { Header(navController) }

@@ -89,6 +89,9 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
                         items(searchResults.size) { index ->
                             ProductSmallViewTemplate(searchResults[index], 180, navController)
                         }
+                        item(span = { GridItemSpan(2) }) {
+                            Spacer(modifier = Modifier.padding(28.dp))
+                        }
                     } else {
                         item(span = { GridItemSpan(2) }) { Spacer(modifier = Modifier.height(40.dp)) }
                         item(span = { GridItemSpan(2) }) { user?.let { profileHead(it) } }

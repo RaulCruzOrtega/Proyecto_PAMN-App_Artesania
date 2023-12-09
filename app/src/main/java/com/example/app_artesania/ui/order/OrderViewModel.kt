@@ -116,7 +116,8 @@ class OrderViewModel(orderId: String?, navController: NavController) : ViewModel
                 category = order.category,
                 userEmail = order.userEmail,
                 offers = newOffersList,
-                isAssigned = order.isAssigned
+                isAssigned = order.isAssigned,
+                image = order.image
             )
             modifyOrder(editedOrder)
             navController.navigate(route = AppScreens.OrderScreen.route + "/${order.id}")
@@ -148,7 +149,8 @@ class OrderViewModel(orderId: String?, navController: NavController) : ViewModel
                 category = order.category,
                 userEmail = order.userEmail,
                 offers = newOffersList,
-                isAssigned = true
+                isAssigned = true,
+                image = order.image
             )
             modifyOrder(editedOrder)
             navController.navigate(route = AppScreens.OrderScreen.route + "/${order.id}")

@@ -1,6 +1,7 @@
 package com.example.app_artesania.data
 
 import android.net.Uri
+import com.example.app_artesania.model.DataRepository
 import com.example.app_artesania.model.Order
 import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
@@ -119,6 +120,17 @@ suspend fun getProduct(id: String): Product {
         product.id = document.id
     }
     return product!!
+}
+
+suspend fun existProduct(id: String): Boolean {
+    val document = data.collection("Articulos").document(id).get().await()
+    val product = document.toObject<Product>()
+    if (product != null){
+        return true
+    }
+    else{
+        return false
+    }
 }
 
 suspend fun getProducts_Craftsman(idcraftsman: String): ArrayList<Product> {
@@ -291,7 +303,8 @@ suspend fun newOrderDB(newOrder: newOrder){
         "category" to newOrder.category,
         "userEmail" to newOrder.userEmail,
         "offers" to newOrder.offers,
-        "isAssigned" to newOrder.isAssigned
+        "isAssigned" to newOrder.isAssigned,
+        "image" to newOrder.image
     )
     data.collection("Orders").add(orderHashMap)
 }
@@ -307,7 +320,8 @@ suspend fun modifyOrder(newOrder: Order){
         "category" to newOrder.category,
         "userEmail" to newOrder.userEmail,
         "offers" to newOrder.offers,
-        "isAssigned" to newOrder.isAssigned
+        "isAssigned" to newOrder.isAssigned,
+        "image" to newOrder.image
     )
     data.collection("Orders").document(newOrder.id).update(orderHashMap as Map<String, Any>).await()
 }
@@ -332,9 +346,20 @@ fun product_purchase(user_email: String, newpurchased: ArrayList<String>){
 
 suspend fun getPurchased(arraypurchased: ArrayList<String>): ArrayList<Product>{
     val purchased = ArrayList<Product>()
+    val delete_purchased = ArrayList<String>()
     for (item in arraypurchased){
-        val product = getProduct(item)
-        purchased.add(product)
+        if (existProduct(item)){
+            val product = getProduct(item)
+            purchased.add(product)
+        } else {
+            delete_purchased.add(item)
+        }
     }
+    val user = DataRepository.getUser()!!
+    for (eliminar in delete_purchased){
+        user.purchased.remove(eliminar)
+    }
+    DataRepository.setUser(user)
+    product_purchase(DataRepository.getUser()!!.email, DataRepository.getUser()!!.purchased)
     return purchased
 }

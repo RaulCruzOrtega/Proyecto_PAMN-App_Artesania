@@ -1,6 +1,7 @@
 package com.example.app_artesania.ui.order
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -33,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -40,6 +43,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.rememberImagePainter
 import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.Offer
 import com.example.app_artesania.model.Order
@@ -134,6 +138,18 @@ fun OrderDetailView(order: Order, userOrder: User){
             Text(text = order.title, fontSize = 20.sp)
             Text(text = "Categoría: " + order.category)
         }
+    }
+    if(order.image != ""){
+        Image(
+            painter = rememberImagePainter(order.image),
+            contentDescription = "Order ${order.title}",
+            alignment = Alignment.Center,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(300.dp)
+                .clip(RoundedCornerShape(10))
+        )
+        Spacer(modifier = Modifier.padding(10.dp))
     }
     Divider(modifier = Modifier
         .fillMaxWidth()

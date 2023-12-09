@@ -1,10 +1,12 @@
 package com.example.app_artesania.ui.editOrder
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.example.app_artesania.data.addImageOrderToFirebaseStorage
 import com.example.app_artesania.data.getOrder
 import com.example.app_artesania.data.modifyOrder
 import com.example.app_artesania.model.Category
@@ -27,6 +29,10 @@ class EditOrderViewModel (idOrder: String?): ViewModel() {
     val description: LiveData<String> = _description
     private val _category = MutableLiveData<Category>()
     val category: LiveData<Category> = _category
+    private val _imageuri = MutableLiveData<Uri>()
+    private val _imageselect = MutableLiveData<String>().apply { value = "" }
+    val imageselect: LiveData<String> = _imageselect
+
     private val _titleError = MutableLiveData<Boolean>()
     val titleError: LiveData<Boolean> = _titleError
     private val _descriptionError = MutableLiveData<Boolean>()
@@ -60,19 +66,42 @@ class EditOrderViewModel (idOrder: String?): ViewModel() {
         return isValidText(_title.value!!) && isValidText(_description.value!!)
     }
 
+    fun imageselect(newImageUri: Uri){
+        _imageuri.value = newImageUri
+        _imageselect.value = newImageUri.lastPathSegment.toString()
+        println(_imageuri.value)
+    }
+
     fun editOrder(navController: NavController){
         viewModelScope.launch {
             if (areFieldsValid()) {
-                val editedOrder: Order = Order(
-                    id = idOrder.value!!,
-                    title = title.value!!,
-                    description = description.value!!,
-                    category = category.value!!.categoryType.name,
-                    userEmail = DataRepository.getUser()!!.email,
-                    offers = _order.value!!.offers,
-                    isAssigned = false
-                )
-                modifyOrder(editedOrder)
+                if (_imageuri.value != null) {
+                    val uristorage = addImageOrderToFirebaseStorage(_imageuri.value!!, DataRepository.getUser()!!)
+                    val editedOrder: Order = Order(
+                        id = idOrder.value!!,
+                        title = title.value!!,
+                        description = description.value!!,
+                        category = category.value!!.categoryType.name,
+                        userEmail = DataRepository.getUser()!!.email,
+                        offers = _order.value!!.offers,
+                        isAssigned = false,
+                        image = uristorage.toString()
+                    )
+                    modifyOrder(editedOrder)
+                }
+                else{
+                    val editedOrder: Order = Order(
+                        id = idOrder.value!!,
+                        title = title.value!!,
+                        description = description.value!!,
+                        category = category.value!!.categoryType.name,
+                        userEmail = DataRepository.getUser()!!.email,
+                        offers = _order.value!!.offers,
+                        isAssigned = false,
+                        image = _order.value!!.image
+                    )
+                    modifyOrder(editedOrder)
+                }
                 navController.navigate(route = AppScreens.OrderScreen.route + "/${_idOrder.value}")
             } else {
                 _titleError.value = !isValidText(_title.value!!)
