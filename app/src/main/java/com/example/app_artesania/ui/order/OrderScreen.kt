@@ -99,8 +99,20 @@ fun OrderBody(viewModel: OrderViewModel, navController: NavController){
             item { Tabs(order!!.isAssigned, viewModel, navController) }
             item { Spacer(modifier = Modifier.padding(10.dp)) }
             item { Text(text = "Ofertas de artesanos", fontSize = 20.sp) }
-            for(offer in order!!.offers) {
-                item { ShowOffer(order!!, offer, false, viewModel, navController) }
+            if(order!!.offers.isEmpty()){
+                item { Text(
+                    text = "Todavía no han hecho ninguna oferta a tu pedido.",
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                ) }
+            }
+            else{
+                for(offer in order!!.offers) {
+                    item { ShowOffer(order!!, offer, false, viewModel, navController) }
+                }
             }
         }
         else {
@@ -118,7 +130,7 @@ fun OrderBody(viewModel: OrderViewModel, navController: NavController){
                 item { MakeOffer(viewModel, navController) }
             }
         }
-        item { Spacer(modifier = Modifier.padding(30.dp)) }
+        item { Spacer(modifier = Modifier.padding(35.dp)) }
     }
 }
 
@@ -223,7 +235,7 @@ fun ShowOffer(order: Order, offer: Offer, myOffer: Boolean, viewModel: OrderView
                 Text(text = offer.comment, fontSize = 15.sp)
             }
             Spacer(modifier = Modifier.padding(5.dp))
-            if (myOffer) {
+            if (myOffer && !order.isAssigned) {
                 IconEditOffer(offer, viewModel)
                 IconDeleteOffer(order, craftsman.idCraftsman, viewModel, navController)
             }

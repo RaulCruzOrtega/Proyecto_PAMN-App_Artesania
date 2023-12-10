@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -52,9 +53,11 @@ fun OrdersScreen(viewModel: OrdersViewModel, navController: NavController) {
     val loadState by viewModel.loadState.observeAsState()
     val myOrders by viewModel.myOrders.observeAsState(ArrayList())
     val myAssignedOrders by viewModel.myAssignedOrders.observeAsState(ArrayList())
+    val myAcceptedOrders by viewModel.myAcceptedOrders.observeAsState(ArrayList())
     val allOrders by viewModel.allOrders.observeAsState(ArrayList())
     val user by viewModel.user.observeAsState()
     val users by viewModel.users.observeAsState(ArrayList())
+    val usersAssignedOffers by viewModel.usersAssignedOrders.observeAsState(ArrayList())
     val searchResults by viewModel.searchResults.observeAsState(ArrayList())
     val isSearching = searchResults.isNotEmpty()
 
@@ -74,8 +77,9 @@ fun OrdersScreen(viewModel: OrdersViewModel, navController: NavController) {
             LoadState.LOADING -> { loader() }
             LoadState.SUCCESS -> {
                 LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(20.dp)
+                        .fillMaxWidth()
                 ) {
                     if (isSearching) {
                         item { Spacer(modifier = Modifier.padding(35.dp)) }
@@ -99,6 +103,7 @@ fun OrdersScreen(viewModel: OrdersViewModel, navController: NavController) {
                     }  else {
                         item { Spacer(modifier = Modifier.padding(40.dp)) }
                         item { Header(navController) }
+                        item { Spacer(modifier = Modifier.padding(5.dp)) }
                         if (myOrders?.isEmpty() == true) {
                             item { Text(text = "No tienes pedidos, ¡crea uno nuevo!") }
                         } else {
@@ -106,15 +111,29 @@ fun OrdersScreen(viewModel: OrdersViewModel, navController: NavController) {
                                 item { OrdersTemplate(order, user!!, true, viewModel, navController) }
                             }
                         }
+                        item { Spacer(modifier = Modifier.padding(10.dp)) }
                         if(myAssignedOrders?.isEmpty() == false){
                             item { Spacer(modifier = Modifier.padding(10.dp)) }
                             item { Text(text = "Mis pedidos asignados", fontSize = 30.sp) }
+                            item { Spacer(modifier = Modifier.padding(5.dp)) }
                             myAssignedOrders?.forEach { order ->
                                 item { OrdersTemplate(order, user!!, true, viewModel, navController) }
                             }
                         }
                         if (user?.isCraftsman == true) {
-                            item { Text(text = "Pedidos de otros usuarios", fontSize = 30.sp) }
+                            if (myAcceptedOrders?.isEmpty() == false) {
+                                item { Text(text = "Mis ofertas aceptadas", fontSize = 30.sp) }
+                                item { Spacer(modifier = Modifier.padding(5.dp)) }
+                                myAcceptedOrders?.forEachIndexed { index, order ->
+                                    val orderUser = usersAssignedOffers?.getOrNull(index)
+                                    if (orderUser != null) {
+                                        item { OrdersTemplate(order, orderUser, false, viewModel, navController) }
+                                    }
+                                }
+                                item { Spacer(modifier = Modifier.padding(10.dp)) }
+                            }
+                            item { Text(text = "Pedidos de usuarios", fontSize = 30.sp) }
+                            item { Spacer(modifier = Modifier.padding(5.dp)) }
                             allOrders?.forEachIndexed { index, order ->
                                 val orderUser = users?.getOrNull(index)
                                 if (orderUser != null) {
@@ -128,8 +147,7 @@ fun OrdersScreen(viewModel: OrdersViewModel, navController: NavController) {
                     item { Spacer(modifier = Modifier.padding(30.dp)) }
                 }
             }
-            else -> {
-            }
+            else -> {}
         }
     }
 }
@@ -139,9 +157,7 @@ fun Header(navController: NavController){
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth()
+        modifier = Modifier.fillMaxWidth()
     ) {
         Text(text = "Mis pedidos", fontSize = 30.sp)
         Spacer(modifier = Modifier.weight(1f))
@@ -158,7 +174,7 @@ fun OrdersTemplate(order: Order, user: User, myOrder: Boolean, viewModel: Orders
     Surface(
         color = MaterialTheme.colorScheme.tertiary,
         modifier = Modifier
-            .padding(10.dp)
+            .padding(bottom = 10.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
     ) {

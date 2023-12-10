@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.app_artesania.data.getAllOrders
 import com.example.app_artesania.data.getAssignedOrdersByEmail
+import com.example.app_artesania.data.getMyAcceptedOrders
 import com.example.app_artesania.data.getProducts
 import com.example.app_artesania.data.getUnassignedOrdersByEmail
 import com.example.app_artesania.data.getUser
@@ -24,12 +25,16 @@ class OrdersViewModel  : ViewModel() {
     val myOrders: LiveData<ArrayList<Order>?> = _myOrders
     private val _myAssignedOrders = MutableLiveData<ArrayList<Order>?>()
     val myAssignedOrders: LiveData<ArrayList<Order>?> = _myAssignedOrders
+    private val _myAcceptedOrders = MutableLiveData<ArrayList<Order>?>()
+    val myAcceptedOrders: LiveData<ArrayList<Order>?> = _myAcceptedOrders
     private val _allOrders = MutableLiveData<ArrayList<Order>?>()
     val allOrders: LiveData<ArrayList<Order>?> = _allOrders
     private val _user = MutableLiveData<User?>()
     val user: LiveData<User?> = _user
     private val _users = MutableLiveData<ArrayList<User>?>()
     val users: LiveData<ArrayList<User>?> = _users.apply { value = ArrayList() }
+    private val _usersAssignedOrders = MutableLiveData<ArrayList<User>?>()
+    val usersAssignedOrders: LiveData<ArrayList<User>?> = _usersAssignedOrders.apply { value = ArrayList() }
 
     private val _searchResults = MutableLiveData<ArrayList<Product>>()
     val searchResults: LiveData<ArrayList<Product>> = _searchResults
@@ -45,6 +50,13 @@ class OrdersViewModel  : ViewModel() {
             _myOrders.value = getUnassignedOrdersByEmail(_user.value!!.email)
             _myAssignedOrders.value = getAssignedOrdersByEmail(_user.value!!.email)
             if (DataRepository.getUser()!!.isCraftsman) {
+                _myAcceptedOrders.value = getMyAcceptedOrders(_user.value!!.idCraftsman)
+                val userAssignedList = mutableListOf<User>()
+                for (order in _myAcceptedOrders.value.orEmpty()) {
+                    userAssignedList.add(getUser(order.userEmail))
+                }
+                _usersAssignedOrders.value = ArrayList(userAssignedList)
+
                 _allOrders.value = getAllOrders(_user.value!!.email)
                 val userList = mutableListOf<User>()
                 for (order in _allOrders.value.orEmpty()) {

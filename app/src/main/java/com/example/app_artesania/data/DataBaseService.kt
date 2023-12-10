@@ -84,7 +84,6 @@ suspend fun getCraftsmans(): ArrayList<User> {
             craftsmansList.add(user)
         }
     }
-    println("SE HA EJECUTADO")
     return craftsmansList
 }
 
@@ -159,7 +158,6 @@ suspend fun getNewProducts(): ArrayList<Product> {
         .filter { it.uploadDate.isNotEmpty() }
         .sortedByDescending { dateFormat.parse(it.uploadDate) }
         .toMutableList()
-    println(sortedProducts)
     return ArrayList(sortedProducts.take(10))
 }
 
@@ -312,6 +310,21 @@ suspend fun getOrder(id: String): Order {
         order.id = document.id
     }
     return order!!
+}
+
+suspend fun getMyAcceptedOrders(idCraftsman: String): ArrayList<Order> {
+    val ordersList: ArrayList<Order> = ArrayList()
+    val ordersCollection = data.collection("Orders")
+        .whereEqualTo("isAssigned", true).get().await()
+    for (document in ordersCollection.documents) {
+        val order = document.toObject<Order>()
+        if (order != null && order.offers[0].idCraftsman == idCraftsman) {
+            order.id = document.id
+            order.isAssigned = document.getBoolean("isAssigned")!!
+            ordersList.add(order)
+        }
+    }
+    return ordersList
 }
 
 suspend fun newOrderDB(newOrder: newOrder){
