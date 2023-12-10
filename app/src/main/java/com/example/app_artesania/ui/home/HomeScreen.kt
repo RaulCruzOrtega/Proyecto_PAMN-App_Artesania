@@ -1,8 +1,6 @@
 package com.example.app_artesania.ui.home
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.Image
-
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,7 +14,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -27,7 +24,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -36,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import coil.compose.rememberImagePainter
 import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.User
@@ -57,6 +52,7 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
     val categories by viewModel.categories.observeAsState(arrayListOf())
     val craftsmansDB by viewModel.craftsmansDB.observeAsState(arrayListOf())
     val productsDB by viewModel.productsDB.observeAsState(arrayListOf())
+    val newProducts by viewModel.newProducts.observeAsState(arrayListOf())
     val searchResults by viewModel.searchResults.observeAsState(arrayListOf())
     val loadState by viewModel.loadState.observeAsState(LoadState.LOADING)
     val isSearching = searchResults.isNotEmpty()
@@ -103,17 +99,10 @@ fun HomeScreen(viewModel: HomeViewModel, navController: NavController) {
                         item(span = { GridItemSpan(2) }) {
                             Spacer(modifier = Modifier.padding(4.dp))
                         }
-                        item(span = { GridItemSpan(2) }) { productsDB?.let { it1 ->
+                        item(span = { GridItemSpan(2) }) { newProducts?.let { it1 ->
                             ProductsSlider("Productos Nuevos",
                                 it1, navController)
                         } }
-                        item(span = { GridItemSpan(2) }) { productsDB?.let { it1 ->
-                            ProductsSlider("Productos en Tendencia",
-                                it1, navController)
-                        } }
-                        item(span = { GridItemSpan(2) }) {
-                            Spacer(modifier = Modifier.padding(4.dp))
-                        }
                         item(span = { GridItemSpan(2) }) {
                             Text(
                                 text = "Otros Productos",

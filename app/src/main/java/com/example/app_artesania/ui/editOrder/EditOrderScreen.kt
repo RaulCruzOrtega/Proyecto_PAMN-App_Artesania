@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.app_artesania.model.Category
 import com.example.app_artesania.model.LoadState
-import com.example.app_artesania.ui.createOrder.CreateOrderViewModel
 import com.example.app_artesania.ui.register.textError
 import com.example.app_artesania.ui.templates.CategoryDropdownMenu
 import com.example.app_artesania.ui.templates.SimpleTopNavBar

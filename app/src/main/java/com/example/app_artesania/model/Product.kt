@@ -7,9 +7,10 @@ data class Product(
     val category: String,
     val price: Double,
     val description: String,
-    val idCraftsman: String
+    val idCraftsman: String,
+    val uploadDate: String
 ){
-    constructor() : this("", "", "",  "", 0.0, "", "")
+    constructor() : this("", "", "",  "", 0.0, "", "", "")
 }
 
 data class newProducto(
@@ -18,5 +19,6 @@ data class newProducto(
     val price: Double,
     val category: String,
     val description: String,
-    val idCraftsman: String
+    val idCraftsman: String,
+    val uploadDate: String
 )

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.LiveData
 import com.example.app_artesania.data.getCraftsmans
+import com.example.app_artesania.data.getNewProducts
 import com.example.app_artesania.data.getProducts
 import com.example.app_artesania.model.Category
 import com.example.app_artesania.model.Category.Alfarería.getCategories
@@ -25,6 +26,8 @@ class HomeViewModel : ViewModel() {
     val categories: LiveData<ArrayList<Category>> = _categories
     private val _searchResults = MutableLiveData<ArrayList<Product>>()
     val searchResults: LiveData<ArrayList<Product>> = _searchResults
+    private val _newProducts = MutableLiveData<ArrayList<Product>?>()
+    val newProducts: LiveData<ArrayList<Product>?> = _newProducts
 
     init { lanzamiento() }
 
@@ -49,6 +52,7 @@ class HomeViewModel : ViewModel() {
             try {
                 _craftsmansDB.value = getCraftsmans()
                 _productsDB.value = getProducts()
+                _newProducts.value = getNewProducts()
                 delay(500)
                 _loadState.value = LoadState.SUCCESS
             } catch (e: Exception) {

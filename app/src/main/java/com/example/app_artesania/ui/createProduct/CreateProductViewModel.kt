@@ -1,5 +1,6 @@
 package com.example.app_artesania.ui.createProduct
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,6 +14,8 @@ import com.example.app_artesania.model.DataRepository
 import com.example.app_artesania.model.newProducto
 import com.example.app_artesania.navigation.AppScreens
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class CreateProductViewModel: ViewModel() {
     private val _name = MutableLiveData<String>()
@@ -66,6 +69,9 @@ class CreateProductViewModel: ViewModel() {
         return isValidName(_name.value!!) && isValidPrice(_price.value!!) && isValidDescription(_description.value!!)
     }
 
+    @SuppressLint("SimpleDateFormat")
+    fun getCurrentDateAsString(): String = SimpleDateFormat("dd-MM-yyyy").format(Date())
+
     fun crearProducto(navController: NavController) {
         viewModelScope.launch {
             if (areFieldsValid()) {
@@ -78,7 +84,8 @@ class CreateProductViewModel: ViewModel() {
                         price = price.value!!.toDouble(),
                         description = description.value!!,
                         category = category.value!!.categoryType.name,
-                        idCraftsman = DataRepository.getUser()!!.idCraftsman
+                        idCraftsman = DataRepository.getUser()!!.idCraftsman,
+                        uploadDate = getCurrentDateAsString()
                     )
                     newProduct(new_producto)
                 } else {
@@ -88,7 +95,8 @@ class CreateProductViewModel: ViewModel() {
                         price = price.value!!.toDouble(),
                         description = description.value!!,
                         category = category.value!!.categoryType.name,
-                        idCraftsman = DataRepository.getUser()!!.idCraftsman
+                        idCraftsman = DataRepository.getUser()!!.idCraftsman,
+                        uploadDate = getCurrentDateAsString()
                     )
                     newProduct(new_producto)
                 }

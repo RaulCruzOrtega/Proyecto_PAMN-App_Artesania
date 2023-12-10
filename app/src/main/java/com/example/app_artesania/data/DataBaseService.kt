@@ -1,5 +1,6 @@
 package com.example.app_artesania.data
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import com.example.app_artesania.model.DataRepository
 import com.example.app_artesania.model.Order
@@ -14,6 +15,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 private val data = FirebaseFirestore.getInstance()
 
@@ -147,6 +150,19 @@ suspend fun getProducts_Craftsman(idcraftsman: String): ArrayList<Product> {
     return productsList
 }
 
+@SuppressLint("SimpleDateFormat")
+suspend fun getNewProducts(): ArrayList<Product> {
+    val productCollection = data.collection("Articulos").get().await()
+    val dateFormat = SimpleDateFormat("dd-MM-yyyy")
+    val sortedProducts = productCollection.documents
+        .mapNotNull { it.toObject<Product>() }
+        .filter { it.uploadDate.isNotEmpty() }
+        .sortedByDescending { dateFormat.parse(it.uploadDate) }
+        .toMutableList()
+    println(sortedProducts)
+    return ArrayList(sortedProducts.take(10))
+}
+
 suspend fun newProduct(newProduct: newProducto){
     val productHashMap = hashMapOf(
         "name" to newProduct.name,
@@ -154,7 +170,8 @@ suspend fun newProduct(newProduct: newProducto){
         "image" to newProduct.image,
         "price" to newProduct.price,
         "category" to newProduct.category,
-        "description" to newProduct.description
+        "description" to newProduct.description,
+        "uploadDate" to newProduct.uploadDate
     )
     data.collection("Articulos").add(productHashMap)
 }
@@ -220,7 +237,8 @@ suspend fun modifyProduct(product: newProducto, idProduct: String){
         "image" to product.image,
         "price" to product.price,
         "category" to product.category,
-        "description" to product.description
+        "description" to product.description,
+        "uploadDate" to product.uploadDate
     )
     val userDocument = data.collection("Articulos").document(idProduct).update(productHashMap as Map<String, Any>).await()
 }

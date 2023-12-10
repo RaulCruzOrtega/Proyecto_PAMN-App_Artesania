@@ -13,6 +13,7 @@ import com.example.app_artesania.model.Category
 import com.example.app_artesania.model.Category.Alfarería.getCategory
 import com.example.app_artesania.model.DataRepository
 import com.example.app_artesania.model.LoadState
+import com.example.app_artesania.model.Product
 import com.example.app_artesania.model.newProducto
 import com.example.app_artesania.navigation.AppScreens
 import kotlinx.coroutines.delay
@@ -29,6 +30,8 @@ class EditProductViewModel (idProduct: String): ViewModel() {
     val description: LiveData<String> = _description
     private val _category = MutableLiveData<Category>()
     val category: LiveData<Category> = _category
+    private val _product = MutableLiveData<Product>()
+    val product: LiveData<Product> = _product
     private val _imageuri = MutableLiveData<Uri>()
     private val _imageselect = MutableLiveData<String>()
     val imageselect: LiveData<String> = _imageselect
@@ -50,12 +53,12 @@ class EditProductViewModel (idProduct: String): ViewModel() {
 
     private fun loaddata(idProduct: String){
         viewModelScope.launch {
-            val product = getProduct(idProduct)
-            _name.value = product.name
-            _price.value = product.price.toString()
-            _description.value = product.description
-            _category.value = getCategory(product.category)
-            _image.value = product.image
+            _product.value = getProduct(idProduct)!!
+            _name.value = _product.value!!.name
+            _price.value = _product.value!!.price.toString()
+            _description.value = _product.value!!.description
+            _category.value = getCategory(_product.value!!.category)
+            _image.value = _product.value!!.image
             delay(500)
             _loadState.value = LoadState.SUCCESS
         }
@@ -105,7 +108,8 @@ class EditProductViewModel (idProduct: String): ViewModel() {
                         price = price.value!!.toDouble(),
                         description = description.value!!,
                         category = category.value!!.categoryType.name,
-                        idCraftsman = DataRepository.getUser()!!.idCraftsman
+                        idCraftsman = DataRepository.getUser()!!.idCraftsman,
+                        uploadDate = _product.value!!.uploadDate
                     )
                     modifyProduct(producto_edit, _idProduct.value!!)
                 } else {
@@ -115,7 +119,8 @@ class EditProductViewModel (idProduct: String): ViewModel() {
                         price = price.value!!.toDouble(),
                         description = description.value!!,
                         category = category.value!!.categoryType.name,
-                        idCraftsman = DataRepository.getUser()!!.idCraftsman
+                        idCraftsman = DataRepository.getUser()!!.idCraftsman,
+                        uploadDate = _product.value!!.uploadDate
                     )
                     modifyProduct(producto_edit, _idProduct.value!!)
                 }
