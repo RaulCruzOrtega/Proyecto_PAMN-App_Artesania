@@ -10,6 +10,7 @@ import com.example.app_artesania.data.getProducts
 import com.example.app_artesania.data.getProducts_Craftsman
 import com.example.app_artesania.data.getPurchased
 import com.example.app_artesania.data.getUser
+import com.example.app_artesania.data.product_purchase
 import com.example.app_artesania.model.DataRepository
 import com.example.app_artesania.model.LoadState
 import com.example.app_artesania.model.Product
@@ -78,6 +79,15 @@ class UserProfileViewModel : ViewModel()  {
                 it.name.contains(query, ignoreCase = true)
             } as ArrayList<Product>
         }
+    }
+
+    fun delPurchased(){
+        _products_purchased.value!!.clear()
+        _show_purchased.value = !_show_purchased.value!!
+        val user = DataRepository.getUser()!!
+        user.purchased.clear()
+        DataRepository.setUser(user)
+        product_purchase(DataRepository.getUser()!!.email, DataRepository.getUser()!!.purchased)
     }
 
     fun resetSearch() {
