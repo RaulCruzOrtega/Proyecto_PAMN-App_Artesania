@@ -151,10 +151,9 @@ suspend fun getProducts_Craftsman(idcraftsman: String): ArrayList<Product> {
 
 @SuppressLint("SimpleDateFormat")
 suspend fun getNewProducts(): ArrayList<Product> {
-    val productCollection = data.collection("Articulos").get().await()
+    val productCollection = getProducts()
     val dateFormat = SimpleDateFormat("dd-MM-yyyy")
-    val sortedProducts = productCollection.documents
-        .mapNotNull { it.toObject<Product>() }
+    val sortedProducts = productCollection
         .filter { it.uploadDate.isNotEmpty() }
         .sortedByDescending { dateFormat.parse(it.uploadDate) }
         .toMutableList()

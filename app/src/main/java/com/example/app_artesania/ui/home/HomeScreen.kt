@@ -218,6 +218,7 @@ fun ProductsSlider(title: String, products: ArrayList<Product>, navController: N
         LazyRow {
             itemsIndexed(products) { _, product ->
                 ProductSmallViewTemplate(product, 176, navController)
+                println(product)
             }
         }
     }
