@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.app_artesania.model.ItemsBottomNav
+import com.example.app_artesania.navigation.AppScreens
 import com.example.app_artesania.ui.theme.App_ArtesaniaTheme
 
 @Composable
