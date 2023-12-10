@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material3.Button
@@ -27,6 +28,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,6 +48,7 @@ import com.example.app_artesania.navigation.AppScreens
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBar
 import com.example.app_artesania.ui.bottomNavBar.BottomNavBarViewModel
 import com.example.app_artesania.ui.templates.DefaultTopBar
+import com.example.app_artesania.ui.templates.DeleteConfirmationDialog
 import com.example.app_artesania.ui.templates.ProductSmallViewTemplate
 import com.example.app_artesania.ui.templates.ProfileImage
 import com.example.app_artesania.ui.templates.loader
@@ -61,6 +66,7 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
     val isSearching = searchResults.isNotEmpty()
     val show_my_products: Boolean by viewModel.show_my_products.observeAsState(false)
     val show_purchased: Boolean by viewModel.show_purchased.observeAsState(false)
+    var showDialog by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -170,6 +176,24 @@ fun UserProfileScreen(viewModel: UserProfileViewModel, navController: NavControl
                                                 .align(Alignment.Bottom)
                                                 .size(30.dp)
                                         )
+                                    }
+                                }
+                                Row (verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End){
+                                    Icon(
+                                        Icons.Rounded.Delete,
+                                        contentDescription = "Icono Eliminar Historial de Compras",
+                                        modifier = Modifier
+                                            .clickable { showDialog = true }
+                                            .size(30.dp)
+                                    )
+                                }
+                                if (showDialog) {
+                                    DeleteConfirmationDialog(
+                                        "¿Está seguro de que desea eliminar el Historial de Compras?"
+                                    ) { confirmed ->
+                                        println("Se ejecuta")
+                                        if (confirmed) { viewModel.delPurchased() }
+                                        showDialog = false
                                     }
                                 }
                             }
