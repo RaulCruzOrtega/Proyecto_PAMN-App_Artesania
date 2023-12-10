@@ -29,8 +29,9 @@ class FavouriteProductsViewModel: ViewModel() {
     }
 
     private fun loadData() {
+        println("Entra")
         viewModelScope.launch{
-            val favproducts = DataRepository.getUser()!!.favoproducts
+            val favproducts: ArrayList<String> = ArrayList(DataRepository.getUser()!!.favoproducts)
             val arrayproducts = ArrayList<Product>()
             val array_favo_elimi = ArrayList<String>()
             for (favproduct in favproducts){
